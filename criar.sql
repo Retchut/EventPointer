@@ -84,7 +84,8 @@ CREATE TABLE poll_option
 );
 
 DROP TABLE IF EXISTS event_role;
-CREATE TABLE event_role(
+CREATE TABLE event_role
+(
         memberId INTEGER NOT NULL REFERENCES member(id) ON DELETE RESTRICT ON UPDATE CASCADE,
         eventId INTEGER NOT NULL REFERENCES event(id) ON DELETE RESTRICT ON UPDATE CASCADE,
         isHost BOOLEAN NOT NULL,
@@ -115,3 +116,19 @@ CREATE INDEX start_event ON event USING btree (startdate);
 -----------------------------------------
 -- Triggers
 -----------------------------------------
+
+CREATE FUNCTION comment_in_event_poll() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+        IF EXISTS (SELECT * FROM event, member, event_role WHERE NEW.eventId = event_role.eventId AND NEW.memberId = event_role.memberId) THEN
+           RAISE EXCEPTION 'A member can only comment in an event poll, if he is enrolled in that specific event.';
+        END IF;
+        RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER comment_in_event_poll()
+        BEFORE INSERT OR UPDATE ON event_comment
+        FOR EACH ROW
+        EXECUTE PROCEDURE comment_in_event_poll();

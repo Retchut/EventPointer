@@ -4,7 +4,6 @@
 -- Types
 -----------------------------------------
 
-CREATE TYPE Roles AS ENUM ('Participant','Host');
 CREATE TYPE EventState AS ENUM ('Scheduled','Ongoing','Canceled','Finished');
 
 -----------------------------------------
@@ -86,10 +85,10 @@ CREATE TABLE poll_option
 
 DROP TABLE IF EXISTS event_role;
 CREATE TABLE event_role(
-        id SERIAL PRIMARY KEY,
         memberId INTEGER NOT NULL REFERENCES member(id) ON DELETE RESTRICT ON UPDATE CASCADE,
         eventId INTEGER NOT NULL REFERENCES event(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-        role roles NOT NULL
+        isHost BOOLEAN NOT NULL,
+        CONSTRAINT member_event_id PRIMARY KEY(memberId, eventId)
 );
 
 

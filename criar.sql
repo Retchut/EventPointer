@@ -4,8 +4,8 @@
 -- Types
 -----------------------------------------
 
-CREATE TYPE Roles AS ENUM {'Participant','Host'};
-CREATE TYPE EventState AS ENUM {'Scheduled','Ongoing','Canceled','Finished'};
+CREATE TYPE Roles AS ENUM ('Participant','Host');
+CREATE TYPE EventState AS ENUM ('Scheduled','Ongoing','Canceled','Finished');
 
 -----------------------------------------
 -- Tables

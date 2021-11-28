@@ -4,6 +4,7 @@
 -- Types
 -----------------------------------------
 
+CREATE TYPE roles AS ENUM {'Participant','Host'};
 CREATE TYPE EventState AS ENUM {'Scheduled','Ongoing','Canceled','Finished'};
 CREATE TYPE OAuthServices AS ENUM {'Steam','Origin','Battle Net','Google','None'}
 
@@ -11,8 +12,8 @@ CREATE TYPE OAuthServices AS ENUM {'Steam','Origin','Battle Net','Google','None'
 -- Tables
 -----------------------------------------
 
-DROP TABLE IF EXISTS Member;
-CREATE TABLE Member
+DROP TABLE IF EXISTS member;
+CREATE TABLE member
 (
     id SERIAL PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,
@@ -22,8 +23,8 @@ CREATE TABLE Member
     isAdmin BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-DROP TABLE IF EXISTS Event;
-CREATE TABLE Event
+DROP TABLE IF EXISTS event;
+CREATE TABLE event
 (
     id SERIAL PRIMARY KEY,
     eventName TEXT NOT NULL,
@@ -33,58 +34,71 @@ CREATE TABLE Event
     duration FLOAT NOT NULL,
     TYPE EventState NOT NULL,
     isPrivate BOOLEAN NOT NULL DEFAULT FALSE,
-    tag TEXT NOT NULL REFERENCES EventTag (tagName) ON DELETE RESTRICT ON UPDATE CASCADE,
+    tagId TEXT NOT NULL REFERENCES event_tag (tagName) ON DELETE RESTRICT ON UPDATE CASCADE,
 	CONSTRAINT dates CHECK (startDate < endDate)
     );
 
 
-DROP TABLE IF EXISTS EventTag;
-CREATE TABLE EventTag
+DROP TABLE IF EXISTS event_tag;
+CREATE TABLE event_tag
 (
     id SERIAL PRIMARY KEY,
     tagName TEXT NOT NULL UNIQUE,
 );
 
-DROP TABLE IF EXISTS EventAnnouncement;
-CREATE TABLE EventAnnouncement
+DROP TABLE IF EXISTS event_announcement;
+CREATE TABLE event_announcement
 (
     id SERIAL PRIMARY KEY,
-    message TEXT NOT NULL UNIQUE,
-    event INTEGER NOT NULL REFERENCES Event (id) ON DELETE RESTRICT ON UPDATE CASCADE
+    message TEXT NOT NULL,
+    eventId INTEGER NOT NULL REFERENCES event (id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 
-DROP TABLE IF EXISTS EventComment;
-CREATE TABLE EventComment
+DROP TABLE IF EXISTS event_comment;
+CREATE TABLE event_comment
 (
     id SERIAL PRIMARY KEY,
-    message TEXT NOT NULL UNIQUE,
-    event INTEGER NOT NULL REFERENCES Event (id) ON DELETE RESTRICT ON UPDATE CASCADE
+    message TEXT NOT NULL,
+    eventId INTEGER NOT NULL REFERENCES event (id) ON DELETE RESTRICT ON UPDATE CASCADE
 
 );
 
-DROP TABLE IF EXISTS EventPoll;
-CREATE TABLE EventPoll
+DROP TABLE IF EXISTS event_poll;
+CREATE TABLE event_poll
 (
     id SERIAL PRIMARY KEY,
-    message TEXT NOT NULL UNIQUE,
-    event INTEGER NOT NULL REFERENCES Event (id) ON DELETE RESTRICT ON UPDATE CASCADE
+    message TEXT NOT NULL,
+    eventId INTEGER NOT NULL REFERENCES event (id) ON DELETE RESTRICT ON UPDATE CASCADE
 
 );
 
 
-DROP TABLE IF EXISTS PollOption;
-CREATE TABLE PollOption
+DROP TABLE IF EXISTS poll_option;
+CREATE TABLE poll_option
 (
     id SERIAL PRIMARY KEY,
-    message TEXT NOT NULL UNIQUE,
-    poll INTEGER NOT NULL REFERENCES EventPoll (id) ON DELETE RESTRICT ON UPDATE CASCADE
+    message TEXT NOT NULL,
+    pollId INTEGER NOT NULL REFERENCES event_poll (id) ON DELETE RESTRICT ON UPDATE CASCADE
 
 );
 
-/* //TODO
-EventHost, EventParticipant, Vote Tables
-Ligar participante/ host a comment e announcement (?) e fazer verificação
-verificar constantes
-Adicionar OAuthServices
-*/
+DROP TABLE IF EXISTS event_role;
+CREATE TABLE event_role(
+        id SERIAL PRIMARY KEY,
+        memberId INTEGER NOT NULL REFERENCES member(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+        eventId INTEGER NOT NULL REFERENCES event(id) ON DELETE RESTRICT ON UPDATE CASCADE
+
+)
+DROP TABLE IF EXISTS vote;
+CREATE TABLE vote
+(
+    id SERIAL PRIMARY KEY,
+    type BOOLEAN NOT NULL,
+    participantId INTEGER NOT NULL REFERENCES event_role (member) ON DELETE RESTRICT ON UPDATE CASCADE,
+    commentId INTEGER REFERENCES event_comment (id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    announcementId INTEGER REFERENCES event_announcement (id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    CHECK ((announcementId IS NOT NULL AND commentId IS NULL) OR (announcementId IS NULL AND commentId IS NOT NULL)) 
+);
+
+

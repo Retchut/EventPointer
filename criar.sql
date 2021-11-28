@@ -3,7 +3,7 @@
 -----------------------------------------
 -- Types
 -----------------------------------------
-
+DROP TYPE  IF EXISTS EventState;
 CREATE TYPE EventState AS ENUM ('Scheduled','Ongoing','Canceled','Finished');
 
 -----------------------------------------
@@ -104,3 +104,10 @@ CREATE TABLE vote
 );
 
 
+-----------------------------------------
+-- Indexes
+-----------------------------------------
+
+CREATE INDEX event_state ON event USING hash (state);
+CREATE INDEX end_event ON event USING btree (enddate);
+CREATE INDEX start_event ON event USING btree (startdate);

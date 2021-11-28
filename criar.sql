@@ -22,6 +22,15 @@ CREATE TABLE member
     isAdmin BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+
+DROP TABLE IF EXISTS event_tag;
+CREATE TABLE event_tag
+(
+    id SERIAL PRIMARY KEY,
+    tagName TEXT NOT NULL UNIQUE
+);
+
+
 DROP TABLE IF EXISTS event;
 CREATE TABLE event
 (
@@ -37,13 +46,6 @@ CREATE TABLE event
 	CONSTRAINT dates CHECK (startDate < endDate)
 );
 
-
-DROP TABLE IF EXISTS event_tag;
-CREATE TABLE event_tag
-(
-    id SERIAL PRIMARY KEY,
-    tagName TEXT NOT NULL UNIQUE
-);
 
 DROP TABLE IF EXISTS event_announcement;
 CREATE TABLE event_announcement
@@ -96,7 +98,7 @@ CREATE TABLE vote
 (
     id SERIAL PRIMARY KEY,
     type BOOLEAN NOT NULL,
-    participantId INTEGER NOT NULL REFERENCES event_role (memberId) ON DELETE RESTRICT ON UPDATE CASCADE,
+    participantId INTEGER NOT NULL REFERENCES member(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     commentId INTEGER REFERENCES event_comment (id) ON DELETE RESTRICT ON UPDATE CASCADE,
     announcementId INTEGER REFERENCES event_announcement (id) ON DELETE RESTRICT ON UPDATE CASCADE,
     CHECK ((announcementId IS NOT NULL AND commentId IS NULL) OR (announcementId IS NULL AND commentId IS NOT NULL)) 

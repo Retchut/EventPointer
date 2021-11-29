@@ -221,7 +221,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER delete_vote()
-        BEFORE INSERT OR UPDATE ON vote
+        BEFORE DELETE vote
         FOR EACH ROW
         EXECUTE PROCEDURE delete_vote();
 END

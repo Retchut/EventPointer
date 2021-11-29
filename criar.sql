@@ -153,21 +153,75 @@ END
 
 
  
-CREATE FUNCTION comment_in_event_poll() RETURNS TRIGGER AS
+CREATE FUNCTION search_event() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM event, member, event_role WHERE NEW.eventId = event_role.eventId AND NEW.memberId = event_role.memberId) THEN
-           RAISE EXCEPTION 'A member can only comment in an event poll, if he is enrolled in that specific event.';
+        IF EXISTS (SELECT * FROM event WHERE NEW.eventId = eventId AND NEW.isPrivate = FALSE) THEN
+           RAISE EXCEPTION ' Private events are not shown in search results.';
         END IF;
         RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER comment_in_event_poll()
-        BEFORE INSERT OR UPDATE ON event_comment
+CREATE TRIGGER search_event()
+        BEFORE INSERT OR UPDATE ON event
         FOR EACH ROW
-        EXECUTE PROCEDURE comment_in_event_poll();
+        EXECUTE PROCEDURE search_event();
+END
+
+
+CREATE FUNCTION event_schedule() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+        IF EXISTS (SELECT * FROM event WHERE NEW.eventId = eventId AND NEW.endDate > NEW.startDate AND NEW.startDate > GETDATE() ) THEN
+           RAISE EXCEPTION ' Ending event date needs to be after starting date and starting date also needs to be at least 1 day after event creation.';
+        END IF;
+        RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER event_schedule()
+        BEFORE INSERT OR UPDATE ON event
+        FOR EACH ROW
+        EXECUTE PROCEDURE event_schedule();
+END
+
+
+CREATE FUNCTION edit_vote() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+        IF EXISTS (SELECT * FROM event WHERE NEW.paticipantId = participantId ) THEN
+           RAISE EXCEPTION ' Only participating members can edit and vote on their own comments on the discussion of events.';
+        END IF;
+        RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER edit_vote()
+        BEFORE INSERT OR UPDATE ON vote
+        FOR EACH ROW
+        EXECUTE PROCEDURE edit_vote();
+END
+
+
+CREATE FUNCTION delete_vote() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+        IF EXISTS (SELECT * FROM event WHERE NEW.paticipantId = participantId ) THEN
+           RAISE EXCEPTION ' Only participating members can delete their vote on the discussion of events.';
+        END IF;
+        RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_vote()
+        BEFORE INSERT OR UPDATE ON vote
+        FOR EACH ROW
+        EXECUTE PROCEDURE delete_vote();
 END
 
 

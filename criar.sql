@@ -132,3 +132,42 @@ CREATE TRIGGER comment_in_event_poll()
         BEFORE INSERT OR UPDATE ON event_comment
         FOR EACH ROW
         EXECUTE PROCEDURE comment_in_event_poll();
+END
+
+
+
+CREATE FUNCTION vote_in_event_poll() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+        IF EXISTS (SELECT * FROM event, member, event_role WHERE NEW.eventId = event_role.eventId AND NEW.memberId = event_role.memberId) THEN
+           RAISE EXCEPTION 'A member can only vote in an event poll, if he is enrolled in that specific event.';
+        END IF;
+        RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER vote_in_event_poll()
+        BEFORE INSERT OR UPDATE ON event_poll
+        FOR EACH ROW
+        EXECUTE PROCEDURE vote_in_event_poll();
+END
+
+
+ 
+CREATE FUNCTION comment_in_event_poll() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+        IF EXISTS (SELECT * FROM event, member, event_role WHERE NEW.eventId = event_role.eventId AND NEW.memberId = event_role.memberId) THEN
+           RAISE EXCEPTION 'A member can only comment in an event poll, if he is enrolled in that specific event.';
+        END IF;
+        RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER comment_in_event_poll()
+        BEFORE INSERT OR UPDATE ON event_comment
+        FOR EACH ROW
+        EXECUTE PROCEDURE comment_in_event_poll();
+END

@@ -113,6 +113,40 @@ CREATE TABLE vote
 CREATE INDEX event_state ON event USING hash (state);
 CREATE INDEX end_event ON event USING btree (enddate);
 CREATE INDEX start_event ON event USING btree (startdate);
+
+-- Add column to event to store computed ts_vectors.
+ALTER TABLE event
+ADD COLUMN tsvectors TSVECTOR;
+
+-- Create a function to automatically update ts_vectors.
+CREATE FUNCTION event_search_update() RETURNS TRIGGER AS $$
+BEGIN
+ IF TG_OP = 'INSERT' THEN
+        NEW.tsvectors = (
+         setweight(to_tsvector('english', NEW.name), 'A')
+        );
+ END IF;
+ IF TG_OP = 'UPDATE' THEN
+         IF (NEW.name <> OLD.name) THEN
+           NEW.tsvectors = (
+             setweight(to_tsvector('english', NEW.name), 'A')
+           );
+         END IF;
+ END IF;
+ RETURN NEW;
+END $$
+LANGUAGE plpgsql;
+
+-- Create a trigger before insert or update on event.
+CREATE TRIGGER event_search_update
+ BEFORE INSERT OR UPDATE ON event
+ FOR EACH ROW
+ EXECUTE PROCEDURE event_search_update();
+
+
+-- Finally, create a GIN index for ts_vectors.
+CREATE INDEX search_idx ON event USING GIN (tsvectors);
+
 -----------------------------------------
 -- Triggers
 -----------------------------------------
@@ -221,7 +255,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER delete_vote()
-        BEFORE INSERT OR UPDATE ON vote
+        BEFORE DELETE ON vote
         FOR EACH ROW
         EXECUTE PROCEDURE delete_vote();
 END

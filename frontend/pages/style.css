@@ -1,0 +1,20 @@
+:root {
+    /* font-size: 16px; */
+    --background-color: #8EB1C7;  /* Pewter Blue  */
+    --color2: #B02E0C;  /* Chinese Red  */
+    --color3: #280004;  /* Dark Sienna  */
+    --color4: #C1BFB5;  /* Pale Silver  */
+    --color5: #FEFDFF;  /*    White     */
+}
+
+body {
+    background-color:var(--background-color);
+    /* background-color:var(--color2); */
+    /* background-color:var(--color3); */
+    /* background-color:var(--color4); */
+    /* background-color:var(--color5); */
+}
+
+/* .nav {
+} */
+

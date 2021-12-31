@@ -1,44 +1,43 @@
 openapi: 3.0.0
 
 info:
-  version: '1.0'
-  title: 'LBAW MediaLibrary Web API'
-  description: 'Web Resources Specification (A7) for MediaLibrary'
+  version: "1.0"
+  title: "LBAW Event Pointer Web API"
+  description: "Web Resources Specification (A7) for Event Pointer"
 
 servers:
-- url: http://lbaw.fe.up.pt
-  description: Production server
+  - url: http://lbaw.fe.up.pt
+    description: Production server
 
 externalDocs:
   description: Find more info here.
-  url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07
+  url: https://git.fe.up.pt/lbaw/lbaw2122/lbaw2115/-/wikis/eap
 
 tags:
-  - name: 'M01: Authentication and Individual Profile'
-  - name: 'M02: Works'
-  - name: 'M03: Reviews and Wish list'
-  - name: 'M04: Loans'
-  - name: 'M05: User Administration and Static pages'
+  - name: "M01: Authentication and Individual Profile"
+  - name: "M02: Event Management"
+  - name: "M03: Event Participation and Ownership"
+  - name: "M04: Announcements and Comments"
+  - name: "M05: User Administration and Static pages"
 
 paths:
-
   /login:
     get:
       operationId: R101
-      summary: 'R101: Login Form'
-      description: 'Provide login form. Access: PUB'
+      summary: "R101: Login Form"
+      description: "Provide login form. Access: PUB"
       tags:
-        - 'M01: Authentication and Individual Profile'
+        - "M01: Authentication and Individual Profile"
       responses:
-        '200':
-          description: 'Ok. Show log-in UI'
+        "200":
+          description: "Ok. Show Log-in UI"
     post:
       operationId: R102
-      summary: 'R102: Login Action'
-      description: 'Processes the login form submission. Access: PUB'
+      summary: "R102: Login Action"
+      description: "Processes the login form submission. Access: PUB"
       tags:
-        - 'M01: Authentication and Individual Profile'
- 
+        - "M01: Authentication and Individual Profile"
+
       requestBody:
         required: true
         content:
@@ -46,66 +45,65 @@ paths:
             schema:
               type: object
               properties:
-                email:          # <!--- form field name
+                email: # <!--- form field name
                   type: string
-                password:    # <!--- form field name
+                password: # <!--- form field name
                   type: string
               required:
                 - email
                 - password
- 
+
       responses:
-        '302':
-          description: 'Redirect after processing the login credentials.'
+        "302":
+          description: "Redirect after processing the login credentials."
           headers:
             Location:
               schema:
                 type: string
               examples:
                 302Success:
-                  description: 'Successful authentication. Redirect to user profile.'
-                  value: '/users/{id}'
+                  description: "Successful authentication. Redirect to user profile."
+                  value: "/users/{id}"
                 302Error:
-                  description: 'Failed authentication. Redirect to login form.'
-                  value: '/login'
- 
-  /logout:
+                  description: "Failed authentication. Redirect to login form."
+                  value: "/login"
 
+  /logout:
     post:
       operationId: R103
-      summary: 'R103: Logout Action'
-      description: 'Logout the current authenticated used. Access: USR, ADM'
+      summary: "R103: Logout Action"
+      description: "Logout the current authenticated user. Access: USR, ADM"
       tags:
-        - 'M01: Authentication and Individual Profile'
+        - "M01: Authentication and Individual Profile"
       responses:
-        '302':
-          description: 'Redirect after processing logout.'
+        "302":
+          description: "Redirect after processing logout."
           headers:
             Location:
               schema:
                 type: string
               examples:
                 302Success:
-                  description: 'Successful logout. Redirect to login form.'
-                  value: '/login'
+                  description: "Successful logout. Redirect to login form."
+                  value: "/login"
 
   /register:
     get:
       operationId: R104
-      summary: 'R104: Register Form'
-      description: 'Provide new user registration form. Access: PUB'
+      summary: "R104: Register Form"
+      description: "Provide new user registration form. Access: PUB"
       tags:
-        - 'M01: Authentication and Individual Profile'
+        - "M01: Authentication and Individual Profile"
       responses:
-        '200':
-          description: 'Ok. Show sign-up UI'
+        "200":
+          description: "Ok. Show Sign-Up UI"
 
     post:
       operationId: R105
-      summary: 'R105: Register Action'
-      description: 'Processes the new user registration form submission. Access: PUB'
+      summary: "R105: Register Action"
+      description: "Processes the new user registration form submission. Access: PUB"
       tags:
-        - 'M01: Authentication and Individual Profile'
+        - "M01: Authentication and Individual Profile"
 
       requestBody:
         required: true
@@ -126,27 +124,27 @@ paths:
                 - password
 
       responses:
-        '302':
-          description: 'Redirect after processing the new user information.'
+        "302":
+          description: "Redirect after processing the new user information."
           headers:
             Location:
               schema:
                 type: string
               examples:
                 302Success:
-                  description: 'Successful authentication. Redirect to user profile.'
-                  value: '/users/{id}'
+                  description: "Successful authentication. Redirect to user profile."
+                  value: "/users/{id}"
                 302Failure:
-                  description: 'Failed authentication. Redirect to login form.'
-                  value: '/login'
+                  description: "Failed authentication. Redirect to login form."
+                  value: "/login"
 
-  /users/{id}:
+  /user/{id}:
     get:
       operationId: R106
-      summary: 'R106: View user profile'
-      description: 'Show the individual user profile. Access: USR'
+      summary: "R106: View user profile"
+      description: "Show the individual user profile. Access: USR"
       tags:
-        - 'M01: Authentication and Individual Profile'
+        - "M01: Authentication and Individual Profile"
 
       parameters:
         - in: path
@@ -156,18 +154,107 @@ paths:
           required: true
 
       responses:
-        '200':
-          description: 'Ok. Show view profile UI'
- 
+        "200":
+          description: "Ok. Show User Profile UI"
 
-  /api/works:
+  /user/{id}/edit:
+    get:
+      operationId: R107
+      summary: "R107: Edit User Profile"
+      description: "Provide new form to edit user profile. Access: OWN,ADM"
+      tags:
+        - "M01: Authentication and Individual Profile"
+
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Ok. Show User Profile UI"
+
+    put:
+      operationId: R108
+      summary: "R108: Edit Profile Action"
+      description: "Processes the profile edition form submission. Access: OWN,ADM"
+      tags:
+        - "M01: Authentication and Individual Profile"
+
+      equestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+              required:
+                - email
+                - password
+
+      responses:
+        "302":
+          description: "Redirect after processing the edited profile info submited."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Profile successfully edited. Redirect to user page."
+                  value: "/user/{id}"
+                302Error:
+                  description: "Failed to edit profile. Redirect to profile edition form."
+                  value: "/user/{id}/edit"
+
+  /home:
+    get:
+      operationId: R201
+      summary: "R201: View Home"
+      description: "Show home page. Access: PUB"
+      tags:
+        - "M02: Event Management"
+
+      responses:
+        "200":
+          description: "Ok. Show Home Page UI"
+
+  /event/{id}:
     get:
       operationId: R202
-      summary: 'R202: Search Works API'
-      description: 'Searches for works and returns the results as JSON. Access: PUB.'
+      summary: "R202: View event"
+      description: "Shows the event information. Access: PUB"
+      tags:
+        - "M02: Event Management"
 
-      tags: 
-        - 'M02: Works'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Ok. Show Event Page UI"
+
+  /api/events:
+    get:
+      operationId: R203
+      summary: "R203: Search Events API"
+      description: "Searches for events and returns the results as JSON. Access: USR."
+
+      tags:
+        - "M02: Event Management"
 
       parameters:
         - in: query
@@ -177,32 +264,20 @@ paths:
             type: string
           required: false
         - in: query
-          name: item
-          description: Category of the works
+          name: name
+          description: Name of the event
           schema:
             type: string
           required: false
         - in: query
-          name: loaned
-          description: Boolean with the loaned flag value
+          name: date
+          description: Start date of the event
           schema:
-            type: boolean
-          required: false
-        - in: query
-          name: owner
-          description: Boolean with the owner flag value
-          schema:
-            type: boolean
-          required: false
-        - in: query
-          name: classification
-          description: Integer corresponding to the work classification
-          schema:
-            type: integer
+            type: date
           required: false
 
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
@@ -224,15 +299,1170 @@ paths:
                     type:
                       type: string
                 example:
-                  - id: 1
-                    title: Rihanna - Unapologetic
-                    obs: Good pop music album.
-                    year: 2012
-                    owner: Joana Lima
-                    type: MP3
-                  - id: 15
-                    title: Mr. Bean
-                    obs: The best comedy movie.
-                    year: 1995
-                    owner: Manuel Teixeira
-                    type: DVD
+                  - name: Red Week
+                    startDate: 01.01.2022
+                    endDate: 08.01.2022
+                    place: Purple Forest
+                    duration: 7
+                    isPrivate: false
+
+  /user/{id}/create_event:
+    get:
+      operationId: R204
+      summary: "R204: Event Creation Form"
+      description: "Provide new form to create an event. Access: USR"
+      tags:
+        - "M02: Event Management"
+
+      parameters:
+        - in: query
+          name: name
+          description: Name of the event
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: start-date
+          description: Start date of the event
+          schema:
+            type: date
+          required: true
+        - in: query
+          name: end-date
+          description: End date of the event
+          schema:
+            type: date
+          required: true
+        - in: query
+          name: place
+          description: Where the event is taken place
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: duration
+          description: Duration of the event
+          schema:
+            type: integer
+          required: true
+        - in: query
+          name: isPrivate
+          description: If the event is private or not
+          schema:
+            type: bool
+          required: true
+
+      responses:
+        "200":
+          description: "Ok. Show Event Creation Form UI"
+
+    post:
+      operationId: R205
+      summary: "R205: Event Creation Action"
+      description: "Processes the event creation form submission. Access: USR"
+      tags:
+        - "M02: Event Management"
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                start-date:
+                  type: date
+                end-date:
+                  type: date
+                place:
+                  type: string
+                duration:
+                  type: integer
+                isPrivate:
+                  type: bool
+              required:
+                - name
+                - start-date
+                - end-date
+                - place
+                - duration
+                - isPrivate
+
+      responses:
+        "302":
+          description: "Redirect after processing the event info submited."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Event successfully created. Redirect to event page."
+                  value: "/event/{id}"
+                302Error:
+                  description: "Failed to create the event. Redirect to event form."
+                  value: "/users/{id}/create"
+
+  /event/{id}/edit:
+    get:
+      operationId: R206
+      summary: "R206: Edit Event Form"
+      description: "Provide new form to edit an event. Access: OWN"
+      tags:
+        - "M02: Event Management"
+
+      parameters:
+        - in: path
+          name: event_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Ok. Show Event Form UI"
+
+    put:
+      operationId: R207
+      summary: "R207: Edit Event Action"
+      description: "Processes the event edition form submission. Access: OWN"
+      tags:
+        - "M02: Event Management"
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                start-date:
+                  type: date
+                end-date:
+                  type: date
+                place:
+                  type: string
+                duration:
+                  type: integer
+                isPrivate:
+                  type: bool
+              required:
+                - name
+                - start-date
+                - end-date
+                - place
+                - duration
+                - isPrivate
+
+      responses:
+        "302":
+          description: "Redirect after processing the event info submited."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Event successfully edited. Redirect to event page."
+                  value: "/event/{id}"
+                302Error:
+                  description: "Failed to edit the event. Redirect to event edition form."
+                  value: "/event/{id}/edit"
+
+  /event/{id}/delete:
+    delete:
+      operationId: R208
+      summary: "R208: Delete Event"
+      description: "Delete an event. Access: OWN,ADM"
+      tags:
+        - "M02: Event Management"
+
+      parameters:
+        - in: path
+          name: event_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Event successfully deleted"
+        "400":
+          description: "Error: Error message via HTTP header"
+        "404":
+          description: "Error: No event found"
+
+  /event/{id}/invite:
+    get:
+      operationId: R209
+      summary: "R209: Invite to Event Form"
+      description: "Form used to invite user to event. Access: OWN"
+      tags:
+        - "M02: Event Management"
+
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+            required: true
+      responses:
+        "200":
+          description: "Ok. Show Invite Form UI"
+
+    post:
+      operationId: R210
+      summary: "R210: Invite to Event Action"
+      description: "Invite user to event. Access: OWN"
+      tags:
+        - "M02: Event Management"
+
+      responses:
+        "302":
+          description: "Invite sent."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "User invited. Redirect to event page."
+                  value: "/event/{id}"
+                302Failure:
+                  description: "Invite Failed. Redirect to invite page."
+                  value: "/event/{id}/invite"
+
+  /user/{id}/invite/{id}:
+    get:
+      operationId: R211
+      summary: "R211: Invitation to Event Form"
+      description: "Event invitation form. Access: USR"
+      tags:
+        - "M02: Event Management"
+
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: bool
+            required: true
+      responses:
+        "200":
+          description: "Ok. Show Invitation Form UI"
+
+    post:
+      operationId: R212
+      summary: "R212: Invitation to Event Action"
+      description: "Invitation to event. Access: USR"
+      tags:
+        - "M02: Event Management"
+
+      responses:
+        "302":
+          description: "Invite answered."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Invite answered. Redirect to event page."
+                  value: "/event/{id}"
+                302Failure:
+                  description: "Answer Failed. Redirect to invitation page."
+                  value: "/user/{id}/invite/{id}"
+
+  /event/{id}/participants:
+    get:
+      operationId: R213
+      summary: "R213: Event Participants"
+      description: "Show event participants. Access: OWN,ADM"
+      tags:
+        - "M02: Event Management"
+      responses:
+        "200":
+          description: "Ok. Show Invitation Form UI"
+
+  /event/{id}/participants/remove:
+    delete:
+      operationId: R214
+      summary: "R214: Remove Participant from Event"
+      description: "Remove participant from an event. Access: OWN"
+      tags:
+        - "M02: Event Management"
+
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Participant successfully removed"
+        "400":
+          description: "Error: Error message via HTTP header"
+        "404":
+          description: "Error: No event found"
+
+  /user/{id}/my_events:
+    get:
+      operationId: R301
+      summary: "R301: View My Events"
+      description: "Show events created by the user. Access: OWN"
+      tags:
+        - "M03: Event Participation and Ownership"
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Ok. Show User Events UI"
+
+  /user/{id}/my_participations:
+    get:
+      operationId: R302
+      summary: "R302: View My Participations"
+      description: "Show user participations. Access: OWN"
+      tags:
+        - "M03: Event Participation and Ownership"
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Ok. Show User Participations UI"
+
+  /event/{id}/announcement/{id}:
+    get:
+      operationId: R401
+      summary: "R401: View Announcement"
+      description: "Shows the announcement information. Access: OWN,PRT"
+      tags:
+        - "M04: Announcements and Comments"
+
+      parameters:
+        - in: path
+          name: announcement_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Ok. Show Announcement Page UI"
+
+  /event/{id}/create_announcement:
+    get:
+      operationId: R402
+      summary: "R402: Create Event Announcement Form"
+      description: "Provide new form to create an event announcement. Access: OWN"
+      tags:
+        - "M04: Announcements and Comments"
+
+      parameters:
+        - in: query
+          name: announcement_title
+          description: Announcement Title
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: announcement_description
+          description: Announcement Description
+          schema:
+            type: string
+          required: true
+
+      response:
+        "200":
+          description: "Ok. Show Announcement Creation Form UI"
+
+    post:
+      operationId: R403
+      summary: "R403: Event Announcement Action"
+      description: "Processes the event announcement form submission. Access: OWN"
+      tags:
+        - "M04: Announcements and Comments"
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                announcement_title:
+                  type: string
+                announcement_description:
+                  type: string
+              required:
+                - announcement_title
+                - announcement_description
+
+      responses:
+        "302":
+          description: "Redirect after processing the announcement info submited."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Announcement successfully posted. Redirect to announcement page."
+                  value: "/event/{id}/announcement/{id}"
+                302Error:
+                  description: "Failed to post the announcement. Redirect to announcement form."
+                  value: "/event/{id}/create_announcement"
+
+  /event/{id}/announcement/{id}/edit:
+    get:
+      operationId: R404
+      summary: "R404: Edit Announcement Form"
+      description: "Provide new form to edit an announcement. Access: OWN"
+      tags:
+        - "M04: Announcements and Comments"
+
+      responses:
+        "200":
+          description: "Ok. Show Announcement Form UI"
+
+    put:
+      operationId: R405
+      summary: "R405: Edit Announcement Action"
+      description: "Processes the announcement edition form submission. Access: OWN"
+      tags:
+        - "M04: Announcements and Comments"
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                announcement_title:
+                  type: string
+                announcement_description:
+                  type: string
+              required:
+                - announcement_title
+                - announcement_description
+
+      responses:
+        "302":
+          description: "Redirect after editing the announcement."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Announcement successfully edited. Redirect to announcement page."
+                  value: "/event/{id}/announcement/{id}"
+                302Error:
+                  description: "Failed to edit the announcement. Redirect to announcement edition form."
+                  value: "/event/{id}/announcement/{id}/edit"
+
+  /event/{id}/announcement/{id}/delete:
+    delete:
+      operationId: R406
+      summary: "R406: Delete Announcement"
+      description: "Delete an Announcement. Access: OWN,ADM"
+      tags:
+        - "M04: Announcements and Comments"
+
+      parameters:
+        - in: path
+          name: announcement_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Announcement successfully deleted"
+        "400":
+          description: "Error: Error message via HTTP header"
+        "404":
+          description: "Error: No announcement found"
+
+  /event/{id}/comment/{id}:
+    get:
+      operationId: R407
+      summary: "R407: View Comment"
+      description: "Shows the comment information. Access: OWN,PRT"
+      tags:
+        - "M04: Announcements and Comments"
+
+      parameters:
+        - in: path
+          name: comment_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Ok. Show Comment Page UI"
+
+  /event/{id}/create_comment:
+    get:
+      operationId: R408
+      summary: "R408: Create Event Comment Form"
+      description: "Provide new form to create an event comment. Access: OWN"
+      tags:
+        - "M04: Announcements and Comments"
+
+      parameters:
+        - in: query
+          name: comment_description
+          description: Comment Description
+          schema:
+            type: string
+          required: true
+
+      response:
+        "200":
+          description: "Ok. Show Comment Creation Form UI"
+
+    post:
+      operationId: R409
+      summary: "R409 Event Comment Action"
+      description: "Processes the event comment form submission. Access: OWN,PRT"
+      tags:
+        - "M04: Announcements and Comments"
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                comment_description:
+                  type: string
+              required:
+                - comment_description
+
+      responses:
+        "302":
+          description: "Redirect after processing the comment info submited."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Comment successfully posted. Redirect to comment page."
+                  value: "/event/{id}/comment/{id}"
+                302Error:
+                  description: "Failed to post the comment. Redirect to comment form."
+                  value: "/event/{id}/create_comment"
+
+  /event/{id}/comment/{id}/edit:
+    get:
+      operationId: R410
+      summary: "R410: Edit Comment Form"
+      description: "Provide new form to edit an comment. Access: OWN"
+      tags:
+        - "M04: Announcements and Comments"
+
+      responses:
+        "200":
+          description: "Ok. Show Comment Form UI"
+
+    put:
+      operationId: R411
+      summary: "R411: Edit Comment Action"
+      description: "Processes the comment edition form submission. Access: OWN,PRT"
+      tags:
+        - "M04: Announcements and Comments"
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                comment_description:
+                  type: string
+              required:
+                - comment_description
+
+      responses:
+        "302":
+          description: "Redirect after editing the comment."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Comment successfully edited. Redirect to comment page."
+                  value: "/event/{id}/comment/{id}"
+                302Error:
+                  description: "Failed to edit the comment. Redirect to comment edition form."
+                  value: "/event/{id}/comment/{id}/edit"
+
+  /event/{id}/comment/{id}/delete:
+    delete:
+      operationId: R412
+      summary: "R412: Delete Comment"
+      description: "Delete a comment. Access: OWN,ADM,PRT"
+      tags:
+        - "M04: Announcements and Comments"
+
+      parameters:
+        - in: path
+          name: comment_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Comment successfully deleted"
+        "400":
+          description: "Error: Error message via HTTP header"
+        "404":
+          description: "Error: No comment found"
+
+  /event/{id}/poll/{id}:
+    get:
+      operationId: R413
+      summary: "R413: View Poll"
+      description: "Shows the poll information. Access: OWN,PRT"
+      tags:
+        - "M04: Announcements and Comments"
+
+      parameters:
+        - in: path
+          name: poll_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Ok. Show Poll Page UI"
+
+  /event/{id}/create_poll:
+    get:
+      operationId: R414
+      summary: "R414: Create Event Poll Form"
+      description: "Provide new form to create an event poll. Access: OWN"
+      tags:
+        - "M04: Announcements and Comments"
+
+      parameters:
+        - in: query
+          name: poll_title
+          description: Poll Title
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: poll_description
+          description: Poll Description
+          schema:
+            type: string
+          required: true
+
+      response:
+        "200":
+          description: "Ok. Show Poll Creation Form UI"
+
+    post:
+      operationId: R415
+      summary: "R415: Event Poll Action"
+      description: "Processes the event poll form submission. Access: OWN"
+      tags:
+        - "M04: Announcements and Comments"
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                poll_title:
+                  type: string
+                poll_description:
+                  type: string
+              required:
+                - poll_title
+                - poll_description
+
+      responses:
+        "302":
+          description: "Redirect after processing the poll info submited."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Poll successfully posted. Redirect to poll page."
+                  value: "/event/{id}/poll/{id}"
+                302Error:
+                  description: "Failed to post the poll. Redirect to poll form."
+                  value: "/event/{id}/create_poll"
+
+  /event/{id}/poll/{id}/edit:
+    get:
+      operationId: R416
+      summary: "R416: Edit Poll Form"
+      description: "Provide new form to edit a poll. Access: OWN"
+      tags:
+        - "M04: Announcements and Comments"
+
+      responses:
+        "200":
+          description: "Ok. Show Poll Form UI"
+
+    put:
+      operationId: R417
+      summary: "R417: Edit Poll Action"
+      description: "Processes the poll edition form submission. Access: OWN"
+      tags:
+        - "M04: Announcements and Comments"
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                poll_title:
+                  type: string
+                poll_description:
+                  type: string
+              required:
+                - poll_title
+                - poll_description
+
+      responses:
+        "302":
+          description: "Redirect after editing the poll."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Poll successfully edited. Redirect to poll page."
+                  value: "/event/{id}/poll/{id}"
+                302Error:
+                  description: "Failed to edit the poll. Redirect to poll edition form."
+                  value: "/event/{id}/poll/{id}/edit"
+
+  /event/{id}/poll/{id}/delete:
+    delete:
+      operationId: R418
+      summary: "R418: Delete Poll"
+      description: "Delete an Poll. Access: OWN,ADM"
+      tags:
+        - "M04: Announcements and Comments"
+
+      parameters:
+        - in: path
+          name: poll_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Poll successfully deleted"
+        "400":
+          description: "Error: Error message via HTTP header"
+        "404":
+          description: "Error: No poll found"
+
+  /event/{id}/announcement/{id}/vote:
+    get:
+      operationId: R419
+      summary: "R419: Vote in Announcement Form"
+      description: "Add Vote to an Announcement Form. Access: OWN,PRT"
+      tags:
+        - "M04: Announcements and Comments"
+
+      parameters:
+        - in: query
+          name: vote
+          description: Vote type
+          schema:
+            type: bool
+          required: true
+
+      response:
+        "200":
+          description: "Ok. Show Vote Creation Form UI"
+
+    post:
+      operationId: R420
+      summary: "R420 Event Vote Action"
+      description: "Processes the vote form submission. Access: OWN,PRT"
+      tags:
+        - "M04: Announcements and Comments"
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                vote:
+                  type: bool
+              required:
+                - vote
+
+      responses:
+        "302":
+          description: "Redirect after processing the vote info submited."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Vote successfully added. Redirect to comment page."
+                  value: "/event/{id}/comment/{id}"
+                302Error:
+                  description: "Failed to vote. Redirect to vote form."
+                  value: "  /event/{id}/announcement/{id}/vote"
+
+  /event/{id}/announcement/{id}/vote/{id}/remove:
+    delete:
+      operationId: R421
+      summary: "R421: Remove Vote in Announcement"
+      description: "Remove a comment. Access: OWN,PRT"
+      tags:
+        - "M04: Announcements and Comments"
+
+      parameters:
+        - in: path
+          name: vote_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Vote successfully removed"
+        "400":
+          description: "Error: Error message via HTTP header"
+        "404":
+          description: "Error: No vote found"
+
+  /event/{id}/comment/{id}/vote:
+    get:
+      operationId: R422
+      summary: "R422: Vote in Comment Form"
+      description: "Add Vote to an Comment Form. Access: OWN,PRT"
+      tags:
+        - "M04: Announcements and Comments"
+
+      parameters:
+        - in: query
+          name: vote
+          description: Vote type
+          schema:
+            type: bool
+          required: true
+
+      response:
+        "200":
+          description: "Ok. Show Vote Creation Form UI"
+
+    post:
+      operationId: R423
+      summary: "R423 Event Vote Action"
+      description: "Processes the vote form submission. Access: OWN,PRT"
+      tags:
+        - "M04: Announcements and Comments"
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                vote:
+                  type: bool
+              required:
+                - vote
+
+      responses:
+        "302":
+          description: "Redirect after processing the vote info submited."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Vote successfully added. Redirect to comment page."
+                  value: "/event/{id}/comment/{id}"
+                302Error:
+                  description: "Failed to vote. Redirect to vote form."
+                  value: "  /event/{id}/comment/{id}/vote"
+
+  /event/{id}/comment/{id}/vote/{id}/remove:
+    delete:
+      operationId: R424
+      summary: "R424: Remove Vote in Comment"
+      description: "Remove a comment. Access: OWN,PRT"
+      tags:
+        - "M04: Announcements and Comments"
+
+      parameters:
+        - in: path
+          name: vote_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Vote successfully removed"
+        "400":
+          description: "Error: Error message via HTTP header"
+        "404":
+          description: "Error: No vote found"
+
+
+  /contacts:
+    get:
+      operationId: R501
+      summary: "R501: View Contacts"
+      description: "Show contacts page. Access: PUB"
+      tags:
+        - "M05: User Administration and Static pages"
+
+      responses:
+        "200":
+          description: "Ok. Show Contacts Page UI"
+
+  /about:
+    get:
+      operationId: R502
+      summary: "R502: View About"
+      description: "Show about page. Access: PUB"
+      tags:
+        - "M05: User Administration and Static pages"
+
+      responses:
+        "200":
+          description: "Ok. Show about Page UI"
+
+  /services:
+    get:
+      operationId: R503
+      summary: "R503: View Services"
+      description: "Show services page. Access: PUB"
+      tags:
+        - "M05: User Administration and Static pages"
+
+      responses:
+        "200":
+          description: "Ok. Show Services Page UI"
+
+  /faqs:
+    get:
+      operationId: R504
+      summary: "R504: View FAQS"
+      description: "Show FAQS page. Access: PUB"
+      tags:
+        - "M05: User Administration and Static pages"
+
+      responses:
+        "200":
+          description: "Ok. Show FAQS Page UI"
+
+  /api/users:
+    get:
+      operationId: R505
+      summary: "R505: Search Users API"
+      description: "Searches for users and returns the results as JSON. Access: USR,ADM."
+
+      tags:
+        - "M05: User Administration and Static pages"
+
+      parameters:
+        - in: query
+          name: query
+          description: String to use for full-text search
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: name
+          description: Name of the user
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: email
+          description: Email of the user
+          schema:
+            type: string
+          required: false
+
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    obs:
+                      type: string
+                    year:
+                      type: string
+                    owner:
+                      type: string
+                    type:
+                      type: string
+                example:
+                  - email: black.knigth@gmail.com
+                    username: Black Knigth
+                    profilePicture:
+                    admin: false
+
+  /admin/user/{id}:
+    delete:
+      operationId: R506
+      summary: "R506: Delete User"
+      description: "Delete an user. Access: ADM"
+      tags:
+        - "M05: User Administration and Static pages"
+
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "User successfully deleted"
+        "400":
+          description: "Error: Error message via HTTP header"
+        "404":
+          description: "Error: No user found"
+
+  /admin/create_report:
+    get:
+      operationId: R507
+      summary: "R507: Create Report Form"
+      description: "Provide new form to create a report. Access: ADM"
+      tags:
+        - "M05: User Administration and Static pages"
+
+      parameters:
+        - in: query
+          name: report_title
+          description: Report Title
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: report_description
+          description: Report Description
+          schema:
+            type: string
+          required: true
+
+      response:
+        "200":
+          description: "Ok. Show Report Creation Form UI"
+
+    post:
+      operationId: R508
+      summary: "R508: Report Action"
+      description: "Processes the report form submission. Access: ADM"
+      tags:
+        - "M05: User Administration and Static pages"
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                report_title:
+                  type: string
+                report_description:
+                  type: string
+              required:
+                - report_title
+                - report_description
+
+      responses:
+        "302":
+          description: "Redirect after processing the report info submited."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Report successfully created. Redirect to report page."
+                  value: "/admin/{id}/report/{id}"
+                302Error:
+                  description: "Failed to created the report. Redirect to report form."
+                  value: "/admin/{id}/create_report"
+
+  /admin/{id}/report/{id}/delete:
+    delete:
+      operationId: R509
+      summary: "R509: Delete Report"
+      description: "Delete a Report. Access: ADM"
+      tags:
+        - "M05: User Administration and Static pages"
+
+      parameters:
+        - in: path
+          name: report_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Report successfully deleted"
+        "400":
+          description: "Error: Error message via HTTP header"
+        "404":
+          description: "Error: No report found"

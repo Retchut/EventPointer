@@ -1,20 +1,30 @@
 :root {
-  --background--primary:  #8EB1C7;   /* Pewter Blue  */
+  --background-primary:  #8EB1C7;   /* Pewter Blue  */
   --background-secondary: #000;  /* Black        */
   --foreground-primary:   #000;    /* Black        */
   --foreground-secondary: #8EB1C7;  /* Pewter Blue  */
   --border: #FFF;
+  --background-test: rgb(11, 156, 101);
 }
 
 body {
-  background-color: var(--background);
+  background-color: #FFF;
   color: var(--foreground-primary);
+}
+
+header, footer, section{
+  margin: 1rem;
+  border-radius: 0.5rem;
 }
 
 header, footer {
   background-color: var(--background-secondary);
   color: var(--foreground-secondary);
-  margin: 1rem;
+}
+
+section {
+  background-color: var(--background-primary);
+  color: var(--foreground-primary);
 }
 
 header {
@@ -45,7 +55,7 @@ a.button {
   border: 0.1rem solid var(--border);
   border-radius: 0.4rem;
   margin: 0 1rem;
-  padding: 1rem 3.0rem;
+  padding: 0.5rem 3.0rem;
 }
 
 a.text{

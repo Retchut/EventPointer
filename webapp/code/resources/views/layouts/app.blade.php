@@ -23,34 +23,44 @@
   </head>
   <body>
     <main>
-    <header class="container-fluid">
-        <div class="row">
-          <div class="col-sm-8">
-            <h1><a class="title" href="/">Event Pointer</a></h1>
-          </div>
-          <div class="col d-flex align-items-center">
-            <div class="col">
-              <a class="button" href="/">Browse</a>
+    <header>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-8">
+              <h1><a class="title" href="/">Event Pointer</a></h1>
             </div>
-            <div class="col">
-              <a class="button" href="/">My Page</a>
-            </div>
-            <div class="col">
-              <a class="button" href="/"> Log In </a>
+            <div class="col d-flex align-items-center">
+              <div class="col">
+                <a class="button" href="/">Browse</a>
+              </div>
+              <div class="col">
+                <a class="button" href="/">My Page</a>
+              </div>
+              <div class="col">
+                <a class="button" href="/"> Log In </a>
+              </div>
             </div>
           </div>
         </div>
       </header>
-      <footer class="container-fluid">
-        <div class="row">
-          <div class="col-sm-10">
-            <a class="text" href="/">About</a>
-          </div>
-          <div class="col-sm-1">
-            <a class="text" href="/">Contacts</a>
-          </div>
-          <div class="col-sm-1">
-            <a class="text" href="/">FAQ</a>
+
+
+      <section id="content">
+        @yield('content')
+      </section>
+
+      <footer>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-10">
+              <a class="text" href="/">About</a>
+            </div>
+            <div class="col-sm-1">
+              <a class="text" href="/">Contacts</a>
+            </div>
+            <div class="col-sm-1">
+              <a class="text" href="/">FAQ</a>
+            </div>
           </div>
         </div>
       </footer>

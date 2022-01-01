@@ -12,8 +12,6 @@ body {
 }
 
 header, footer {
-  display: flex;
-  justify-content: space-between;
   background-color: var(--background-secondary);
   color: var(--foreground-secondary);
   margin: 1rem;
@@ -46,12 +44,8 @@ a.button {
   background-color: var(--foreground-secondary);
   border: 0.1rem solid var(--border);
   border-radius: 0.4rem;
-  height: 2rem;
-  line-height: 2rem;
   margin: 0 1rem;
-  padding:0 3.0rem;
-  text-align: center;
-  float: right;
+  padding: 1rem 3.0rem;
 }
 
 a.text{

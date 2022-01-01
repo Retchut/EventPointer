@@ -23,14 +23,24 @@
   <body>
     <main>
       <header>
-        <h1><a href="{{ url('/cards') }}">Thingy!</a></h1>
+        <h1><a href="{{ url('/home') }}">Event Pointer</a></h1>
+        <a class="button" href="{{ url('/browse') }}">browse</a>
+        <a class="button" href="{{ url('/member') }}">my page</a>
+        <!-- if authenticated, shows logout button -->
         @if (Auth::check())
         <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
+        @else
+        <a class="button" href="{{ url('/login') }}"> Log in </a>
         @endif
       </header>
       <section id="content">
         @yield('content')
       </section>
+      <footer>
+        <a class="button" href="{{ url('/about') }}">about</a>
+        <a class="button" href="{{ url('/contacts') }}">contacts</a>
+        <a class="button" href="{{ url('/faq') }}">FAQ</a>
+      </footer>
     </main>
   </body>
 </html>

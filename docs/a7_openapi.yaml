@@ -1636,7 +1636,7 @@ paths:
                     profilePicture:
                     admin: false
 
-  /admin/user/{user_id}:
+  /admin/user/{user_id}/delete:
     delete:
       operationId: R506
       summary: "R506: Delete User"
@@ -1659,10 +1659,30 @@ paths:
         "404":
           description: "Error: No user found"
 
-  /admin/create_report:
+  /admin/report/{report_id}:
     get:
       operationId: R507
-      summary: "R507: Create Report Form"
+      summary: "R507: View Report"
+      description: "Shows the report information. Access: ADM"
+      tags:
+        - "M05: User Administration and Static pages"
+
+      parameters:
+        - in: path
+          name: report_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Ok. Show Report Page UI"
+
+
+  /admin/create_report:
+    get:
+      operationId: R508
+      summary: "R508: Create Report Form"
       description: "Provide new form to create a report. Access: ADM"
       tags:
         - "M05: User Administration and Static pages"
@@ -1686,8 +1706,8 @@ paths:
           description: "Ok. Show Report Creation Form UI"
 
     post:
-      operationId: R508
-      summary: "R508: Report Action"
+      operationId: R509
+      summary: "R509: Report Action"
       description: "Processes the report form submission. Access: ADM"
       tags:
         - "M05: User Administration and Static pages"
@@ -1724,8 +1744,8 @@ paths:
 
   /admin/{admin_id}/report/{report_id}/delete:
     delete:
-      operationId: R509
-      summary: "R509: Delete Report"
+      operationId: R510
+      summary: "R510: Delete Report"
       description: "Delete a Report. Access: ADM"
       tags:
         - "M05: User Administration and Static pages"

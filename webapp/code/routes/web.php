@@ -12,15 +12,17 @@
 */
 
 // Home
-Route::get('home', /*homecontroller*/);
+Route::get('/', 'HomeController@show');
+//Route::get('/home', 'HomeController@show');
+
 
 
 // Authentication
-Route::get('login', /*login form*/);
-Route::post('login', /*login controller*/);
-Route::post('logout', /*logout controller*/);
-Route::get('register', /*register form*/);
-Route::post('register', /*register controller*/);
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('login', 'Auth\LoginController@login');
+Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+Route::post('register', 'Auth\RegisterController@register');
 
 
 // Indiviual Profile
@@ -34,13 +36,13 @@ Route::get('user/{user_id}/create_event', /*create event form*/);
 Route::post('user/{user_id}/create_event', /*create event controller*/);
 Route::get('event/{id}/edit', /*edit event form*/);
 Route::post('event/{event_id}/edit', /*edit event controller*/);
-Route::get('event/{event_id}/', /*delete event controller*/);
+Route::delete('event/{event_id}/', /*delete event controller*/);
 Route::get('event/{event_id}/invite', /*invite to event form*/);
 Route::post('event/{event_id}/invite', /*invite to event controller*/);
 Route::get('user/{user_id}/invite/{invite_id}', /*invitation form*/);
 Route::post('user/{user_id}/invite/{invite_id}', /*invitation controler*/);
 Route::get('event/{event_id}/participants',/*participants controller*/);
-Route::get('event/{event_id}/participants/remove',/*delete participant controller*/);
+Route::delete('event/{event_id}/participants/{participant_id}',/*delete participant controller*/);
 
 //API
 
@@ -58,6 +60,7 @@ Route::get('user/{user_id}/my_participations',/*view my participations controlle
 // Static pages
 Route::get('faq', /*FAQ CONTROLLER*/);
 Route::get('about', /*about CONTROLLER*/);
+Route::get('services', /*services CONTROLLER*/);
 Route::get('contacts', /*contacts CONTROLLER*/);
 
 
@@ -66,12 +69,3 @@ Route::get('admin/user/{user_id}/delete', /*delete user controller*/);
 Route::get('admin/create_report',/*create report form*/);
 Route::post('admin/create_report',/*create report form*/);
 Route::get('admin/report/{report_id}/delete',/*delete report controller*/);
-
-
-
-// Authentication
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('register', 'Auth\RegisterController@register');

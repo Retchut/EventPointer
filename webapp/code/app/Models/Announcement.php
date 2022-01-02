@@ -18,6 +18,6 @@ class Announcement extends Model
 
     public function user()
     {
-        return $this->belongsTo('App/Event_Role', 'idrole');
+        return $this->belongsTo('App\Models\Event_Role', 'idrole');
     }
 }

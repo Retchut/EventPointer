@@ -114,6 +114,11 @@ CREATE INDEX event_state ON event USING hash (state);
 CREATE INDEX end_event ON event USING btree (enddate);
 CREATE INDEX start_event ON event USING btree (startdate);
 
+
+-----------------------------------------
+-- FTS Indexes
+-----------------------------------------
+
 -- Add column to event to store computed ts_vectors.
 ALTER TABLE event
 ADD COLUMN tsvectors TSVECTOR;
@@ -168,6 +173,23 @@ CREATE TRIGGER comment_in_event_poll()
         EXECUTE PROCEDURE comment_in_event_poll();
 END
 
+CREATE FUNCTION delete_comment_in_event_poll() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+        IF EXISTS (SELECT * FROM event, member, event_role WHERE NEW.eventId = event_role.eventId AND NEW.memberId = event_role.memberId AND NEW.event_comment = event_comment) THEN
+           RAISE EXCEPTION 'A member can only delete a comment in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
+        END IF;
+        RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_comment_in_event_poll()
+        BEFORE DELETE ON event_comment
+        FOR EACH ROW
+        EXECUTE PROCEDURE delete_comment_in_event_poll();
+END
+
 
 
 CREATE FUNCTION vote_in_event_poll() RETURNS TRIGGER AS
@@ -187,12 +209,29 @@ CREATE TRIGGER vote_in_event_poll()
         EXECUTE PROCEDURE vote_in_event_poll();
 END
 
+CREATE FUNCTION delete_vote_in_event_poll() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+        IF EXISTS (SELECT * FROM event, member, event_role WHERE NEW.eventId = event_role.eventId AND NEW.memberId = event_role.memberId AND NEW.vote = vote) THEN
+           RAISE EXCEPTION 'A member can only delete a vote in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
+        END IF;
+        RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_vote_in_event_poll()
+        BEFORE DELETE ON vote
+        FOR EACH ROW
+        EXECUTE PROCEDURE delete_vote_in_event_poll();
+END
+
 
  
 CREATE FUNCTION search_event() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM event WHERE NEW.eventId = eventId AND NEW.isPrivate = FALSE) THEN
+        IF EXISTS (SELECT * FROM event WHERE NEW.eventId = eventId AND NEW.isPrivate = TRUE) THEN
            RAISE EXCEPTION ' Private events are not shown in search results.';
         END IF;
         RETURN NEW;
@@ -204,6 +243,23 @@ CREATE TRIGGER search_event()
         BEFORE INSERT OR UPDATE ON event
         FOR EACH ROW
         EXECUTE PROCEDURE search_event();
+END
+
+CREATE FUNCTION private_event_invite_only() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+        IF EXISTS (SELECT * FROM ask_access WHERE NEW.event = event AND NEW.event.isPrivate = TRUE) THEN
+           RAISE EXCEPTION ' Private events are invite only.';
+        END IF;
+        RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER private_event_invite_only()
+        BEFORE INSERT OR UPDATE ON ask_access
+        FOR EACH ROW
+        EXECUTE PROCEDURE private_event_invite_only();
 END
 
 
@@ -243,21 +299,21 @@ CREATE TRIGGER edit_vote()
 END
 
 
-CREATE FUNCTION delete_vote() RETURNS TRIGGER AS
+CREATE FUNCTION delete_account() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM event WHERE NEW.paticipantId = participantId ) THEN
-           RAISE EXCEPTION ' Only participating members can delete their vote on the discussion of events.';
+        IF EXISTS (SELECT * FROM member WHERE NEW.id = id ) THEN
+           RAISE EXCEPTION ' Only members can delete their account.';
         END IF;
         RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER delete_vote()
-        BEFORE DELETE ON vote
+CREATE TRIGGER delete_account()
+        BEFORE DELETE ON member
         FOR EACH ROW
-        EXECUTE PROCEDURE delete_vote();
+        EXECUTE PROCEDURE delete_account();
 END
 
 

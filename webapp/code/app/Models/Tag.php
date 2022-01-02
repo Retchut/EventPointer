@@ -12,6 +12,6 @@ class Tag extends Model
         protected $fillable = ['tagname'];
 
         public function events(){
-            return $this->belongsToMany('App/Event');
+            return $this->belongsToMany('App\Models\Event');
         }
 }

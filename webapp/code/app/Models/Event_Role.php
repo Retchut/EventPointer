@@ -42,12 +42,4 @@ class Event_Role extends Model
         return $this->belongsToMany('App\Event_Role', 'event_role');
     }
 
-    /**
-     * Hosts of the event
-     */
-    public function participants()
-    {
-        return $this->belongsToMany('App\User', 'ticket', 'idevent', 'iduser');
-    }
-
 }

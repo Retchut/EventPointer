@@ -27,18 +27,25 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-sm-8">
-              <h1><a class="title" href="/">Event Pointer</a></h1>
+              <h1><a class="title" href="{{ url('/') }}">Event Pointer</a></h1>
             </div>
             <div class="col d-flex align-items-center">
               <div class="col">
-                <a class="button" href="/">Browse</a>
+                <a class="button" href="{{ url('/browse') }}">Browse</a>
+              </div>
+              @if (Auth::check())
+              <div class="col">
+                <a class="button" href="{{ url('/user/{user_id}') }}">My Page</a>
               </div>
               <div class="col">
-                <a class="button" href="/">My Page</a>
+                <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
               </div>
+              @else
               <div class="col">
-                <a class="button" href="/"> Log In </a>
+                <a class="button" href="{{ url('/login') }}"> Log In </a>
               </div>
+              @endif
+
             </div>
           </div>
         </div>
@@ -52,14 +59,14 @@
       <footer>
         <div class="container-fluid">
           <div class="row">
+            <div class="col-sm-1">
+              <a class="text" href="{{ url('/about') }}">About</a>
+            </div>
             <div class="col-sm-10">
-              <a class="text" href="/">About</a>
+              <a class="text" href="{{ url('/faq') }}">FAQ</a>
             </div>
-            <div class="col-sm-1">
-              <a class="text" href="/">Contacts</a>
-            </div>
-            <div class="col-sm-1">
-              <a class="text" href="/">FAQ</a>
+            <div class="col-sm-1 float-end">
+              <a class="text" href="{{ url('/contacts') }}">Contacts</a>
             </div>
           </div>
         </div>

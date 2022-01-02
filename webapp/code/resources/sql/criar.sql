@@ -1,7 +1,7 @@
 
 
 
- SET search_path TO lbaw2115;
+SET search_path TO lbaw2115;
 -----------------------------------------
 -- Types
 -----------------------------------------
@@ -56,6 +56,27 @@ CREATE TABLE event_role
         eventId INTEGER NOT NULL REFERENCES event(id) ON DELETE RESTRICT ON UPDATE CASCADE,
         isHost BOOLEAN NOT NULL
 );
+
+DROP TABLE IF EXISTS invite CASCADE;
+CREATE TABLE invite
+(
+    id SERIAL PRIMARY KEY,
+    participant INTEGER NOT NULL REFERENCES member(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    host INTEGER NOT NULL REFERENCES member(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    event INTEGER NOT NULL REFERENCES event(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    CHECK (participant <> host)
+);
+
+
+
+DROP TABLE IF EXISTS ask_access CASCADE;
+CREATE TABLE ask_access
+(
+    id SERIAL PRIMARY KEY,
+    participant INTEGER NOT NULL REFERENCES member(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    event INTEGER NOT NULL REFERENCES event(id) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
 
 DROP TABLE IF EXISTS event_announcement CASCADE;
 CREATE TABLE event_announcement

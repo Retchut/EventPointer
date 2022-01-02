@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'About')
+@section('title', 'Admin')
 
 @section('content')
 
-<section id="about">
-    <h1>About</h1>
+<section id="admin">
+    <h1>Admin</h1>
 </section>
 
 @endsection

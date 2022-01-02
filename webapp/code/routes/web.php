@@ -22,34 +22,34 @@ Route::get('browse', 'BrowseController@show');
 Route::get('user/{user_id}', 'UserController@show');
 
 //User Edit
-Route::get('user/{user_id}/edit', /*'UserController@edit'*/);
+Route::get('user/{user_id}/edit', 'EditProfileController@index')->name('edit.show');
 /* Cria-se novo controller para uma nova página para editar, onde se faz depois a edição, e aí sim, chama-se o método edit? */
 
 //User Create Event
-Route::get('user/{user_id}/create_event', /*create event form*/);
-Route::post('user/{user_id}/create_event', /*create event controller*/);
+Route::get('user/{user_id}/create_event', 'EventController@index')->name('create.show');
+Route::post('user/{user_id}/create_event', 'EventController@create')->name('create');
 
-// User Ivite
-Route::get('user/{user_id}/invite/{invite_id}', /*invitation form*/);
-Route::post('user/{user_id}/invite/{invite_id}', /*invitation controler*/);
+// User Invite
+Route::get('user/{user_id}/invite/{invite_id}', 'InviteController@index')->name('create.show');
+Route::post('user/{user_id}/invite/{invite_id}', 'InviteController@create')->name('create');
 
 // User Events
-Route::get('user/{user_id}/my_events',/*view my events controller*/);
+Route::get('user/{user_id}/my_events', 'MyEventsController@index');
 
 // User Participations
 Route::get('user/{user_id}/my_participations',/*view my participations controller*/);
 
 // Event
-Route::get('event/{event_id}', 'EventController@show');
-Route::delete('event/{event_id}/', 'EventController@delete'); /* Missing logic */
+Route::get('event/{event_id}', 'EventController@show')->name('edit.show');
+Route::delete('event/{event_id}/', 'EventController@delete'); 
 
 // Event Edit
-Route::get('event/{event_id}/edit', /*edit event form*/);
-Route::post('event/{event_id}/edit', /*edit event controller*/);
+Route::get('event/{event_id}/edit', 'EditEventController@index')->name('create.show');
+Route::post('event/{event_id}/edit', 'EditEventController@create')->name('create');
 
 // Event Invite
-Route::get('event/{event_id}/invite', /*invite to event form*/);
-Route::post('event/{event_id}/invite', /*invite to event controller*/);
+Route::get('event/{event_id}/invite', 'InvitationController@index')->name('invite.show');
+Route::post('event/{event_id}/invite', 'InvitationController@invite')->name('invite');
 
 // Event Participants
 Route::get('event/{event_id}/participants',/*participants controller*/);
@@ -74,13 +74,13 @@ Route::get('api/users',/*search users controller*/);
 Route::get('admin/{admin_id}', 'AdminController@show');
 
 // Admin Create Report
-Route::get('admin/create_report',/*create report form*/);
-Route::post('admin/create_report',/*create report form*/);
+Route::get('admin/create_report','AdminReportController@index')->name('create.show');
+Route::post('admin/create_report','AdminReportController@create')->name('create');
 
 // Admin manage user
 Route::get('admin/user/{user_id}/', /* admin used edit page contoller */);
-Route::get('admin/user/{user_id}/delete', /*delete user controller*/);
+Route::get('admin/user/{user_id}/delete', 'AdminUserController@remove');
 
 // Admin report
 Route::get('admin/report/{report_id}/',/* see reports controller*/);
-Route::get('admin/report/{report_id}/delete',/*delete report controller*/);
+Route::get('admin/report/{report_id}/delete','AdminReportController@remove');

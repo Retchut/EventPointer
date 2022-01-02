@@ -20,4 +20,5 @@ class UserController extends Controller
       $this->authorize('show', $user);
       return view('pages.user', ['user' => $user]);
     }
+
 }

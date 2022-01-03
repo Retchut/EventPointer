@@ -8,7 +8,7 @@
         <form method="POST" action="{{ route('login') }}">
             {{ csrf_field() }}
             <div class="row">
-                <div class="col-sm-6 m-4 text-boxes">
+                <div class="col-sm-6 m-4">
                     <div class="row">
                         <label for="email">E-mail</label>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
@@ -20,7 +20,7 @@
                     </div>
 
                     <div class="row">
-                    <label for="password" >Password</label>
+                        <label for="password">Password</label>
                         <input id="password" type="password" name="password" required>
                         @if ($errors->has('password'))
                             <span class="error">
@@ -30,7 +30,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-4 m-4 buttons">
+                <div class="col-sm-4 m-4">
                     <div class="row">
                         <label>
                             <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me

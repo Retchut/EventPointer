@@ -36,26 +36,7 @@
                 <h1>Events</h1>
                 <div class="user-events info-div">
                     <!-- TODO: Abstract this into template -->
-                    <div class="row user-event m-3">
-                        <div class="col-sm-6 info-div"><p>Name</p></div>
-                        <div class="col-sm-2 info-div"><p>Date</p></div>
-                        <div class="col-sm-4 info-div"><p>Place</p></div>
-                    </div>
-                    <div class="row user-event m-3">
-                        <div class="col-sm-6 info-div"><p>Name</p></div>
-                        <div class="col-sm-2 info-div"><p>Date</p></div>
-                        <div class="col-sm-4 info-div"><p>Place</p></div>
-                    </div>
-                    <div class="row user-event m-3">
-                        <div class="col-sm-6 info-div"><p>Name</p></div>
-                        <div class="col-sm-2 info-div"><p>Date</p></div>
-                        <div class="col-sm-4 info-div"><p>Place</p></div>
-                    </div>
-                    <div class="row user-event m-3">
-                        <div class="col-sm-6 info-div"><p>Name</p></div>
-                        <div class="col-sm-2 info-div"><p>Date</p></div>
-                        <div class="col-sm-4 info-div"><p>Place</p></div>
-                    </div>
+                    @each('partials.userevent', $event, 'event')
                 </div>
             </div>
 

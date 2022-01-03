@@ -75,6 +75,7 @@ a.text{
 
 input {
   background-color: var(--background-last-plane);
+  color: var(--foreground-primary)
 }
 
 .info-div {

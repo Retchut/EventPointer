@@ -1,0 +1,6 @@
+.user-pic{
+    padding: 0;
+    border: 0.3rem solid var(--border);
+    border-radius: 50% 50%;
+    width: 50%;
+}

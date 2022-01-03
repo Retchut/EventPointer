@@ -26,14 +26,14 @@ class User extends Authenticatable
 {
     use Notifiable;
     public $timestamps  = false;
-    protected $table = 'member';
+    protected $table = 'users';
 
     public $fillable = [
         'id',
         'username',
         'email',
         'pass',
-        'profilePicturUrl',
+        'profilePictureUrl',
         'isAdmin'
     ];
 
@@ -81,11 +81,11 @@ class User extends Authenticatable
      * The events this user owns.
      */
     public function host() {
-        return $this->hasMany('App\Models\Event_Role')->where(['host.ishost', '=', 'true'],['$this->id','=','host.memberid']);
+        return $this->hasMany('App\Models\Event_Role')->where(['host.ishost', '=', 'true'],['$this->id','=','host.userid']);
       }
   
       public function participant() {
-          return $this->hasMany('App\Models\Event_Role')->where(['host.ishost', '=', 'false'],['$this->id','=','host.memberid']);
+          return $this->hasMany('App\Models\Event_Role')->where(['host.ishost', '=', 'false'],['$this->id','=','host.userid']);
       }
   
        /**

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use App\Models\Event;
+
 /**
  * Class User
  * @package App\Models
@@ -74,7 +76,7 @@ class User extends Authenticatable
      **/
     public function reviews()
     {
-        return $this->belongsToMany(\App\Models\Event::class, 'review');
+        return $this->belongsToMany(Event::class, 'review');
     }
 
     /**
@@ -93,7 +95,7 @@ class User extends Authenticatable
        **/
       public function events()
       {
-          return $this->hasMany(\App\Models\Event::class);
+          return $this->hasMany(Event::class);
       }
 
     /**

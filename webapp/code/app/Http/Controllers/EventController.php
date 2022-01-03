@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-use app\Models\Event;
+use App\Models\Event;
 
 class EventController extends Controller
 {
@@ -18,9 +18,9 @@ class EventController extends Controller
      */
     public function show($event_id)
     {
-      $event = Event::find($event_id);
-      $this->authorize('show', $event);
-      return view('pages.event', ['event' => $event]);
+      $events = Event::find($event_id);
+      $this->authorize('show', $events);
+      return view('pages.event', ['event' => $events]);
     }
 
     public function delete(Request $request, $event_id)

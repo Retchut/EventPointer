@@ -423,6 +423,7 @@ insert into users (username, email, pass, profilePictureURL) values ('pmassingha
 insert into users (username, email, pass, profilePictureURL) values ('vsheart', 'jgheorghet@bbc.co.uk', 'ObJwIR', 'https://tinyurl.com/lbawprofilepic');
 insert into users (username, email, pass, profilePictureURL) values ('jpolinu', 'jrollandu@irs.gov', 'g106h5', 'https://tinyurl.com/lbawprofilepic');
 insert into users (username, email, pass, profilePictureURL) values ('sclackersrr', 'ufontenotrr@samsung.com', 'QlPGYB', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilePictureURL) values ('testing', 'testing@testing.com', 'password', 'https://tinyurl.com/lbawprofilepic');
 
 
 insert into event_tag (tagName) values ('Mudo');

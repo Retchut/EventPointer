@@ -1,14 +1,22 @@
 :root {
-  --background-primary:  #8EB1C7;   /* Pewter Blue  */
-  --background-secondary: #000;  /* Black        */
-  --foreground-primary:   #000;    /* Black        */
-  --foreground-secondary: #8EB1C7;  /* Pewter Blue  */
-  --border: #FFF;
+  /*--background-last-plane: #FFF;*/
+  /*--background-primary:  #8EB1C7;   /* Pewter Blue  */
+  /*--background-secondary: #000;  /* Black        */
+  /*--foreground-primary:   #000;    /* Black        */
+  /*--foreground-secondary: #8EB1C7;  /* Pewter Blue  */
+  /*--border: #FFF;*/
+  /*--background-test: rgb(11, 156, 101);*/
+  --background-last-plane: #181a1b;
+  --background-primary:  #325266;
+  --background-secondary: #000;  
+  --foreground-primary:   #e8e6e3;    
+  --foreground-secondary: #325266;
+  --border: #736b5e;
   --background-test: rgb(11, 156, 101);
 }
 
 body {
-  background-color: #FFF;
+  background-color: var(--background-last-plane);
   color: var(--foreground-primary);
 }
 
@@ -40,7 +48,7 @@ h1, h2, h3, h4, h5 {
   margin: 0;
 }
 
-a {
+a, button {
   text-decoration: none;
   white-space: nowrap; 
 }
@@ -50,7 +58,7 @@ a.title{
   float: left;
 }
 
-a.button {
+a.button, button.button {
   color: var(--foreground-primary);
   background-color: var(--foreground-secondary);
   border: 0.1rem solid var(--border);
@@ -63,6 +71,14 @@ a.text{
   color: var(--foreground-secondary);
   margin: 0 1rem;
   font-size: 20px;
+}
+
+input {
+  background-color: var(--background-last-plane);
+}
+
+.info-div {
+  border: 0.1rem solid var(--border);
 }
 
 /* a:hover {

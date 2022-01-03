@@ -7,10 +7,16 @@
 <section id="faq">
     <h1>FAQ</h1>
     <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Risus nullam eget felis eget nunc lobortis. Id donec ultrices tincidunt arcu non sodales neque sodales. Mi ipsum faucibus vitae aliquet nec ullamcorper sit. Ac felis donec et odio pellentesque diam. Amet cursus sit amet dictum sit amet justo donec. Convallis posuere morbi leo urna. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. Donec pretium vulputate sapien nec. Et netus et malesuada fames. Semper risus in hendrerit gravida rutrum quisque non.
+        Here you can see the most frequent asked questions.
     </p>
     <p>
-        Iaculis nunc sed augue lacus viverra vitae. Vestibulum lectus mauris ultrices eros in cursus turpis. At tempor commodo ullamcorper a lacus vestibulum. Purus viverra accumsan in nisl nisi scelerisque. Tellus orci ac auctor augue mauris augue. Faucibus in ornare quam viverra orci sagittis eu volutpat. Eu non diam phasellus vestibulum lorem sed risus ultricies. Praesent elementum facilisis leo vel. Augue neque gravida in fermentum. Donec enim diam vulputate ut pharetra sit amet aliquam id. Etiam tempor orci eu lobortis elementum nibh tellus. Convallis convallis tellus id interdum velit laoreet. In aliquam sem fringilla ut morbi tincidunt augue interdum velit.
+        How do I become a member? You have to create an account and then you are ready to start attending our events.
+    </p>
+    <p>
+        How can I attend an event? If the event is public, you can browse currently available public events and then make a request for access to the event. The host will take care of this part. If the event is private, you can only attend if you have an invitation.
+    </p>
+    <p>
+        How do I comment or vote in a discusion of an event? If you are a participant of that event, you can make, edit and delete discussion comments and also vote.
     </p>
 </section>
 

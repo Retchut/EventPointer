@@ -5,13 +5,32 @@
 @section('content')
 
 <section id="contacts">
-    <h1>Contacts</h1>
+    <h1>Contact Us</h1>
+    <hr>
+
+<!-- Content Row -->
+<div class="row pb-3">
+  <!-- Map Column -->
+  <div class="col-md-8">
+    <!-- Embedded Google Map -->
+    <iframe width="100%" height="400px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?hl=en&amp;ie=UTF8&amp;ll=41.177967,-8.5960284&amp;t=m&amp;z=15&amp;output=embed"></iframe>
+  </div>
+  <!-- Contact Details Column -->
+  <div class="col-md-4">
+    <h3>Contact details</h3>
     <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Risus nullam eget felis eget nunc lobortis. Id donec ultrices tincidunt arcu non sodales neque sodales. Mi ipsum faucibus vitae aliquet nec ullamcorper sit. Ac felis donec et odio pellentesque diam. Amet cursus sit amet dictum sit amet justo donec. Convallis posuere morbi leo urna. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. Donec pretium vulputate sapien nec. Et netus et malesuada fames. Semper risus in hendrerit gravida rutrum quisque non.
+      LBAW21 Group 15 @ Faculdade de Engenharia (FEUP)<br>Rua Dr. Roberto Frias<br>4200-465 PORTO<br>
     </p>
-    <p>
-        Iaculis nunc sed augue lacus viverra vitae. Vestibulum lectus mauris ultrices eros in cursus turpis. At tempor commodo ullamcorper a lacus vestibulum. Purus viverra accumsan in nisl nisi scelerisque. Tellus orci ac auctor augue mauris augue. Faucibus in ornare quam viverra orci sagittis eu volutpat. Eu non diam phasellus vestibulum lorem sed risus ultricies. Praesent elementum facilisis leo vel. Augue neque gravida in fermentum. Donec enim diam vulputate ut pharetra sit amet aliquam id. Etiam tempor orci eu lobortis elementum nibh tellus. Convallis convallis tellus id interdum velit laoreet. In aliquam sem fringilla ut morbi tincidunt augue interdum velit.
+    <p><i class="fa fa-phone"></i>
+      <abbr title="Phone"></abbr> (+351) 22 508 14 00</p>
+    <p><i class="fa fa-envelope"></i>
+      <abbr title="Email"></abbr> <a href="mailto:up201904977@edu.fe.up.pt ">up201904977@edu.fe.up.pt </a>
     </p>
-</section>
+    <p><i class="fa fa-clock"></i>
+      <abbr title="Hours"></abbr> Monday - Sunday: 24h</p>
+  </div>
+</div>
+</div>
+
 
 @endsection

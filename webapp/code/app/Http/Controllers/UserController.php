@@ -19,7 +19,7 @@ class UserController extends Controller
     public function show($user_id)
     {
       $user = User::find($user_id);
-      $this->authorize('show', $user);
+      // $this->authorize('show', $user);
       return view('pages.user', ['user' => $user]);
     }
 

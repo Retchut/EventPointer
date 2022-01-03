@@ -25,8 +25,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable;
-    public $table = 'users';
     public $timestamps  = false;
+    protected $table = 'member';
+
     public $fillable = [
         'id',
         'username',
@@ -56,7 +57,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'pass', 'remember_token',
+        'pass', 'remember_token', isAdmin,
     ];
 
     /**
@@ -77,20 +78,23 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     **/
-    public function events()
-    {
-        return $this->hasMany(\App\Models\Event::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     **/
-    public function loans()
-    {
-        return $this->hasMany(\App\Models\Comment::class);
-    }
+     * The events this user owns.
+     */
+    public function host() {
+        return $this->hasMany('App\Models\Event_Role')->where(['host.ishost', '=', 'true'],['$this->id','=','host.memberid']);
+      }
+  
+      public function participant() {
+          return $this->hasMany('App\Models\Event_Role')->where(['host.ishost', '=', 'false'],['$this->id','=','host.memberid']);
+      }
+  
+       /**
+       * @return \Illuminate\Database\Eloquent\Relations\HasMany
+       **/
+      public function events()
+      {
+          return $this->hasMany(\App\Models\Event::class);
+      }
 
     /**
      * @return mixed
@@ -98,5 +102,9 @@ class User extends Authenticatable
     public function isAdmin() {
         return $this->is_admin;
     }
+
+    protected $attributes = [
+        'isadmin' => false,
+    ];
 }
 

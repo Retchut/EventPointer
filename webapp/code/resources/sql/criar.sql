@@ -305,7 +305,7 @@ END
 CREATE FUNCTION edit_vote() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM event WHERE NEW.paticipantId = participantId ) THEN
+        IF EXISTS (SELECT * FROM event WHERE votes, event_role, member WHERE NEW.event_roleId = vote.event_roleId AND event_role.memberId = member.id) THEN
            RAISE EXCEPTION ' Only participating members can edit and vote on their own comments on the discussion of events.';
         END IF;
         RETURN NEW;
@@ -323,7 +323,7 @@ END
 CREATE FUNCTION delete_account() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM member WHERE NEW.id = id ) THEN
+        IF EXISTS (SELECT * FROM member WHERE NEW.id = member.id ) THEN
            RAISE EXCEPTION ' Only members can delete their account.';
         END IF;
         RETURN NEW;
@@ -337,6 +337,23 @@ CREATE TRIGGER delete_account()
         EXECUTE PROCEDURE delete_account();
 END
 
+
+CREATE FUNCTION delete_account_effects() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+        IF EXISTS (SELECT * FROM votes, event_role, member WHERE NEW.event_roleId = vote.event_roleId AND event_role.memberId = member.id) THEN
+           RAISE EXCEPTION ' Only votes from previous member will be deleted.';
+        END IF;
+        RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_account_effects()
+        AFTER DELETE ON member
+        FOR EACH ROW
+        EXECUTE PROCEDURE delete_account_effects();
+END
 
 -----------------------------------------
 -- Transactions

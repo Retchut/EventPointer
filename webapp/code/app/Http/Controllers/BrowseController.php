@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\Event;
+
 class BrowseController extends Controller
 {
     /**
@@ -15,6 +17,8 @@ class BrowseController extends Controller
      */
     public function show()
     {
-      return view('pages.browse');
+      $events = Event::all();
+      // $this->authorize('show', $events);
+      return view('pages.browse', ['event' => $events]);
     }
 }

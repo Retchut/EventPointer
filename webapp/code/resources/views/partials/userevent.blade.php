@@ -1,8 +1,10 @@
 <article class="event" data-id="{{ $event->id }}">
-<div class="row user-event m-3">
-    <div class="col-sm-9"><h2 class="font-weight-bold pb-2">{{$event->eventname}}</h2></div>
-    <div class="col-sm-3"><h3 class="font-weight-bold pb-2"><a class="button" href="{{ url('/event/'.$event->id) }}">Find out more</a></h2></div>
-    <div class="row pb-1">
+<div class="row user-event m-3 info-div rounded">
+    <div class="col-sm-9">
+        <div class="row">
+            <h2 class="font-weight-bold pb-2">{{$event->eventname}}</h2>
+        </div>
+        <div class="row pb-1">
         <div class="col-1 text-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-event text-center"  viewBox="0 0 16 16">
                 <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
@@ -20,5 +22,12 @@
             <h5> {{$event->place}} </h5>
         </div>
     </div>
+    </div>
+    <div class="col-sm-3 d-flex align-items-center">
+        <h3 class="font-weight-bold pb-2">
+            <a class="button" href="{{ url('/event/'.$event->id) }}">Find out more</a>
+        </h3>
+    </div>
+    
 </div>
 </article>

@@ -23,8 +23,8 @@ class UserController extends Controller
       // $this->authorize('show', $user);
       // return view('pages.user', ['event' => $events]);
       return view('pages.user', [ 'userdata' => 
-      [$user, $events] ]
-    );
+        [$user, $events] ]
+      );
     }
 
 }

@@ -14,12 +14,13 @@ class Event_Role extends Model
 
     public function event()
     {
-        return $this->belongsTo('App\Event');
+        return $this->belongsTo('App\Models\Event');
     }
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        // return $this->belongsToMany(User::class);
+        return $this->belongsTo('App\Models\User');
     }
 
     /*public function comments()

@@ -85,27 +85,23 @@ class User extends Authenticatable
      */
     public function host() {
         return $this->hasMany('App\Models\Event_Role')->where(['host.ishost', '=', 'true'],['$this->id','=','host.userid']);
-      }
+    }
   
-      public function participant() {
-          return $this->hasMany('App\Models\Event_Role')->where(['host.ishost', '=', 'false'],['$this->id','=','host.userid']);
-      }
+    public function participant() {
+        return $this->hasMany('App\Models\Event_Role')->where(['host.ishost', '=', 'false'],['$this->id','=','host.userid']);
+    }
   
-       /**
-       * @return \Illuminate\Database\Eloquent\Relations\HasMany
-       **/
-      public function events($user_id)
-      {
-            $eventrole = Event_Role::all();
-            // $events = array();
-            // foreach($eventrole as $er){
-            //     if($er->use)
-            //     array_push($events, $er);
-            // }
-            // unset($er);
-            // return Event::whereBelongsTo($user_id)->get();
-            return Event::all();
-      }
+    public function events($user_id)
+    {
+        $eventroles = Event_Role::all();
+        $events = array();
+        foreach($eventroles as $er){
+            if($er->userid == $user_id){
+                    array_push($events, Event::find($er->eventid));
+            }
+        }
+        return $events;
+    }
 
     /**
      * @return mixed

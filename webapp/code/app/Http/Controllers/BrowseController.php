@@ -17,8 +17,8 @@ class BrowseController extends Controller
      */
     public function show()
     {
-      $event = Event::all();
+      $events = Event::all();
       // $this->authorize('show', $events);
-      return view('pages.browse', ['event' => $event]);
+      return view('pages.browse', ['event' => $events]);
     }
 }

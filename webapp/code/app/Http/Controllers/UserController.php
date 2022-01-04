@@ -19,9 +19,9 @@ class UserController extends Controller
     public function show($user_id)
     {
       $user = User::find($user_id);
-      $events = $user->events();
+      $events = $user->events($user_id);
       // $this->authorize('show', $user);
-      return view('pages.user', $user, $events->get());
+      return view('pages.user', $user, ['event' => $events]);
     }
 
 }

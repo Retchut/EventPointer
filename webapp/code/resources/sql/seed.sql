@@ -393,36 +393,36 @@ CREATE TRIGGER delete_account_effects
 -- Population
 -----------------------------------------
 
-insert into users (username, email, pass, profilepictureurl,isadmin) values ('dcastillon0', 'flathwell0@forbes.com', 'password', 'https://tinyurl.com/lbawprofilepic',true);
-insert into users (username, email, pass, profilepictureurl,isadmin) values ('dfrowde1', 'nboulde1@netvibes.com', 'password', 'https://tinyurl.com/lbawprofilepic',true);
-insert into users (username, email, pass, profilepictureurl,isadmin) values ('chutson2', 'caddey2@illinois.edu', 'password', 'https://tinyurl.com/lbawprofilepic',true);
-insert into users (username, email, pass, profilepictureurl,isadmin) values ('bdarlasson3', 'mdawton3@google.com', 'password', 'https://tinyurl.com/lbawprofilepic',true);
-insert into users (username, email, pass, profilepictureurl,isadmin) values ('bdawson4', 'bredbourn4@baidu.com', 'password', 'https://tinyurl.com/lbawprofilepic',true);
-insert into users (username, email, pass, profilepictureurl) values ('bleitche5', 'hbowler5@mlb.com', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('lcreaser6', 'kfowells6@usnews.com', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('mdacres7', 'tmcgown7@miibeian.gov.cn', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('faslott8', 'lgallally8@desdev.cn', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('saery9', 'kgrovier9@printfriendly.com', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('kdonovina', 'wtavenera@rambler.ru', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('rsimenetb', 'jmarshamb@mashable.com', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('ssumnallc', 'clomasc@bbb.org', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('eboundeyd', 'kkieltyd@dell.com', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('rkimburyf', 'abazeleyf@posterous.com', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('sortigag', 'phachetteg@chicagotribune.com', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('hbuscombeh', 'kpatriah@answers.com', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('tbaishi', 'dcammackei@webs.com', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('rblanshardj', 'iferencj@nytimes.com', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('lplatfootk', 'idumberellk@mit.edu', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('sceschinil', 'lserchwelll@google.co.jp', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('mmottleym', 'pcasbournem@loc.gov', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('cknyvettn', 'ceveredn@nytimes.com', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('nsvaninio', 'ssmedleyo@umich.edu', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('ckaganq', 'mandreuttiq@nifty.com', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('rmanachr', 'bschlagtmansr@cocolog-nifty.com', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('pmassinghams', 'bcuvleys@miibeian.gov.cn', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('vsheart', 'jgheorghet@bbc.co.uk', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('jpolinu', 'jrollandu@irs.gov', 'password', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilepictureurl) values ('sclackersrr', 'ufontenotrr@samsung.com', 'password', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl,isadmin) values ('dcastillon0', 'flathwell0@forbes.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic',true);
+insert into users (username, email, pass, profilepictureurl,isadmin) values ('dfrowde1', 'nboulde1@netvibes.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic',true);
+insert into users (username, email, pass, profilepictureurl,isadmin) values ('chutson2', 'caddey2@illinois.edu', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic',true);
+insert into users (username, email, pass, profilepictureurl,isadmin) values ('bdarlasson3', 'mdawton3@google.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic',true);
+insert into users (username, email, pass, profilepictureurl,isadmin) values ('bdawson4', 'bredbourn4@baidu.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic',true);
+insert into users (username, email, pass, profilepictureurl) values ('bleitche5', 'hbowler5@mlb.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('lcreaser6', 'kfowells6@usnews.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('mdacres7', 'tmcgown7@miibeian.gov.cn', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('faslott8', 'lgallally8@desdev.cn', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('saery9', 'kgrovier9@printfriendly.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('kdonovina', 'wtavenera@rambler.ru', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('rsimenetb', 'jmarshamb@mashable.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('ssumnallc', 'clomasc@bbb.org', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('eboundeyd', 'kkieltyd@dell.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('rkimburyf', 'abazeleyf@posterous.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('sortigag', 'phachetteg@chicagotribune.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('hbuscombeh', 'kpatriah@answers.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('tbaishi', 'dcammackei@webs.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('rblanshardj', 'iferencj@nytimes.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('lplatfootk', 'idumberellk@mit.edu', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('sceschinil', 'lserchwelll@google.co.jp', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('mmottleym', 'pcasbournem@loc.gov', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('cknyvettn', 'ceveredn@nytimes.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('nsvaninio', 'ssmedleyo@umich.edu', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('ckaganq', 'mandreuttiq@nifty.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('rmanachr', 'bschlagtmansr@cocolog-nifty.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('pmassinghams', 'bcuvleys@miibeian.gov.cn', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('vsheart', 'jgheorghet@bbc.co.uk', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('jpolinu', 'jrollandu@irs.gov', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, pass, profilepictureurl) values ('sclackersrr', 'ufontenotrr@samsung.com', '$2y$10$8JesrQ86/39U6MnY0BI0Oub4bFQCNZHkxx14KnfBgL3c0O/VZ9NwS', 'https://tinyurl.com/lbawprofilepic');
 insert into users (username, email, pass, profilepictureurl) values ('testing', 'testing@testing.com', '$2a$10$ng7OkqvhULpQvSfrvj/L1uoiQqJwjyQ/AKVptFMGA9YuToigxJsse', 'https://tinyurl.com/lbawprofilepic');
 
 

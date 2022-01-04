@@ -37,17 +37,14 @@
                         </label>
                     </div>
 
-                    <div class="row">
-                        <button type="submit button">
-                            Login
-                        </button>
-                    </div>
-
-                    <div class="row">
-                        <a class="button button-outline" href="{{ route('register') }}">Register</a>
-                    </div>
-
+            
                 </div>
+            </div>
+            <div class="row-sm-2 d-flex justify-content-center">
+                <button type="submit button">
+                Login
+                    </button>
+                    <a class="button button-outline" href="{{ route('register') }}">Register</a>
             </div>
         </form>
     </div>

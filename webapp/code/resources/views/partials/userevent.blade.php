@@ -1,8 +1,5 @@
 <article class="event" data-id="{{ $event->id }}">
 <div class="row user-event m-3">
-    <!-- <div class="col-sm-6 info-div"><p>{{$event->eventname}}</p></div>
-    <div class="col-sm-2 info-div"><p>{{$event->startdate}}</p></div>
-    <div class="col-sm-4 info-div"><p>{{$event->place}}</p></div> -->
     <div class="col-sm-9"><h2 class="font-weight-bold pb-2">{{$event->eventname}}</h2></div>
     <div class="col-sm-3"><h3 class="font-weight-bold pb-2"><a class="button" href="{{ url('/event/'.$event->id) }}">Find out more</a></h2></div>
     <div class="row pb-1">

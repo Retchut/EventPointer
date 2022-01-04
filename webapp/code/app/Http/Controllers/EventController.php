@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-use app\Models\Event;
+use App\Models\Event;
 
 class EventController extends Controller
 {
@@ -18,9 +18,9 @@ class EventController extends Controller
      */
     public function show($event_id)
     {
-      $event = Event::find($event_id);
-      $this->authorize('show', $event);
-      return view('pages.event', ['event' => $event]);
+      $events = Event::find($event_id);
+      $this->authorize('show', $events);
+      return view('pages.event', ['event' => $events]);
     }
 
     public function delete(Request $request, $event_id)
@@ -30,7 +30,7 @@ class EventController extends Controller
       $this->authorize('delete', $event);
       $event->delete();
 
-      return $event;
+      return $event; //home??
     }
 
     public function index()
@@ -55,14 +55,14 @@ class EventController extends Controller
             $event->isPrivate = $request->input('isPrivate');
             $event->save();
 
-            $picture = $request->file('cover');
-            $extension = $picture->getClientOriginalExtension();
-            $path = $event->id . '.' . $extension;
-            Storage::disk('public')->put('/event/' . $path,  File::get($picture));
-            $photo = new Photo();
-            $photo->name = $path;
-            $photo->idevent = $event->id;
-            $photo->save();
+            //$picture = $request->file('cover');
+            //$extension = $picture->getClientOriginalExtension();
+            //$path = $event->id . '.' . $extension;
+            //Storage::disk('public')->put('/event/' . $path,  File::get($picture));
+            //$photo = new Photo();
+            //$photo->name = $path;
+            //$photo->idevent = $event->id;
+            //$photo->save();
 
             $event_host = new EventHost();
             $this->authorize('create', Auth::user());

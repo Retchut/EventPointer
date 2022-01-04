@@ -36,7 +36,7 @@
                 <h1>Events</h1>
                 <div class="user-events info-div">
                     <!-- TODO: Abstract this into template -->
-                    @each('partials.userevent', $event, 'event')
+                    @each('partials.userevent', $events, 'event')
                 </div>
             </div>
 

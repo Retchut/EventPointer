@@ -17,9 +17,9 @@ class Event_Role extends Model
         return $this->belongsTo('App\Event', 'eventid');
     }
 
-    public function member()
+    public function user()
     {
-        return $this->belongsTo('App\Member', 'memberid');
+        return $this->belongsTo('App\User', 'userid');
     }
 
     /*public function comments()

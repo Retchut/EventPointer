@@ -36,11 +36,10 @@
 
         <div class="col-md-2 w-75 border rounded py-2 bg-light text-dark align-center">
             <h3 class="m-1">Events:</h3>
-            @foreach ($eventg as $eventG)
+            @foreach ($event as $event)
             <div>
                 <h3>{{$event->name}}</h3>
                 <h2>{{$event->startdate}} - {{$event->enddate}}  in {{$event->place}}</h2>
-
             </div>
             @endforeach
 

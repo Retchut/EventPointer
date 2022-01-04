@@ -12,8 +12,8 @@ CREATE TYPE EventState AS ENUM ('Scheduled','Ongoing','Canceled','Finished');
 -- Tables
 -----------------------------------------
 
-DROP TABLE IF EXISTS users CASCADE;
-CREATE TABLE users
+DROP TABLE IF EXISTS member CASCADE;
+CREATE TABLE member
 (
     id SERIAL PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,
@@ -53,7 +53,7 @@ DROP TABLE IF EXISTS event_role CASCADE;
 CREATE TABLE event_role
 (
         id SERIAL PRIMARY KEY,
-        usersId INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+        memberId INTEGER NOT NULL REFERENCES member(id) ON DELETE RESTRICT ON UPDATE CASCADE,
         eventId INTEGER NOT NULL REFERENCES eventG(id) ON DELETE RESTRICT ON UPDATE CASCADE,
         isHost BOOLEAN NOT NULL
 );
@@ -62,8 +62,8 @@ DROP TABLE IF EXISTS invite CASCADE;
 CREATE TABLE invite
 (
     id SERIAL PRIMARY KEY,
-    participant INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    host INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    participant INTEGER NOT NULL REFERENCES member(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    host INTEGER NOT NULL REFERENCES member(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     eventId INTEGER NOT NULL REFERENCES eventG(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     CHECK (participant <> host)
 );
@@ -74,7 +74,7 @@ DROP TABLE IF EXISTS ask_access CASCADE;
 CREATE TABLE ask_access
 (
     id SERIAL PRIMARY KEY,
-    participant INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    participant INTEGER NOT NULL REFERENCES member(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     eventId INTEGER NOT NULL REFERENCES eventG(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -189,8 +189,8 @@ DROP FUNCTION IF EXISTS comment_in_event_poll() CASCADE;
 CREATE FUNCTION comment_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventG INNER JOIN event_role ON eventG.id = event_role.eventId INNER JOIN users ON event_role.usersId = users.id WHERE NEW.eventG.id = event_role.eventId AND NEW.users.id = event_role.usersId) THEN
-           RAISE EXCEPTION 'A users can only comment in an event poll, if he is enrolled in that specific event.';
+        IF EXISTS (SELECT * FROM eventG INNER JOIN event_role ON eventG.id = event_role.eventId INNER JOIN member ON event_role.memberId = member.id WHERE NEW.eventG.id = event_role.eventId AND NEW.member.id = event_role.memberId) THEN
+           RAISE EXCEPTION 'A member can only comment in an event poll, if he is enrolled in that specific event.';
         END IF;
         RETURN NEW;
 END
@@ -208,8 +208,8 @@ DROP FUNCTION IF EXISTS delete_comment_in_event_poll() CASCADE;
 CREATE FUNCTION delete_comment_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventG INNER JOIN event_role ON eventG.id = event_role.eventId INNER JOIN users ON event_role.usersId = users.id WHERE NEW.eventG.id = event_role.eventId AND NEW.users.id = event_role.usersId) THEN
-           RAISE EXCEPTION 'A users can only delete a comment in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
+        IF EXISTS (SELECT * FROM eventG INNER JOIN event_role ON eventG.id = event_role.eventId INNER JOIN member ON event_role.memberId = member.id WHERE NEW.eventG.id = event_role.eventId AND NEW.member.id = event_role.memberId) THEN
+           RAISE EXCEPTION 'A member can only delete a comment in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
         END IF;
         RETURN NEW;
 END
@@ -227,8 +227,8 @@ CREATE TRIGGER delete_comment_in_event_poll
 --CREATE FUNCTION vote_in_event_poll() RETURNS TRIGGER AS
 --$BODY$
 --BEGIN
---        IF EXISTS (SELECT * FROM event_poll INNER JOIN event_role ON role_id = event_role.eventId INNER JOIN users ON event_role.usersId = users.id WHERE NEW.role_id = event_role.eventId AND NEW.users.id = event_role.usersId) THEN
---           RAISE EXCEPTION 'A users can only vote in an event poll, if he is enrolled in that specific event.';
+--        IF EXISTS (SELECT * FROM event_poll INNER JOIN event_role ON role_id = event_role.eventId INNER JOIN member ON event_role.memberId = member.id WHERE NEW.role_id = event_role.eventId AND NEW.member.id = event_role.memberId) THEN
+--           RAISE EXCEPTION 'A member can only vote in an event poll, if he is enrolled in that specific event.';
 --        END IF;
 --        RETURN NEW;
 --END
@@ -246,8 +246,8 @@ DROP FUNCTION IF EXISTS delete_vote_in_event_poll() CASCADE;
 CREATE FUNCTION delete_vote_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventG INNER JOIN event_role ON eventG.id = event_role.eventId INNER JOIN users ON event_role.usersId = users.id WHERE NEW.eventG.id = event_role.eventId AND NEW.users.id = event_role.usersId) THEN
-           RAISE EXCEPTION 'A users can only delete a vote in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
+        IF EXISTS (SELECT * FROM eventG INNER JOIN event_role ON eventG.id = event_role.eventId INNER JOIN member ON event_role.memberId = member.id WHERE NEW.eventG.id = event_role.eventId AND NEW.member.id = event_role.memberId) THEN
+           RAISE EXCEPTION 'A member can only delete a vote in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
         END IF;
         RETURN NEW;
 END
@@ -322,8 +322,8 @@ DROP FUNCTION IF EXISTS edit_vote() CASCADE;
 CREATE FUNCTION edit_vote() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventG INNER JOIN event_role ON eventG.id = event_role.eventId INNER JOIN users ON event_role.usersId = users.id WHERE NEW.eventG.id = event_role.eventId AND NEW.users.id = event_role.usersId) THEN
-           RAISE EXCEPTION ' Only participating userss can edit and vote on their own comments on the discussion of events.';
+        IF EXISTS (SELECT * FROM eventG INNER JOIN event_role ON eventG.id = event_role.eventId INNER JOIN member ON event_role.memberId = member.id WHERE NEW.eventG.id = event_role.eventId AND NEW.member.id = event_role.memberId) THEN
+           RAISE EXCEPTION ' Only participating members can edit and vote on their own comments on the discussion of events.';
         END IF;
         RETURN NEW;
 END
@@ -341,17 +341,17 @@ DROP FUNCTION IF EXISTS delete_account() CASCADE;
 CREATE FUNCTION delete_account() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM users WHERE NEW.id = users.id ) THEN
-           RAISE EXCEPTION ' Only userss can delete their account.';
+        IF EXISTS (SELECT * FROM member WHERE NEW.id = member.id ) THEN
+           RAISE EXCEPTION ' Only members can delete their account.';
         END IF;
         RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS delete_acount ON users CASCADE;
+DROP TRIGGER IF EXISTS delete_acount ON member CASCADE;
 CREATE TRIGGER delete_account
-        BEFORE DELETE ON users
+        BEFORE DELETE ON member
         FOR EACH ROW
         EXECUTE PROCEDURE delete_account();
 
@@ -360,17 +360,17 @@ DROP FUNCTION IF EXISTS delete_account_effects() CASCADE;
 CREATE FUNCTION delete_account_effects() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM vote INNER JOIN event_role ON vote.event_roleId = event_role.id INNER JOIN users ON users.id = event_role.usersId WHERE NEW.event_roleId = vote.event_roleId AND event_role.usersId = users.id) THEN
-           RAISE EXCEPTION 'Only votes from previous users will be deleted.';
+        IF EXISTS (SELECT * FROM vote INNER JOIN event_role ON vote.event_roleId = event_role.id INNER JOIN member ON member.id = event_role.memberId WHERE NEW.event_roleId = vote.event_roleId AND event_role.memberId = member.id) THEN
+           RAISE EXCEPTION 'Only votes from previous member will be deleted.';
         END IF;
         RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS delete_account_effects ON users CASCADE;
+DROP TRIGGER IF EXISTS delete_account_effects ON member CASCADE;
 CREATE TRIGGER delete_account_effects
-        AFTER DELETE ON users
+        AFTER DELETE ON member
         FOR EACH ROW
         EXECUTE PROCEDURE delete_account_effects();
 
@@ -380,12 +380,12 @@ CREATE TRIGGER delete_account_effects
 -----------------------------------------
 
 --BEGIN TRANSACTION
-    --SELECT COUNT (*) AS users_found FROM users WHERE username= $username
-    --IF users_found = 0
+    --SELECT COUNT (*) AS member_found FROM member WHERE username= $username
+    --IF member_found = 0
     --BEGIN
         --RETURN ERROR_NOT_FOUND
     --END                 
-    --DELETE FROM users WHERE username = $username        
+    --DELETE FROM member WHERE username = $username        
 --COMMIT TRANSACTION
 
 
@@ -393,37 +393,36 @@ CREATE TRIGGER delete_account_effects
 -- Population
 -----------------------------------------
 
-insert into users (username, email, pass, profilePictureURL,isAdmin) values ('dcastillon0', 'flathwell0@forbes.com', '12345', 'https://tinyurl.com/lbawprofilepic',true);
-insert into users (username, email, pass, profilePictureURL,isAdmin) values ('dfrowde1', 'nboulde1@netvibes.com', 'S3LRguOh', 'https://tinyurl.com/lbawprofilepic',true);
-insert into users (username, email, pass, profilePictureURL,isAdmin) values ('chutson2', 'caddey2@illinois.edu', 'pKbhn3Fao', 'https://tinyurl.com/lbawprofilepic',true);
-insert into users (username, email, pass, profilePictureURL,isAdmin) values ('bdarlasson3', 'mdawton3@google.com', '5mmgeLg', 'https://tinyurl.com/lbawprofilepic',true);
-insert into users (username, email, pass, profilePictureURL,isAdmin) values ('bdawson4', 'bredbourn4@baidu.com', 'XMzcdUd', 'https://tinyurl.com/lbawprofilepic',true);
-insert into users (username, email, pass, profilePictureURL) values ('bleitche5', 'hbowler5@mlb.com', 'KqY83M', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('lcreaser6', 'kfowells6@usnews.com', 'fEP8siNLEpbz', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('mdacres7', 'tmcgown7@miibeian.gov.cn', 'kx2N7FPNX', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('faslott8', 'lgallally8@desdev.cn', 'bfFVPHyJB3', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('saery9', 'kgrovier9@printfriendly.com', 'xmleMqcDfbD', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('kdonovina', 'wtavenera@rambler.ru', 'q6yJBp', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('rsimenetb', 'jmarshamb@mashable.com', 'thtHVztR', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('ssumnallc', 'clomasc@bbb.org', '30nso5C', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('eboundeyd', 'kkieltyd@dell.com', 'YaHo9XyW', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('rkimburyf', 'abazeleyf@posterous.com', 'OZnQnxv', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('sortigag', 'phachetteg@chicagotribune.com', '7I5aabwy', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('hbuscombeh', 'kpatriah@answers.com', 'iTB9rStR', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('tbaishi', 'dcammackei@webs.com', 'Ia0pZmeL', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('rblanshardj', 'iferencj@nytimes.com', 'QlYzZJ', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('lplatfootk', 'idumberellk@mit.edu', 'YnLf479EQ', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('sceschinil', 'lserchwelll@google.co.jp', 'CQRA7vokR2a', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('mmottleym', 'pcasbournem@loc.gov', '7jaIC4', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('cknyvettn', 'ceveredn@nytimes.com', 'nwcB2EH4', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('nsvaninio', 'ssmedleyo@umich.edu', 'YLCQgeaq83', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('ckaganq', 'mandreuttiq@nifty.com', 'vgsrrbe', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('rmanachr', 'bschlagtmansr@cocolog-nifty.com', 'kOWzzJ', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('pmassinghams', 'bcuvleys@miibeian.gov.cn', 'YWmG4l', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('vsheart', 'jgheorghet@bbc.co.uk', 'ObJwIR', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('jpolinu', 'jrollandu@irs.gov', 'g106h5', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('sclackersrr', 'ufontenotrr@samsung.com', 'QlPGYB', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, pass, profilePictureURL) values ('testing', 'testing@testing.com', 'password', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL,isAdmin) values ('dcastillon0', 'flathwell0@forbes.com', '12345', 'https://tinyurl.com/lbawprofilepic',true);
+insert into member (username, email, pass, profilePictureURL,isAdmin) values ('dfrowde1', 'nboulde1@netvibes.com', 'S3LRguOh', 'https://tinyurl.com/lbawprofilepic',true);
+insert into member (username, email, pass, profilePictureURL,isAdmin) values ('chutson2', 'caddey2@illinois.edu', 'pKbhn3Fao', 'https://tinyurl.com/lbawprofilepic',true);
+insert into member (username, email, pass, profilePictureURL,isAdmin) values ('bdarlasson3', 'mdawton3@google.com', '5mmgeLg', 'https://tinyurl.com/lbawprofilepic',true);
+insert into member (username, email, pass, profilePictureURL,isAdmin) values ('bdawson4', 'bredbourn4@baidu.com', 'XMzcdUd', 'https://tinyurl.com/lbawprofilepic',true);
+insert into member (username, email, pass, profilePictureURL) values ('bleitche5', 'hbowler5@mlb.com', 'KqY83M', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('lcreaser6', 'kfowells6@usnews.com', 'fEP8siNLEpbz', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('mdacres7', 'tmcgown7@miibeian.gov.cn', 'kx2N7FPNX', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('faslott8', 'lgallally8@desdev.cn', 'bfFVPHyJB3', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('saery9', 'kgrovier9@printfriendly.com', 'xmleMqcDfbD', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('kdonovina', 'wtavenera@rambler.ru', 'q6yJBp', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('rsimenetb', 'jmarshamb@mashable.com', 'thtHVztR', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('ssumnallc', 'clomasc@bbb.org', '30nso5C', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('eboundeyd', 'kkieltyd@dell.com', 'YaHo9XyW', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('rkimburyf', 'abazeleyf@posterous.com', 'OZnQnxv', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('sortigag', 'phachetteg@chicagotribune.com', '7I5aabwy', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('hbuscombeh', 'kpatriah@answers.com', 'iTB9rStR', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('tbaishi', 'dcammackei@webs.com', 'Ia0pZmeL', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('rblanshardj', 'iferencj@nytimes.com', 'QlYzZJ', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('lplatfootk', 'idumberellk@mit.edu', 'YnLf479EQ', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('sceschinil', 'lserchwelll@google.co.jp', 'CQRA7vokR2a', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('mmottleym', 'pcasbournem@loc.gov', '7jaIC4', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('cknyvettn', 'ceveredn@nytimes.com', 'nwcB2EH4', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('nsvaninio', 'ssmedleyo@umich.edu', 'YLCQgeaq83', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('ckaganq', 'mandreuttiq@nifty.com', 'vgsrrbe', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('rmanachr', 'bschlagtmansr@cocolog-nifty.com', 'kOWzzJ', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('pmassinghams', 'bcuvleys@miibeian.gov.cn', 'YWmG4l', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('vsheart', 'jgheorghet@bbc.co.uk', 'ObJwIR', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('jpolinu', 'jrollandu@irs.gov', 'g106h5', 'https://tinyurl.com/lbawprofilepic');
+insert into member (username, email, pass, profilePictureURL) values ('sclackersrr', 'ufontenotrr@samsung.com', 'QlPGYB', 'https://tinyurl.com/lbawprofilepic');
 
 
 insert into event_tag (tagName) values ('Mudo');
@@ -480,56 +479,56 @@ insert into eventG (eventName, startDate, endDate, place, duration, eventState, 
 insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Synthyris laciniata (A. Gray) Rydb.',  '2021-01-01', '2021-04-28', 'Sidi Yahia el Gharb', 103.45, 'Canceled', 8);
 
 
-insert into event_role (usersId, eventId, isHost) values (19, 1, true);
-insert into event_role (usersId, eventId, isHost) values (8, 4, false);
-insert into event_role (usersId, eventId, isHost) values (5, 18, true);
-insert into event_role (usersId, eventId, isHost) values (4, 17, false);
-insert into event_role (usersId, eventId, isHost) values (27, 25, true);
-insert into event_role (usersId, eventId, isHost) values (15, 17, false);
-insert into event_role (usersId, eventId, isHost) values (30, 10, true);
-insert into event_role (usersId, eventId, isHost) values (4, 21, true);
-insert into event_role (usersId, eventId, isHost) values (7, 11, true);
-insert into event_role (usersId, eventId, isHost) values (25, 29, false);
-insert into event_role (usersId, eventId, isHost) values (16, 7, false);
-insert into event_role (usersId, eventId, isHost) values (4, 12, true);
-insert into event_role (usersId, eventId, isHost) values (27, 23, false);
-insert into event_role (usersId, eventId, isHost) values (3, 26, true);
-insert into event_role (usersId, eventId, isHost) values (2, 6, true);
-insert into event_role (usersId, eventId, isHost) values (15, 12, false);
-insert into event_role (usersId, eventId, isHost) values (23, 30, true);
-insert into event_role (usersId, eventId, isHost) values (10, 28, false);
-insert into event_role (usersId, eventId, isHost) values (14, 14, false);
-insert into event_role (usersId, eventId, isHost) values (8, 2, true);
-insert into event_role (usersId, eventId, isHost) values (23, 22, true);
-insert into event_role (usersId, eventId, isHost) values (14, 1, false);
-insert into event_role (usersId, eventId, isHost) values (1, 27, true);
-insert into event_role (usersId, eventId, isHost) values (17, 5, true);
-insert into event_role (usersId, eventId, isHost) values (28, 27, false);
-insert into event_role (usersId, eventId, isHost) values (10, 22, false);
-insert into event_role (usersId, eventId, isHost) values (12, 11, false);
-insert into event_role (usersId, eventId, isHost) values (18, 13, false);
-insert into event_role (usersId, eventId, isHost) values (21, 23, true);
-insert into event_role (usersId, eventId, isHost) values (23, 9, true);
-insert into event_role (usersId, eventId, isHost) values (16, 20, true);
-insert into event_role (usersId, eventId, isHost) values (15, 21, false);
-insert into event_role (usersId, eventId, isHost) values (28, 21, false);
-insert into event_role (usersId, eventId, isHost) values (16, 9, false);
-insert into event_role (usersId, eventId, isHost) values (30, 19, true);
-insert into event_role (usersId, eventId, isHost) values (2, 24, true);
-insert into event_role (usersId, eventId, isHost) values (22, 17, true);
-insert into event_role (usersId, eventId, isHost) values (9, 7, true);
-insert into event_role (usersId, eventId, isHost) values (21, 15, true);
-insert into event_role (usersId, eventId, isHost) values (21, 8, true);
-insert into event_role (usersId, eventId, isHost) values (23, 1, false);
-insert into event_role (usersId, eventId, isHost) values (1, 16, true);
-insert into event_role (usersId, eventId, isHost) values (30, 7, false);
-insert into event_role (usersId, eventId, isHost) values (10, 15, false);
-insert into event_role (usersId, eventId, isHost) values (25, 14, true);
-insert into event_role (usersId, eventId, isHost) values (10, 13, true);
-insert into event_role (usersId, eventId, isHost) values (24, 28, true);
-insert into event_role (usersId, eventId, isHost) values (28, 3, true);
-insert into event_role (usersId, eventId, isHost) values (25, 4, true);
-insert into event_role (usersId, eventId, isHost) values (8, 29, true);
+insert into event_role (memberId, eventId, isHost) values (19, 1, true);
+insert into event_role (memberId, eventId, isHost) values (8, 4, false);
+insert into event_role (memberId, eventId, isHost) values (5, 18, true);
+insert into event_role (memberId, eventId, isHost) values (4, 17, false);
+insert into event_role (memberId, eventId, isHost) values (27, 25, true);
+insert into event_role (memberId, eventId, isHost) values (15, 17, false);
+insert into event_role (memberId, eventId, isHost) values (30, 10, true);
+insert into event_role (memberId, eventId, isHost) values (4, 21, true);
+insert into event_role (memberId, eventId, isHost) values (7, 11, true);
+insert into event_role (memberId, eventId, isHost) values (25, 29, false);
+insert into event_role (memberId, eventId, isHost) values (16, 7, false);
+insert into event_role (memberId, eventId, isHost) values (4, 12, true);
+insert into event_role (memberId, eventId, isHost) values (27, 23, false);
+insert into event_role (memberId, eventId, isHost) values (3, 26, true);
+insert into event_role (memberId, eventId, isHost) values (2, 6, true);
+insert into event_role (memberId, eventId, isHost) values (15, 12, false);
+insert into event_role (memberId, eventId, isHost) values (23, 30, true);
+insert into event_role (memberId, eventId, isHost) values (10, 28, false);
+insert into event_role (memberId, eventId, isHost) values (14, 14, false);
+insert into event_role (memberId, eventId, isHost) values (8, 2, true);
+insert into event_role (memberId, eventId, isHost) values (23, 22, true);
+insert into event_role (memberId, eventId, isHost) values (14, 1, false);
+insert into event_role (memberId, eventId, isHost) values (1, 27, true);
+insert into event_role (memberId, eventId, isHost) values (17, 5, true);
+insert into event_role (memberId, eventId, isHost) values (28, 27, false);
+insert into event_role (memberId, eventId, isHost) values (10, 22, false);
+insert into event_role (memberId, eventId, isHost) values (12, 11, false);
+insert into event_role (memberId, eventId, isHost) values (18, 13, false);
+insert into event_role (memberId, eventId, isHost) values (21, 23, true);
+insert into event_role (memberId, eventId, isHost) values (23, 9, true);
+insert into event_role (memberId, eventId, isHost) values (16, 20, true);
+insert into event_role (memberId, eventId, isHost) values (15, 21, false);
+insert into event_role (memberId, eventId, isHost) values (28, 21, false);
+insert into event_role (memberId, eventId, isHost) values (16, 9, false);
+insert into event_role (memberId, eventId, isHost) values (30, 19, true);
+insert into event_role (memberId, eventId, isHost) values (2, 24, true);
+insert into event_role (memberId, eventId, isHost) values (22, 17, true);
+insert into event_role (memberId, eventId, isHost) values (9, 7, true);
+insert into event_role (memberId, eventId, isHost) values (21, 15, true);
+insert into event_role (memberId, eventId, isHost) values (21, 8, true);
+insert into event_role (memberId, eventId, isHost) values (23, 1, false);
+insert into event_role (memberId, eventId, isHost) values (1, 16, true);
+insert into event_role (memberId, eventId, isHost) values (30, 7, false);
+insert into event_role (memberId, eventId, isHost) values (10, 15, false);
+insert into event_role (memberId, eventId, isHost) values (25, 14, true);
+insert into event_role (memberId, eventId, isHost) values (10, 13, true);
+insert into event_role (memberId, eventId, isHost) values (24, 28, true);
+insert into event_role (memberId, eventId, isHost) values (28, 3, true);
+insert into event_role (memberId, eventId, isHost) values (25, 4, true);
+insert into event_role (memberId, eventId, isHost) values (8, 29, true);
 
 
 insert into invite (participant, host, eventId) values (30, 19, 1);

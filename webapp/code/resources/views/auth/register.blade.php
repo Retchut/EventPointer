@@ -46,11 +46,12 @@
                 </div>
                 </div>
 
-                  
+                <div class="row-sm-2 d-flex justify-content-center">
                   <button type="submit">
                     Register
                   </button>
                   <a class="button button-outline" href="{{ route('login') }}">Login</a>
+                </div>
               </form>
 </section>
 @endsection

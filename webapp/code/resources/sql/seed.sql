@@ -5,8 +5,8 @@ SET search_path TO lbaw2115;
 -----------------------------------------
 -- Types
 -----------------------------------------
-DROP TYPE  IF EXISTS EventState CASCADE;
-CREATE TYPE EventState AS ENUM ('Scheduled','Ongoing','Canceled','Finished');
+DROP TYPE  IF EXISTS eventstate CASCADE;
+CREATE TYPE eventstate AS ENUM ('Scheduled','Ongoing','Canceled','Finished');
 
 -----------------------------------------
 -- Tables
@@ -42,7 +42,7 @@ CREATE TABLE eventg
     enddate DATE NOT NULL,
     place TEXT NOT NULL,
     duration FLOAT NOT NULL,
-    eventstate EventState NOT NULL,
+    eventstate eventstate NOT NULL,
     isprivate BOOLEAN NOT NULL DEFAULT FALSE,
     tagid INTEGER NOT NULL REFERENCES event_tag(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT dates CHECK (startdate < enddate)

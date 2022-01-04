@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use App\Models\Event;
+use App\Models\Event_Role;
 
 /**
  * Class User
@@ -95,7 +96,8 @@ class User extends Authenticatable
        **/
       public function events()
       {
-          return $this->hasMany(Event::class);
+            Event_Role::find($user_id)
+            return $this->hasMany(Event::class);
       }
 
     /**

@@ -33,8 +33,8 @@ CREATE TABLE event_tag
 );
 
 
-DROP TABLE IF EXISTS eventG CASCADE;
-CREATE TABLE eventG
+DROP TABLE IF EXISTS eventg CASCADE;
+CREATE TABLE eventg
 (
     id SERIAL PRIMARY KEY,
     eventName TEXT NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE event_role
 (
         id SERIAL PRIMARY KEY,
         usersId INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-        eventId INTEGER NOT NULL REFERENCES eventG(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+        eventId INTEGER NOT NULL REFERENCES eventg(id) ON DELETE RESTRICT ON UPDATE CASCADE,
         isHost BOOLEAN NOT NULL
 );
 
@@ -64,7 +64,7 @@ CREATE TABLE invite
     id SERIAL PRIMARY KEY,
     participant INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     host INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    eventId INTEGER NOT NULL REFERENCES eventG(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    eventId INTEGER NOT NULL REFERENCES eventg(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     CHECK (participant <> host)
 );
 
@@ -75,7 +75,7 @@ CREATE TABLE ask_access
 (
     id SERIAL PRIMARY KEY,
     participant INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    eventId INTEGER NOT NULL REFERENCES eventG(id) ON DELETE RESTRICT ON UPDATE CASCADE
+    eventId INTEGER NOT NULL REFERENCES eventg(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 
@@ -132,13 +132,13 @@ CREATE TABLE vote
 -- Indexes
 -----------------------------------------
 DROP INDEX IF EXISTS event_state CASCADE;
-CREATE INDEX event_state ON eventG USING hash (eventState);
+CREATE INDEX event_state ON eventg USING hash (eventState);
 
 DROP INDEX IF EXISTS end_event CASCADE;
-CREATE INDEX end_event ON eventG USING btree (enddate);
+CREATE INDEX end_event ON eventg USING btree (enddate);
 
 DROP INDEX IF EXISTS start_event CASCADE;
-CREATE INDEX start_event ON eventG USING btree (startdate);
+CREATE INDEX start_event ON eventg USING btree (startdate);
 
 
 -----------------------------------------
@@ -146,7 +146,7 @@ CREATE INDEX start_event ON eventG USING btree (startdate);
 -----------------------------------------
 
 -- Add column to event to store computed ts_vectors.
-ALTER TABLE eventG
+ALTER TABLE eventg
 ADD COLUMN tsvectors TSVECTOR;
 
 -- Create a function to automatically update ts_vectors.
@@ -170,16 +170,16 @@ END $$
 LANGUAGE plpgsql;
 
 -- Create a trigger before insert or update on event.
-DROP TRIGGER IF EXISTS event_search_update ON eventG CASCADE;
+DROP TRIGGER IF EXISTS event_search_update ON eventg CASCADE;
 CREATE TRIGGER event_search_update
- BEFORE INSERT OR UPDATE ON eventG
+ BEFORE INSERT OR UPDATE ON eventg
  FOR EACH ROW
  EXECUTE PROCEDURE event_search_update();
 
 
 -- Finally, create a GIN index for ts_vectors.
 DROP INDEX IF EXISTS search_idx CASCADE;
-CREATE INDEX search_idx ON eventG USING GIN (tsvectors);
+CREATE INDEX search_idx ON eventg USING GIN (tsvectors);
 
 -----------------------------------------
 -- Triggers
@@ -189,7 +189,7 @@ DROP FUNCTION IF EXISTS comment_in_event_poll() CASCADE;
 CREATE FUNCTION comment_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventG INNER JOIN event_role ON eventG.id = event_role.eventId INNER JOIN users ON event_role.usersId = users.id WHERE NEW.eventG.id = event_role.eventId AND NEW.users.id = event_role.usersId) THEN
+        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventId INNER JOIN users ON event_role.usersId = users.id WHERE NEW.eventg.id = event_role.eventId AND NEW.users.id = event_role.usersId) THEN
            RAISE EXCEPTION 'A users can only comment in an event poll, if he is enrolled in that specific event.';
         END IF;
         RETURN NEW;
@@ -208,7 +208,7 @@ DROP FUNCTION IF EXISTS delete_comment_in_event_poll() CASCADE;
 CREATE FUNCTION delete_comment_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventG INNER JOIN event_role ON eventG.id = event_role.eventId INNER JOIN users ON event_role.usersId = users.id WHERE NEW.eventG.id = event_role.eventId AND NEW.users.id = event_role.usersId) THEN
+        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventId INNER JOIN users ON event_role.usersId = users.id WHERE NEW.eventg.id = event_role.eventId AND NEW.users.id = event_role.usersId) THEN
            RAISE EXCEPTION 'A users can only delete a comment in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
         END IF;
         RETURN NEW;
@@ -246,7 +246,7 @@ DROP FUNCTION IF EXISTS delete_vote_in_event_poll() CASCADE;
 CREATE FUNCTION delete_vote_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventG INNER JOIN event_role ON eventG.id = event_role.eventId INNER JOIN users ON event_role.usersId = users.id WHERE NEW.eventG.id = event_role.eventId AND NEW.users.id = event_role.usersId) THEN
+        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventId INNER JOIN users ON event_role.usersId = users.id WHERE NEW.eventg.id = event_role.eventId AND NEW.users.id = event_role.usersId) THEN
            RAISE EXCEPTION 'A users can only delete a vote in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
         END IF;
         RETURN NEW;
@@ -265,7 +265,7 @@ DROP FUNCTION IF EXISTS search_event() CASCADE;
 CREATE FUNCTION search_event() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventG WHERE NEW.id = id AND NEW.isPrivate = TRUE) THEN
+        IF EXISTS (SELECT * FROM eventg WHERE NEW.id = id AND NEW.isPrivate = TRUE) THEN
            RAISE EXCEPTION ' Private events are not shown in search results.';
         END IF;
         RETURN NEW;
@@ -275,7 +275,7 @@ LANGUAGE plpgsql;
 
 DROP TRIGGER IF EXISTS search_event ON event CASCADE;
 CREATE TRIGGER search_event
-        BEFORE INSERT OR UPDATE ON eventG
+        BEFORE INSERT OR UPDATE ON eventg
         FOR EACH ROW
         EXECUTE PROCEDURE search_event();
 
@@ -303,7 +303,7 @@ DROP FUNCTION IF EXISTS event_schedule() CASCADE;
 CREATE FUNCTION event_schedule() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventG WHERE NEW.id = id AND NEW.endDate > NEW.startDate AND NEW.startDate > CURRENT_DATE ) THEN
+        IF EXISTS (SELECT * FROM eventg WHERE NEW.id = id AND NEW.endDate > NEW.startDate AND NEW.startDate > CURRENT_DATE ) THEN
            RAISE EXCEPTION ' Ending event date needs to be after starting date and starting date also needs to be at least 1 day after event creation.';
         END IF;
         RETURN NEW;
@@ -311,9 +311,9 @@ END
 $BODY$
 LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS event_schedule ON eventG CASCADE;
+DROP TRIGGER IF EXISTS event_schedule ON eventg CASCADE;
 CREATE TRIGGER event_schedule
-        BEFORE INSERT OR UPDATE ON eventG
+        BEFORE INSERT OR UPDATE ON eventg
         FOR EACH ROW
         EXECUTE PROCEDURE event_schedule();
 
@@ -322,7 +322,7 @@ DROP FUNCTION IF EXISTS edit_vote() CASCADE;
 CREATE FUNCTION edit_vote() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventG INNER JOIN event_role ON eventG.id = event_role.eventId INNER JOIN users ON event_role.usersId = users.id WHERE NEW.eventG.id = event_role.eventId AND NEW.users.id = event_role.usersId) THEN
+        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventId INNER JOIN users ON event_role.usersId = users.id WHERE NEW.eventg.id = event_role.eventId AND NEW.users.id = event_role.usersId) THEN
            RAISE EXCEPTION ' Only participating userss can edit and vote on their own comments on the discussion of events.';
         END IF;
         RETURN NEW;
@@ -448,36 +448,36 @@ insert into event_tag (tagName) values ('Aivee');
 insert into event_tag (tagName) values ('Edgeclub');
 
 
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Cuscuta denticulata Engelm. var. denticulata', '2021-05-31', '2021-08-24', 'Changqiao', 89.08, 'Scheduled', 1);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Quercus havardii Rydb. var. tuckeri S.L. Welsh', '2021-11-14', '2021-12-02', 'Sololá', 168.33, 'Scheduled', 2);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Brosimum Sw.','2021-02-18', '2021-10-15', 'Luyang', 75.24, 'Scheduled', 3);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Symphyotrichum pilosum (Willd.) G.L. Nesom', '2020-12-05', '2021-04-25', 'Chemnitz', 130.78, 'Scheduled', 4);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Aphanes arvensis L.', '2021-06-26', '2021-08-21', 'Mersa Matruh', 79.0, 'Scheduled', 5);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Cyanea purpurellifolia (Rock) Lammers, Givnish & Systma', '2021-06-15', '2021-07-17', 'Uherce Mineralne', 144.41, 'Scheduled', 6);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Cryptantha kelseyana Greene', '2021-11-16', '2021-12-05', 'Oral', 118.39, 'Scheduled', 7);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Gladiolus ×colvillei Sweet',  '2021-01-20', '2021-03-14', 'Jingning Chengguanzhen', 159.48, 'Scheduled', 8);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Arundina Blume', '2021-10-12', '2021-11-24', 'San Buenaventura', 24.53, 'Scheduled', 9);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Cypripedium kentuckiense C.F. Reed', '2021-04-20', '2021-12-12', 'Tanjungluar', 132.92, 'Scheduled', 10);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Livistona chinensis (Jacq.) R. Br. ex Mart.', '2021-09-03', '2021-09-24', 'Lagodekhi', 32.93, 'Scheduled', 11);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Schoenolirion Torr. ex Durand', '2021-02-05', '2021-02-18', 'Masku', 177.85, 'Scheduled', 12);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Trifolium israeliticum Zohary & Katzn.', '2021-07-26', '2021-12-06', 'Yabēlo', 167.64, 'Scheduled', 13);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Trisetum canescens Buckley',  '2021-05-19', '2021-06-07', 'Tarczyn', 58.07, 'Scheduled', 14);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Draba borealis DC.', '2021-09-17', '2021-09-20', 'Gualeguaychú', 174.62, 'Scheduled', 15);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Sparganium eurycarpum Engelm.', '2020-10-26', '2021-01-27', 'Itagüí', 34.47, 'Scheduled', 16);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Agave xylonacantha Salm-Dyck', '2021-05-11', '2021-10-30', 'Chengxiang', 146.11, 'Scheduled', 17);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Plagiomnium drummondii (Bruch & Schimp.) T. Kop.', '2021-02-28', '2021-09-29', 'Zavitinsk', 82.66, 'Scheduled', 18);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Thelypodium integrifolium (Nutt.) Endl. ex Walp. ssp. complanatum Al-Shehbaz', '2021-04-15', '2021-06-12', 'Batiovo', 91.19, 'Scheduled', 19);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Cotoneaster melanocarpus G. Lodd.', '2021-01-08', '2021-10-14', 'Looc', 86.41, 'Scheduled', 20);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Carex fracta Mack.',  '2021-03-22', '2021-10-02', 'Chak Two Hundred Forty-Nine TDA', 85.98, 'Finished', 4);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Aucuba Thunb.',  '2021-04-25', '2021-08-09', 'Sovetskaya Gavan’', 120.63, 'Finished', 1);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Alternanthera paronychioides A. St.-Hil. var. amazonica Huber','2021-01-21', '2021-01-24', 'Kembangkerang Lauk Timur', 120.17, 'Finished', 2);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Thelopsis melathelia Nyl.', '2021-01-01', '2021-01-06', 'Sankt Lorenzen im Mürztal', 147.2, 'Finished', 3);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Dubautia ciliolata (DC.) D.D. Keck ssp. glutinosa G.D. Carr', '2021-01-24', '2021-02-06', 'Nürnberg', 172.16, 'Canceled', 3);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Calycadenia villosa DC.',  '2021-01-04', '2021-06-07', 'Piedras', 90.02, 'Canceled', 4);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Arthonia pruinosella Nyl.', '2021-08-21', '2021-08-22', 'Cipari', 31.49, 'Canceled', 5);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Masonhalea Karnefelt',  '2021-01-03', '2021-05-22', 'Krosno Odrzańskie', 110.15, 'Canceled', 6);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Triphora craigheadii Luer',  '2021-01-25', '2021-03-20', 'Ampasimanolotra', 128.34, 'Canceled', 7);
-insert into eventG (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Synthyris laciniata (A. Gray) Rydb.',  '2021-01-01', '2021-04-28', 'Sidi Yahia el Gharb', 103.45, 'Canceled', 8);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Cuscuta denticulata Engelm. var. denticulata', '2021-05-31', '2021-08-24', 'Changqiao', 89.08, 'Scheduled', 1);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Quercus havardii Rydb. var. tuckeri S.L. Welsh', '2021-11-14', '2021-12-02', 'Sololá', 168.33, 'Scheduled', 2);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Brosimum Sw.','2021-02-18', '2021-10-15', 'Luyang', 75.24, 'Scheduled', 3);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Symphyotrichum pilosum (Willd.) G.L. Nesom', '2020-12-05', '2021-04-25', 'Chemnitz', 130.78, 'Scheduled', 4);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Aphanes arvensis L.', '2021-06-26', '2021-08-21', 'Mersa Matruh', 79.0, 'Scheduled', 5);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Cyanea purpurellifolia (Rock) Lammers, Givnish & Systma', '2021-06-15', '2021-07-17', 'Uherce Mineralne', 144.41, 'Scheduled', 6);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Cryptantha kelseyana Greene', '2021-11-16', '2021-12-05', 'Oral', 118.39, 'Scheduled', 7);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Gladiolus ×colvillei Sweet',  '2021-01-20', '2021-03-14', 'Jingning Chengguanzhen', 159.48, 'Scheduled', 8);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Arundina Blume', '2021-10-12', '2021-11-24', 'San Buenaventura', 24.53, 'Scheduled', 9);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Cypripedium kentuckiense C.F. Reed', '2021-04-20', '2021-12-12', 'Tanjungluar', 132.92, 'Scheduled', 10);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Livistona chinensis (Jacq.) R. Br. ex Mart.', '2021-09-03', '2021-09-24', 'Lagodekhi', 32.93, 'Scheduled', 11);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Schoenolirion Torr. ex Durand', '2021-02-05', '2021-02-18', 'Masku', 177.85, 'Scheduled', 12);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Trifolium israeliticum Zohary & Katzn.', '2021-07-26', '2021-12-06', 'Yabēlo', 167.64, 'Scheduled', 13);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Trisetum canescens Buckley',  '2021-05-19', '2021-06-07', 'Tarczyn', 58.07, 'Scheduled', 14);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Draba borealis DC.', '2021-09-17', '2021-09-20', 'Gualeguaychú', 174.62, 'Scheduled', 15);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Sparganium eurycarpum Engelm.', '2020-10-26', '2021-01-27', 'Itagüí', 34.47, 'Scheduled', 16);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Agave xylonacantha Salm-Dyck', '2021-05-11', '2021-10-30', 'Chengxiang', 146.11, 'Scheduled', 17);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Plagiomnium drummondii (Bruch & Schimp.) T. Kop.', '2021-02-28', '2021-09-29', 'Zavitinsk', 82.66, 'Scheduled', 18);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Thelypodium integrifolium (Nutt.) Endl. ex Walp. ssp. complanatum Al-Shehbaz', '2021-04-15', '2021-06-12', 'Batiovo', 91.19, 'Scheduled', 19);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Cotoneaster melanocarpus G. Lodd.', '2021-01-08', '2021-10-14', 'Looc', 86.41, 'Scheduled', 20);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Carex fracta Mack.',  '2021-03-22', '2021-10-02', 'Chak Two Hundred Forty-Nine TDA', 85.98, 'Finished', 4);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Aucuba Thunb.',  '2021-04-25', '2021-08-09', 'Sovetskaya Gavan’', 120.63, 'Finished', 1);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Alternanthera paronychioides A. St.-Hil. var. amazonica Huber','2021-01-21', '2021-01-24', 'Kembangkerang Lauk Timur', 120.17, 'Finished', 2);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Thelopsis melathelia Nyl.', '2021-01-01', '2021-01-06', 'Sankt Lorenzen im Mürztal', 147.2, 'Finished', 3);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Dubautia ciliolata (DC.) D.D. Keck ssp. glutinosa G.D. Carr', '2021-01-24', '2021-02-06', 'Nürnberg', 172.16, 'Canceled', 3);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Calycadenia villosa DC.',  '2021-01-04', '2021-06-07', 'Piedras', 90.02, 'Canceled', 4);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Arthonia pruinosella Nyl.', '2021-08-21', '2021-08-22', 'Cipari', 31.49, 'Canceled', 5);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Masonhalea Karnefelt',  '2021-01-03', '2021-05-22', 'Krosno Odrzańskie', 110.15, 'Canceled', 6);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Triphora craigheadii Luer',  '2021-01-25', '2021-03-20', 'Ampasimanolotra', 128.34, 'Canceled', 7);
+insert into eventg (eventName, startDate, endDate, place, duration, eventState, tagID) values ('Synthyris laciniata (A. Gray) Rydb.',  '2021-01-01', '2021-04-28', 'Sidi Yahia el Gharb', 103.45, 'Canceled', 8);
 
 
 insert into event_role (usersId, eventId, isHost) values (19, 1, true);

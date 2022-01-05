@@ -48,8 +48,12 @@ Route::get('event/{event_id}', 'EventController@show')->name('edit.show');
 Route::delete('event/{event_id}/', 'EventController@delete'); 
 
 // Event Edit
-Route::get('event/{event_id}/edit', 'EditEventController@index')->name('create.show');
-Route::post('event/{event_id}/edit', 'EditEventController@create')->name('create');
+Route::get('event/{event_id}/edit', 'EditEventController@show')->name('edit.show');
+Route::post('event/{event_id}/edit', 'EditEventController@update');
+
+// Report Event
+Route::get('event/{event_id}/report', 'ReportEventController@index')->name('create.show');
+Route::post('event/{event_id}/report', 'ReportEventController@create')->name('create');
 
 // Event Invite
 Route::get('event/{event_id}/invite', 'InvitationController@index')->name('invite.show');

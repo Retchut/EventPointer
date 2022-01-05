@@ -23,6 +23,8 @@ class EventController extends Controller
       return view('pages.event', ['event' => $events]);
     }
 
+    
+
     public function delete(Request $request, $event_id)
     {
       $event = Event::find($event_id);

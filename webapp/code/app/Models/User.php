@@ -37,8 +37,9 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'profilePictureUrl',
-        'isAdmin'
+        'profilepictureurl',
+        'isadmin',
+        'registrationdate'
     ];
 
     /**
@@ -51,8 +52,8 @@ class User extends Authenticatable
         'username' => 'string',
         'email' => 'string',
         'password' => 'string',
-        'profilePictureUrl' => 'string',
-        'isAdmin' => 'boolean'
+        'profilepictureurl' => 'string',
+        'isadmin' => 'boolean'
     ];
 
     /**

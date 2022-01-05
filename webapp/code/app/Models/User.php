@@ -99,12 +99,7 @@ class User extends Authenticatable
     public function events($user_id)
     {
         $eventroles = Event_Role::all();
-        $events = array();
-        foreach($eventroles as $er){
-            if($er->userid == $user_id){
-                    array_push($events, Event::find($er->eventid));
-            }
-        }
+        $events = Event_Role::where('userid', $user_id)->join('eventg', 'event_role.eventid', '=', 'eventg.id')->get();
         return $events;
     }
 

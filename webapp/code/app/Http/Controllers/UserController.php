@@ -19,12 +19,17 @@ class UserController extends Controller
     public function show($user_id)
     {
       $user = User::find($user_id);
+      if(is_null($user)){
+        return abort(404);
+      }
       $events = $user->events($user_id);
-      // $this->authorize('show', $user);
-      // return view('pages.user', ['event' => $events]);
-      return view('pages.user', [ 'userdata' => 
-        [$user, $events] ]
-      );
+      $user_stats = [
+        'Upvotes' => 0,
+        'Comments' => 0,
+        'Total Events' => count($events),
+        'Member Since' => $user->registrationdate
+      ];
+      return view('pages.user', ['user' => $user, 'events' => $events, 'user_stats' => $user_stats]);
     }
 
     public function delete($user_id) : RedirectResponse

@@ -1,4 +1,4 @@
-<article class="event" data-id="{{ $event->id }}">
+<article class="user_event">
 <div class="row user-event m-3 info-div rounded">
     <div class="col-sm-9">
         <div class="row">

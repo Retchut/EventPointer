@@ -12,10 +12,10 @@
         <div class="row">
             <div class="col-sm-3">
                 <div class="row">
-                    <h1>{{$userdata[0]->username}}</h1>
+                    <h1>{{$user->username}}</h1>
                 </div>
                 <div class="row d-flex justify-content-center">
-                    <img src="{{ $userdata[0]->profilepictureurl }}" alt="profile_img" class="user-pic">
+                    <img src="{{ $user->profilepictureurl }}" alt="profile_img" class="user-pic">
                 </div>
             </div>
 
@@ -35,7 +35,7 @@
             <div class="col-sm-10">
                 <h1>Events</h1>
                 <div class="user-events info-div bg-light text-dark rounded">
-                    @foreach ($userdata[1] as $event)
+                    @foreach ($events as $event)
                         @include('partials.userevent', ['event' => $event])
                     @endforeach
                 </div>
@@ -44,23 +44,9 @@
             <div class="col-sm-2">
                 <h1>Stats</h1>
                 <div class="user-stats info-div bg-light text-dark rounded">
-                    <!-- TODO: Abstract this into template -->
-                    <div class="row user-stat m-2">
-                        <div class="col-sm-7 info-div rounded"><p>Upvotes</p></div>
-                        <div class="col-sm-5 info-div rounded"><p>0</p></div>
-                    </div>
-                    <div class="row user-stat m-2">
-                        <div class="col-sm-7 info-div rounded"><p>Comments</p></div>
-                        <div class="col-sm-5 info-div rounded"><p>0</p></div>
-                    </div>
-                    <div class="row user-stat m-2">
-                        <div class="col-sm-7 info-div rounded"><p>Total Events</p></div>
-                        <div class="col-sm-5 info-div rounded"><p>0</p></div>
-                    </div>
-                    <div class="row user-stat m-2">
-                        <div class="col-sm-7 info-div"><p>Member Since</p></div>
-                        <div class="col-sm-5 info-div"><p>{{$userdata[0]->registrationdate}}</p></div>
-                    </div>
+                    @foreach ($user_stats as $key => $stat)
+                        @include('partials.userstat', ['key' => $key, 'stat' => $stat])
+                    @endforeach
                 </div>
             </div>
         </div>

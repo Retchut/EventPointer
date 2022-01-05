@@ -27,4 +27,17 @@ class UserController extends Controller
       );
     }
 
+    public function delete($user_id) : RedirectResponse
+    {
+        if(Auth::guest()) {
+            return redirect()->back();
+        }
+
+        $user = User::find($user_id);
+
+        $user->delete();
+
+        return redirect()->route('home.show');
+    }
+
 }

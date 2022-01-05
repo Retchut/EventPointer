@@ -73,6 +73,10 @@ class User extends Authenticatable
 
     ];
 
+    protected $attributes = [
+        'isadmin' => false,
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      **/
@@ -111,8 +115,8 @@ class User extends Authenticatable
         return $this->is_admin;
     }
 
-    protected $attributes = [
-        'isadmin' => false,
-    ];
+    
+
+    
 }
 

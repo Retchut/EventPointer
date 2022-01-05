@@ -22,6 +22,7 @@ Route::get('browse', 'BrowseController@show');
 
 // User Profile
 Route::get('user/{user_id}', 'UserController@show');
+Route::delete('/user/{user_id}/delete', 'UserController@delete');
 
 //User Edit
 Route::get('user/{user_id}/edit', 'EditProfileController@index')->name('edit.show');

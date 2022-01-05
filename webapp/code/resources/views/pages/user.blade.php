@@ -64,6 +64,10 @@
                 </div>
             </div>
         </div>
+        
+        <div class="col-sm-1 float-end">
+            <div class = "text-right m-3"><button type="button" class="btn btn-danger" href="{{ url('/user/'.$user>id).'/delete' }}">Delete</button></div>
+        </div>
 
     </div>
 </section>

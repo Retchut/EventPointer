@@ -50,24 +50,24 @@
         <!-- Tabs -->
         <ul class="nav nav-pills justify-content-center" role="tablist">
 
-            <li class="nav-item info-div mx-2 text-light rounded">
-                <button class="nav-link" id="description-tab" data-bs-toggle="tab" data-bs-target="#description-content" type="button" role="tab" aria-controls="announcements-content" aria-selected="false">
+            <li class="nav-item info-div mx-2 rounded">
+                <button class="nav-link text-light" id="description-tab" data-bs-toggle="tab" data-bs-target="#description-content" type="button" role="tab" aria-controls="announcements-content" aria-selected="false">
                     <h3 class="m-2">Description</h3>
                 </button>
             </li>
 
-            <li class="nav-item info-div mx-2 text-light rounded">
-                <button class="nav-link" id="announcements-tab" data-bs-toggle="tab" data-bs-target="#announcements-content" type="button" role="tab" aria-controls="announcements-content" aria-selected="false">
+            <li class="nav-item info-div mx-2 rounded">
+                <button class="nav-link text-light" id="announcements-tab" data-bs-toggle="tab" data-bs-target="#announcements-content" type="button" role="tab" aria-controls="announcements-content" aria-selected="false">
                     <h3 class="m-2">Announcements</h3>
                 </button>
             </li>
-            <li class="nav-item info-div mx-2 text-light rounded">
-                <button class="nav-link" id="forum-tab" data-bs-toggle="tab" data-bs-target="#forum-content" type="button" role="tab" aria-controls="forum-content" aria-selected="false">
+            <li class="nav-item info-div mx-2 rounded">
+                <button class="nav-link text-light" id="forum-tab" data-bs-toggle="tab" data-bs-target="#forum-content" type="button" role="tab" aria-controls="forum-content" aria-selected="false">
                     <h3 class="m-2">Forum</h3>
                 </button>
             </li>
-            <li class="nav-item info-div mx-2 text-light rounded">
-                <button class="nav-link" id="participants-tab" data-bs-toggle="tab" data-bs-target="#participants-content" type="button" role="tab" aria-controls="participants-content" aria-selected="false">
+            <li class="nav-item info-div mx-2 rounded">
+                <button class="nav-link text-light" id="participants-tab" data-bs-toggle="tab" data-bs-target="#participants-content" type="button" role="tab" aria-controls="participants-content" aria-selected="false">
                     <h3 class="m-2">Participants</h3>
                 </button>
             </li>

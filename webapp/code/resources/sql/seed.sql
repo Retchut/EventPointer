@@ -54,7 +54,7 @@ DROP TABLE IF EXISTS event_role CASCADE;
 CREATE TABLE event_role
 (
         id SERIAL PRIMARY KEY,
-        usersid INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+        userid INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
         eventid INTEGER NOT NULL REFERENCES eventg(id) ON DELETE RESTRICT ON UPDATE CASCADE,
         isHost BOOLEAN NOT NULL
 );
@@ -190,7 +190,7 @@ DROP FUNCTION IF EXISTS comment_in_event_poll() CASCADE;
 CREATE FUNCTION comment_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.usersid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.usersid) THEN
+        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
            RAISE EXCEPTION 'A users can only comment in an event poll, if he is enrolled in that specific event.';
         END IF;
         RETURN NEW;
@@ -209,7 +209,7 @@ DROP FUNCTION IF EXISTS delete_comment_in_event_poll() CASCADE;
 CREATE FUNCTION delete_comment_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.usersid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.usersid) THEN
+        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
            RAISE EXCEPTION 'A users can only delete a comment in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
         END IF;
         RETURN NEW;
@@ -228,7 +228,7 @@ CREATE TRIGGER delete_comment_in_event_poll
 --CREATE FUNCTION vote_in_event_poll() RETURNS TRIGGER AS
 --$BODY$
 --BEGIN
---        IF EXISTS (SELECT * FROM event_poll INNER JOIN event_role ON role_id = event_role.eventid INNER JOIN users ON event_role.usersid = users.id WHERE NEW.role_id = event_role.eventid AND NEW.users.id = event_role.usersid) THEN
+--        IF EXISTS (SELECT * FROM event_poll INNER JOIN event_role ON role_id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.role_id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
 --           RAISE EXCEPTION 'A users can only vote in an event poll, if he is enrolled in that specific event.';
 --        END IF;
 --        RETURN NEW;
@@ -247,7 +247,7 @@ DROP FUNCTION IF EXISTS delete_vote_in_event_poll() CASCADE;
 CREATE FUNCTION delete_vote_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.usersid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.usersid) THEN
+        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
            RAISE EXCEPTION 'A users can only delete a vote in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
         END IF;
         RETURN NEW;
@@ -323,7 +323,7 @@ DROP FUNCTION IF EXISTS edit_vote() CASCADE;
 CREATE FUNCTION edit_vote() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.usersid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.usersid) THEN
+        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
            RAISE EXCEPTION ' Only participating userss can edit and vote on their own comments on the discussion of events.';
         END IF;
         RETURN NEW;
@@ -361,7 +361,7 @@ DROP FUNCTION IF EXISTS delete_account_effects() CASCADE;
 CREATE FUNCTION delete_account_effects() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM vote INNER JOIN event_role ON vote.event_roleid = event_role.id INNER JOIN users ON users.id = event_role.usersid WHERE NEW.event_roleid = vote.event_roleid AND event_role.usersid = users.id) THEN
+        IF EXISTS (SELECT * FROM vote INNER JOIN event_role ON vote.event_roleid = event_role.id INNER JOIN users ON users.id = event_role.userid WHERE NEW.event_roleid = vote.event_roleid AND event_role.userid = users.id) THEN
            RAISE EXCEPTION 'Only votes from previous users will be deleted.';
         END IF;
         RETURN NEW;
@@ -481,56 +481,56 @@ insert into eventg (eventname, startdate, enddate, place, duration, eventstate, 
 insert into eventg (eventname, startdate, enddate, place, duration, eventstate, tagid) values ('Synthyris laciniata (A. Gray) Rydb.',  '2021-01-01', '2021-04-28', 'Sidi Yahia el Gharb', 103.45, 'Canceled', 8);
 
 
-insert into event_role (usersid, eventid, isHost) values (19, 1, true);
-insert into event_role (usersid, eventid, isHost) values (8, 4, false);
-insert into event_role (usersid, eventid, isHost) values (5, 18, true);
-insert into event_role (usersid, eventid, isHost) values (4, 17, false);
-insert into event_role (usersid, eventid, isHost) values (27, 25, true);
-insert into event_role (usersid, eventid, isHost) values (15, 17, false);
-insert into event_role (usersid, eventid, isHost) values (30, 10, true);
-insert into event_role (usersid, eventid, isHost) values (4, 21, true);
-insert into event_role (usersid, eventid, isHost) values (7, 11, true);
-insert into event_role (usersid, eventid, isHost) values (25, 29, false);
-insert into event_role (usersid, eventid, isHost) values (16, 7, false);
-insert into event_role (usersid, eventid, isHost) values (4, 12, true);
-insert into event_role (usersid, eventid, isHost) values (27, 23, false);
-insert into event_role (usersid, eventid, isHost) values (3, 26, true);
-insert into event_role (usersid, eventid, isHost) values (2, 6, true);
-insert into event_role (usersid, eventid, isHost) values (15, 12, false);
-insert into event_role (usersid, eventid, isHost) values (23, 30, true);
-insert into event_role (usersid, eventid, isHost) values (10, 28, false);
-insert into event_role (usersid, eventid, isHost) values (14, 14, false);
-insert into event_role (usersid, eventid, isHost) values (8, 2, true);
-insert into event_role (usersid, eventid, isHost) values (23, 22, true);
-insert into event_role (usersid, eventid, isHost) values (14, 1, false);
-insert into event_role (usersid, eventid, isHost) values (1, 27, true);
-insert into event_role (usersid, eventid, isHost) values (17, 5, true);
-insert into event_role (usersid, eventid, isHost) values (28, 27, false);
-insert into event_role (usersid, eventid, isHost) values (10, 22, false);
-insert into event_role (usersid, eventid, isHost) values (12, 11, false);
-insert into event_role (usersid, eventid, isHost) values (18, 13, false);
-insert into event_role (usersid, eventid, isHost) values (21, 23, true);
-insert into event_role (usersid, eventid, isHost) values (23, 9, true);
-insert into event_role (usersid, eventid, isHost) values (16, 20, true);
-insert into event_role (usersid, eventid, isHost) values (15, 21, false);
-insert into event_role (usersid, eventid, isHost) values (28, 21, false);
-insert into event_role (usersid, eventid, isHost) values (16, 9, false);
-insert into event_role (usersid, eventid, isHost) values (30, 19, true);
-insert into event_role (usersid, eventid, isHost) values (2, 24, true);
-insert into event_role (usersid, eventid, isHost) values (22, 17, true);
-insert into event_role (usersid, eventid, isHost) values (9, 7, true);
-insert into event_role (usersid, eventid, isHost) values (21, 15, true);
-insert into event_role (usersid, eventid, isHost) values (21, 8, true);
-insert into event_role (usersid, eventid, isHost) values (23, 1, false);
-insert into event_role (usersid, eventid, isHost) values (1, 16, true);
-insert into event_role (usersid, eventid, isHost) values (30, 7, false);
-insert into event_role (usersid, eventid, isHost) values (10, 15, false);
-insert into event_role (usersid, eventid, isHost) values (25, 14, true);
-insert into event_role (usersid, eventid, isHost) values (10, 13, true);
-insert into event_role (usersid, eventid, isHost) values (24, 28, true);
-insert into event_role (usersid, eventid, isHost) values (28, 3, true);
-insert into event_role (usersid, eventid, isHost) values (25, 4, true);
-insert into event_role (usersid, eventid, isHost) values (8, 29, true);
+insert into event_role (userid, eventid, isHost) values (19, 1, true);
+insert into event_role (userid, eventid, isHost) values (8, 4, false);
+insert into event_role (userid, eventid, isHost) values (5, 18, true);
+insert into event_role (userid, eventid, isHost) values (4, 17, false);
+insert into event_role (userid, eventid, isHost) values (27, 25, true);
+insert into event_role (userid, eventid, isHost) values (15, 17, false);
+insert into event_role (userid, eventid, isHost) values (30, 10, true);
+insert into event_role (userid, eventid, isHost) values (4, 21, true);
+insert into event_role (userid, eventid, isHost) values (7, 11, true);
+insert into event_role (userid, eventid, isHost) values (25, 29, false);
+insert into event_role (userid, eventid, isHost) values (16, 7, false);
+insert into event_role (userid, eventid, isHost) values (4, 12, true);
+insert into event_role (userid, eventid, isHost) values (27, 23, false);
+insert into event_role (userid, eventid, isHost) values (3, 26, true);
+insert into event_role (userid, eventid, isHost) values (2, 6, true);
+insert into event_role (userid, eventid, isHost) values (15, 12, false);
+insert into event_role (userid, eventid, isHost) values (23, 30, true);
+insert into event_role (userid, eventid, isHost) values (10, 28, false);
+insert into event_role (userid, eventid, isHost) values (14, 14, false);
+insert into event_role (userid, eventid, isHost) values (8, 2, true);
+insert into event_role (userid, eventid, isHost) values (23, 22, true);
+insert into event_role (userid, eventid, isHost) values (14, 1, false);
+insert into event_role (userid, eventid, isHost) values (1, 27, true);
+insert into event_role (userid, eventid, isHost) values (17, 5, true);
+insert into event_role (userid, eventid, isHost) values (28, 27, false);
+insert into event_role (userid, eventid, isHost) values (10, 22, false);
+insert into event_role (userid, eventid, isHost) values (12, 11, false);
+insert into event_role (userid, eventid, isHost) values (18, 13, false);
+insert into event_role (userid, eventid, isHost) values (21, 23, true);
+insert into event_role (userid, eventid, isHost) values (23, 9, true);
+insert into event_role (userid, eventid, isHost) values (16, 20, true);
+insert into event_role (userid, eventid, isHost) values (15, 21, false);
+insert into event_role (userid, eventid, isHost) values (28, 21, false);
+insert into event_role (userid, eventid, isHost) values (16, 9, false);
+insert into event_role (userid, eventid, isHost) values (30, 19, true);
+insert into event_role (userid, eventid, isHost) values (2, 24, true);
+insert into event_role (userid, eventid, isHost) values (22, 17, true);
+insert into event_role (userid, eventid, isHost) values (9, 7, true);
+insert into event_role (userid, eventid, isHost) values (21, 15, true);
+insert into event_role (userid, eventid, isHost) values (21, 8, true);
+insert into event_role (userid, eventid, isHost) values (23, 1, false);
+insert into event_role (userid, eventid, isHost) values (1, 16, true);
+insert into event_role (userid, eventid, isHost) values (30, 7, false);
+insert into event_role (userid, eventid, isHost) values (10, 15, false);
+insert into event_role (userid, eventid, isHost) values (25, 14, true);
+insert into event_role (userid, eventid, isHost) values (10, 13, true);
+insert into event_role (userid, eventid, isHost) values (24, 28, true);
+insert into event_role (userid, eventid, isHost) values (28, 3, true);
+insert into event_role (userid, eventid, isHost) values (25, 4, true);
+insert into event_role (userid, eventid, isHost) values (8, 29, true);
 
 
 insert into invite (participant, host, eventid) values (30, 19, 1);

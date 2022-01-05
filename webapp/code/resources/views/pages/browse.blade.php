@@ -4,7 +4,8 @@
 
 @section('content')
 
-<section id="browse ">
+<section id="browse">
+    <script type="text/javascript" src="{{ asset('js/browseSort.js') }}"> </script>
     <h1>Browse</h1>
 
     <div class="row gap-5">
@@ -15,21 +16,23 @@
             <!-- search event methods-->
             <h3 class="m-1"> Order By: </h3>
 
-            <div>
-                <h5 class="m-2">Start Date:</h5>
-                <button id = "sd_d" class="btn btn-dark m-2"> &#11014</button>
-                <button id = "sd_a" class="btn btn-dark  m-2"> &#11015</button>
-            </div>
-            <div>
-                <h5 class="m-2">End Date:</h5>
-                <button id = "se_d" class="btn btn-dark  m-2"> &#11014</button>
-                <button id = "se_a" class="btn btn-dark  m-2"> &#11015</button>
-            </div>
+            <div id="sort-buttons">
+                <div>
+                    <h5 class="m-2">Start Date:</h5>
+                    <button id = "sd_d" class="btn btn-dark m-2"> &#11014</button>
+                    <button id = "sd_a" class="btn btn-dark  m-2"> &#11015</button>
+                </div>
+                <div>
+                    <h5 class="m-2">End Date:</h5>
+                    <button id = "ed_d" class="btn btn-dark  m-2"> &#11014</button>
+                    <button id = "ed_a" class="btn btn-dark  m-2"> &#11015</button>
+                </div>
 
-            <div>
-                <h5 class="m-2">Duration:</h5>
-                <button id = "dur_d" type="button" class="btn btn-dark  m-2"> &#11014</button>
-                <button id = "dur_a" type="button" class="btn btn-dark  m-2"> &#11015</button>
+                <div>
+                    <h5 class="m-2">Duration:</h5>
+                    <button id = "dur_d" type="button" class="btn btn-dark  m-2"> &#11014</button>
+                    <button id = "dur_a" type="button" class="btn btn-dark  m-2"> &#11015</button>
+                </div>
             </div>
 
             <div>
@@ -53,10 +56,10 @@
             </div>
             <div class="col">
 
-                @foreach ($event as $event)
-                @if($event->isprivate==FALSE)
-                @include('partials.browse_events')
-                @endif
+                @foreach ($events as $event)
+                    @if($event->isprivate==FALSE)
+                    @include('partials.browse_events')
+                    @endif
                 @endforeach
 
             </div>

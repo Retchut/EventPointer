@@ -60,8 +60,8 @@
         @if (Auth::user()->id == $user->id)
         <div class="d-flex justify-content-end">
             <div class="row-sm-1  m-2 p-3">
-                    <button type="button" class="btn btn-secondary" href="{{ url('/user/'.@Auth::user()->id.'/edit') }}">Edit Account</button> 
-                    <button type="button" class="btn btn-danger" href="{{ url('/user/'.@Auth::user()->id.'/delete') }}">Delete Account</button>
+                    <button type="button" class="btn btn-secondary"><a class="text-light" href="{{ url('/user/'.@Auth::user()->id.'/edit') }}">Edit Account</a></button> 
+                    <button type="button" class="btn btn-danger"><a class="text-light" href="{{ url('/user/'.@Auth::user()->id.'/delete') }}">Delete Account</a></button>
             </div>
         </div>
         @endif

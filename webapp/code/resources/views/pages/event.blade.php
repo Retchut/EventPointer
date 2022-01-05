@@ -40,8 +40,8 @@
                     </div>
                     <div class="row">
                         <!-- only show if host -->
-                        <div class="row text-center"><a class="button" href="{{ url('/event/{event_id}/edit') }}">Edit Event</a></div>
-                        <div class="row text-center"><a class="button" href="{{ url('/event/{event_id}/') }}">Report Event</a></div>
+                        <div class="row text-center"><a class="button" href="{{ url('/event/'.$event->id).'/edit' }}">Edit Event</a></div>
+                        <div class="row text-center"><a class="button" href="{{ url('/event/'.$event->id).'/report' }}">Report Event</a></div>
                     </div>
                     </div>
             </div>

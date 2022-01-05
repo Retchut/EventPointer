@@ -9,17 +9,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-class EditEventController extends Controller
+class ReportEventController extends Controller
 {
    // protected $redirectTo = 'event';
 
-
-   public function show($event_id)
-   {
-     $events = Event::find($event_id);
-     // $this->authorize('show', $events);
-     return view('pages.editevent', ['event' => $events]);
-   }
 
     public function index($event_id)
     {
@@ -27,7 +20,7 @@ class EditEventController extends Controller
         //$user = User::find(Auth::user()->id);
         //$event_role = User::events_host($user->$id);
         //if(Auth::check() and this)
-    return view('pages.editevent'/*, ['event' => $events]*/);
+    return view('pages.reportevent'/*, ['event' => $events]*/);
     }
 /*
     public function create(Request $request)
@@ -46,8 +39,8 @@ class EditEventController extends Controller
             return $event;
         });
       }
-*/
-    /*public function update(Request $request, $id)
+
+    public function update(Request $request, $id)
     {
         $event = Event::find($id);
 
@@ -78,18 +71,6 @@ class EditEventController extends Controller
         $event->save();
 
         return redirect()-> route('event.show', $id);
-    }*/
-    public function update(Request $request, $id)
-    {
-        $event = Event::find($id);
-
-        $event->eventname = $request->input('eventname');
-        $event->startdate = $request->input('startdate');
-        $event->enddate = $request->input('enddate');
-        $event->place = $request->input('place');
-        $event->eventstate =$request->input('eventstate');
-        $event->save();
-        return redirect()-> route('event.show', $id);
-
-}
+    }
+*/
 }

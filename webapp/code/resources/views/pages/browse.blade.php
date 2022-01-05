@@ -37,13 +37,20 @@
 
             <div>
                 <h5 class="m-2">State:</h5>
-                <select class="form-select form-select-lg mb-3"" multiple aria-label=" multiple select example">
-                    <option>All</option>
-                    <option value="1" selected>Scheduled</option>
+                <select id="state-select" class="form-select form-select-lg mb-3"" multiple aria-label=" multiple select example" onchange="window.location.reload()">
+                    <option selected>All</option>
+                    <option value="1">Scheduled</option>
                     <option value="2">Ongoing</option>
                     <option value="3">Canceled</option>
                     <option value="4">Finished</option>
                 </select>
+                <!-- TODO: Fix this -->
+                <script>
+                function change(){
+                    let value = select.options[select.selectedIndex].value;
+                    window.location.href = window.location.href + "/" + value;
+                }
+                </script>
             </div>
         </div>
 

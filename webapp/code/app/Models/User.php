@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -35,7 +36,7 @@ class User extends Authenticatable
         'id',
         'username',
         'email',
-        'pass',
+        'password',
         'profilePictureUrl',
         'isAdmin'
     ];
@@ -49,7 +50,7 @@ class User extends Authenticatable
         'id' => 'integer',
         'username' => 'string',
         'email' => 'string',
-        'pass' => 'string',
+        'password' => 'string',
         'profilePictureUrl' => 'string',
         'isAdmin' => 'boolean'
     ];
@@ -60,7 +61,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'pass', 'remember_token', 'isAdmin',
+        'password', 'remember_token', 'isAdmin',
     ];
 
     /**
@@ -97,13 +98,14 @@ class User extends Authenticatable
       public function events($user_id)
       {
             $eventrole = Event_Role::all();
-            // $events = array();
-            // foreach($eventrole as $er){
-            //     if($er->use)
-            //     array_push($events, $er);
-            // }
-            // unset($er);
-            // return Event::whereBelongsTo($user_id)->get();
+            $events = array();
+            foreach($eventrole as $er){
+                if($er->use){
+                    array_push($events, $er);
+                }
+            }
+            unset($er);
+            return Event::whereBelongsTo($user_id)->get();
             return Event::all();
       }
 

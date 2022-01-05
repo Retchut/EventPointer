@@ -21,11 +21,12 @@ Route::get('contacts', 'ContactsController@show');
 Route::get('browse', 'BrowseController@show');
 
 // User Profile
-Route::get('user/{user_id}', 'UserController@show');
-Route::delete('/user/{user_id}/delete', 'UserController@delete');
+Route::get('user/{user_id}', 'UserController@show')->name('user.show');
+Route::get('/user/{user_id}/delete', 'UserController@delete');
 
 //User Edit
 Route::get('user/{user_id}/edit', 'EditProfileController@index')->name('edit.show');
+Route::post('user/{user_id}/edit', 'EditProfileController@update')->name('user.update');
 /* Cria-se novo controller para uma nova página para editar, onde se faz depois a edição, e aí sim, chama-se o método edit? */
 
 //User Create Event

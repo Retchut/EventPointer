@@ -13,15 +13,15 @@ class EditUserController extends Controller
     protected $redirectTo = 'user';
 
 
-    public function index($id)
+    public function index($user_id)
     {
-        $user = User::find($id);
-        return view('pages.editProfile', ['user' => $user]);
+        $user = User::find($user_id);
+        return view('pages.editUser', ['user' => $user]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $user_id)
     {
-        $user = User::find($id);
+        $user = User::find($user_id);
 
         $this->authorize('update', $user);
 
@@ -35,9 +35,9 @@ class EditUserController extends Controller
             $user->email = $request->input('email');
         }
 
-        if($request->input('pass') != null){
-            $this->validate(request(), ['pass' => 'string|min:8',]);
-            $user->password = bcrypt($request->input('pass'));
+        if($request->input('password') != null){
+            $this->validate(request(), ['password' => 'string|min:8',]);
+            $user->password = bcrypt($request->input('password'));
         }
 
         if($request->input('profilePictureUrl') != null){
@@ -47,7 +47,7 @@ class EditUserController extends Controller
 
         $user->save();
 
-        return redirect()-> route('profile.show', $id);
+        return redirect()-> route('user.show', $user_id);
     }
 
 }

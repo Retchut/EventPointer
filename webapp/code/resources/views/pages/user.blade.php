@@ -56,11 +56,15 @@
                 </div>
             </div>
         </div>
-        
-            <div class = "d-flex flex-row-reverse mt-5"><button class="btn btn-danger" href="{{ url('/user/'.@Auth::user()->id.'/delete') }}">Delete Account</button></div>
 
-            <div class = "d-flex flex-row mt-5"><button class="button" href="{{ url('/user/'.@Auth::user()->id.'/edit') }}">Edit Account</button></div>
-
+            <div class="row m-2 p-3">
+                <div class="col-11">
+                    <button type="button" class="btn btn-secondary" href="{{ url('/user/'.@Auth::user()->id.'/edit') }}">Edit Account</button> 
+                </div>
+                <div class="col-1">
+                    <button type="button" class="btn btn-danger" href="{{ url('/user/'.@Auth::user()->id.'/delete') }}">Delete Account</button>
+                </div>
+            </div>
     </div>
 </section>
 

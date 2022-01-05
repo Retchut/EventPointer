@@ -19,6 +19,7 @@ Route::get('about', 'AboutController@show');
 Route::get('faq', 'FAQController@show');
 Route::get('contacts', 'ContactsController@show');
 Route::get('browse', 'BrowseController@show');
+Route::get('browse/{filter}', 'BrowseController@sort');
 
 // User Profile
 Route::get('user/{user_id}', 'UserController@show')->name('user.show');

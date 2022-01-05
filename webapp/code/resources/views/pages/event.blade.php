@@ -5,7 +5,6 @@
 @section('content')
 
 <section id="event">
-    <link href="{{ asset('css/event.css') }}" rel="stylesheet">
     <div class="container-fluid p-4">
         <div class="event-details pb-5">
             <div class="row">

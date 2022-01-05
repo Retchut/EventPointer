@@ -23,20 +23,35 @@ class BrowseController extends Controller
   }
   
 
-  // public function show()
-  // {
-  //   $events = Event::all();
-    // $events_sd_asc = Event::orderBy('startdate', 'asc')->get();
-    // $events_sd_des = Event::orderBy('startdate', 'desc')->get();
-    // $events_ed_asc = Event::orderBy('enddate', 'asc')->get();
-    // $events_ed_des = Event::orderBy('enddate', 'desc')->get();
-    // $events_dur_asc = Event::orderBy('duration', 'asc')->get();
-    // $events_dur_des = Event::orderBy('duration', 'desc')->get();
-    // $scheduled = Event::orderBy('duration', 'desc')->get();
+  public function sort($order)
+  {
+    $events = Event::all();
+    $events_sd_asc = array();
+    switch ($order) {
+      case "sdate-asc":
+        $events_sorted = $events->sortBy(['startdate', 'asc']);
+          break;
+      case "sdate-desc":
+          $events_sorted = $events->sortBy(['startdate', 'desc']);
+          break;
+      case "edate-asc":
+          $events_sorted = $events->sortBy(['enddate', 'asc']);
+          break;
+      case "edate-desc":
+          $events_sorted = $events->sortBy(['enddate', 'desc']);
+          break;
+      case "dur-asc":
+          $events_sorted = $events->sortBy(['duration', 'asc']);
+          break;
+      case "dur-desc":
+          $events_sorted = $events->sortBy(['duration', 'desc']);
+          break;
+    }
+
+    $scheduled = $events->sortBy(['duration', 'desc']);
     // $this->authorize('show', $events);
-    // return view('pages.browse', ['events' => $events]);
-    // return view('pages.browse', ['event' => $events], ['events_sd_asc' => $events_sd_asc], ['events_sd_des' => $events_sd_des], ['events_ed_asc' => $events_ed_asc], ['events_ed_des' => $events_ed_des], ['events_dur_asc' => $events_dur_asc], ['events_dur_des' => $events_dur_des], ['scheduled' => $scheduled]);
-  // }
+    return view('pages.browse', ['events' => $events_sorted]);
+  }
 
   
 }

@@ -57,7 +57,7 @@
             </div>
         </div>
         
-            <div class = "d-flex flex-row-reverse mt    -3"><button type="button" class="btn btn-danger" href="{{ url('/user/'.$user->id).'/delete' }}">Delete Account</button></div>
+            <div class = "d-flex flex-row-reverse mt-5"><button class="btn btn-danger" href="{{ url('/user/'.@Auth::user()->id.'/delete') }}">Delete Account</button></div> <span>{{ Auth::user()->name }}</span>
 
     </div>
 </section>

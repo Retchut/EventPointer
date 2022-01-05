@@ -16,5 +16,6 @@ class HomeController extends Controller
     public function show()
     {
       return view('pages.home');
+      dd(url("/user/31/delete"));
     }
 }

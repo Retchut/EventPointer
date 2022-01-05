@@ -57,14 +57,14 @@
             </div>
         </div>
 
-            <div class="row m-2 p-3">
-                <div class="col-11">
+        @if (Auth::user()->id == $user->id)
+        <div class="d-flex justify-content-end">
+            <div class="row-sm-1  m-2 p-3">
                     <button type="button" class="btn btn-secondary" href="{{ url('/user/'.@Auth::user()->id.'/edit') }}">Edit Account</button> 
-                </div>
-                <div class="col-1">
                     <button type="button" class="btn btn-danger" href="{{ url('/user/'.@Auth::user()->id.'/delete') }}">Delete Account</button>
-                </div>
             </div>
+        </div>
+        @endif
     </div>
 </section>
 

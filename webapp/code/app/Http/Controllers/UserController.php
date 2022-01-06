@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\User;
+use App\Models\Report;
+
 
 class UserController extends Controller
 {
@@ -23,13 +25,16 @@ class UserController extends Controller
         return abort(404);
       }
       $events = $user->events($user_id);
+      
+      $reports = Report::all();
+      
       $user_stats = [
         'Upvotes' => 0,
         'Comments' => 0,
         'Total Events' => count($events),
         'Member Since' => $user->registrationdate
       ];
-      return view('pages.user', ['user' => $user, 'events' => $events, 'user_stats' => $user_stats]);
+      return view('pages.user', ['user' => $user, 'events' => $events, 'user_stats' => $user_stats,'reports'=>$reports]);
     }
 
     public function delete($user_id) : RedirectResponse

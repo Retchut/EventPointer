@@ -129,6 +129,16 @@ CREATE TABLE vote
 );
 
 
+DROP TABLE IF EXISTS reports CASCADE;
+CREATE TABLE reports
+(
+    id SERIAL PRIMARY KEY,
+    descriptions TEXT NOT NULL,
+    userid INTEGER NOT NULL REFERENCES users (id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    eventid INTEGER NOT NULL REFERENCES eventg (id) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+
 -----------------------------------------
 -- Indexes
 -----------------------------------------
@@ -394,11 +404,11 @@ CREATE TRIGGER delete_account_effects
 -- Population
 -----------------------------------------
 
-insert into users (username, email, password, profilepictureurl,isadmin) values ('dcastillon0', 'flathwell0@forbes.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic',true);
-insert into users (username, email, password, profilepictureurl,isadmin) values ('dfrowde1', 'nboulde1@netvibes.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic',true);
-insert into users (username, email, password, profilepictureurl,isadmin) values ('chutson2', 'caddey2@illinois.edu', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic',true);
-insert into users (username, email, password, profilepictureurl,isadmin) values ('bdarlasson3', 'mdawton3@google.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic',true);
-insert into users (username, email, password, profilepictureurl,isadmin) values ('bdawson4', 'bredbourn4@baidu.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic',true);
+insert into users (username, email, password, profilepictureurl,isadmin) values ('admin', 'admin@theone.com', '$2y$10$75Sdlr3i9/18niLK1pMF0.wq5q9W.U/r4VtvWgaQLOSgDECJDwSqG', 'https://tinyurl.com/adminlbaw',true);
+insert into users (username, email, password, profilepictureurl,isadmin) values ('dfrowde1', 'nboulde1@netvibes.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/adminlbaw',true);
+insert into users (username, email, password, profilepictureurl,isadmin) values ('chutson2', 'caddey2@illinois.edu', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/adminlbaw',true);
+insert into users (username, email, password, profilepictureurl,isadmin) values ('bdarlasson3', 'mdawton3@google.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/adminlbaw',true);
+insert into users (username, email, password, profilepictureurl,isadmin) values ('bdawson4', 'bredbourn4@baidu.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/adminlbaw',true);
 insert into users (username, email, password, profilepictureurl) values ('bleitche5', 'hbowler5@mlb.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
 insert into users (username, email, password, profilepictureurl) values ('lcreaser6', 'kfowells6@usnews.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
 insert into users (username, email, password, profilepictureurl) values ('mdacres7', 'tmcgown7@miibeian.gov.cn', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
@@ -625,3 +635,10 @@ insert into vote (votetype, event_roleid, commentid, announcementid) values (fal
 insert into vote (votetype, event_roleid, commentid, announcementid) values (true, 10, NULL, 3);
 insert into vote (votetype, event_roleid, commentid, announcementid) values (false, 7, NULL, 12);
 insert into vote (votetype, event_roleid, commentid, announcementid) values (false, 12, NULL, 4);
+
+
+
+insert into reports (userid, eventid, descriptions) values (6,7,'How does a computer get drunk? A. It takes screenshots');
+insert into reports (userid, eventid, descriptions) values (7,8,'How does a computer get drunk? A. It takes screenshots');
+insert into reports (userid, eventid, descriptions) values (8,9,'How does a computer get drunk? A. It takes screenshots'); 
+insert into reports (userid, eventid, descriptions) values (9,9,'How does a computer get drunk? A. It takes screenshots'); 

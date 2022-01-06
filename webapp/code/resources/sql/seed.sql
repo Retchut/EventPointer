@@ -423,7 +423,7 @@ insert into users (username, email, password, profilepictureurl) values ('rmanac
 insert into users (username, email, password, profilepictureurl) values ('pmassinghams', 'bcuvleys@miibeian.gov.cn', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
 insert into users (username, email, password, profilepictureurl) values ('vsheart', 'jgheorghet@bbc.co.uk', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
 insert into users (username, email, password, profilepictureurl) values ('jpolinu', 'jrollandu@irs.gov', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('sclackersrr', 'ufontenotrr@samsung.com', 'password', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, profilepictureurl) values ('sclackersrr', 'ufontenotrr@samsung.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
 insert into users (username, email, password, profilepictureurl) values ('testing', 'testing@testing.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
 
 

@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="row-sm-2 d-flex justify-content-center">
-                  <button type="submit">
+                  <button type="submit button"  class="btn btn-light">
                     Register
                   </button>
                   <a class="button button-outline" href="{{ route('login') }}">Login</a>

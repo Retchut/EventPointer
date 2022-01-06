@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Event;
 use App\Models\Event_Role;
 
+
+
 /**
  * Class User
  * @package App\Models
@@ -28,6 +30,7 @@ use App\Models\Event_Role;
  */
 class User extends Authenticatable
 {
+
     use Notifiable;
     public $timestamps  = false;
     protected $table = 'users';

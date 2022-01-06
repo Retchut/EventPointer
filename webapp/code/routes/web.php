@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Pages
-Route::get('/', 'HomeController@show');
+Route::get('/', 'HomeController@show')->name('home');
 Route::get('about', 'AboutController@show');
 Route::get('faq', 'FAQController@show');
 Route::get('contacts', 'ContactsController@show');
@@ -22,11 +22,11 @@ Route::get('browse', 'BrowseController@show');
 
 // User Profile
 Route::get('user/{user_id}', 'UserController@show')->name('user.show');
-Route::get('/user/{user_id}/delete', 'UserController@delete');
+Route::get('/user/{user_id}/delete', 'UserController@delete')->name('user.delete');
 
 //User Edit
-Route::get('user/{user_id}/edit', 'EditProfileController@index')->name('edit.show');
-Route::post('user/{user_id}/edit', 'EditProfileController@update')->name('user.update');
+Route::get('user/{user_id}/edit', 'EditUserController@index')->name('edit.show');
+Route::post('user/{user_id}/edit', 'EditUserController@update')->name('user.update');
 /* Cria-se novo controller para uma nova página para editar, onde se faz depois a edição, e aí sim, chama-se o método edit? */
 
 //User Create Event

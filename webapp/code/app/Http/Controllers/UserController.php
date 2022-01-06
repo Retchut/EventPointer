@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\User;
 
+
 class UserController extends Controller
 {
     /**
@@ -32,17 +33,21 @@ class UserController extends Controller
       return view('pages.user', ['user' => $user, 'events' => $events, 'user_stats' => $user_stats]);
     }
 
-    public function delete($user_id) : RedirectResponse
+    public function delete($user_id)
     {
-        if(Auth::guest()) {
-            return redirect()->back();
-        }
+      $user = User::find($user_id);
 
-        $user = User::find($user_id);
+      $this->authorize('delete', $user);
 
-        $user->delete();
+      Auth::logout();
 
-        return redirect()->url('/');
+      $user->username = 'deleted'.$user->id;
+      $user->email = 'deleted'.$user->id.'@deleted.com';
+      $user->password = bcrypt('deleted');
+
+      $user->save();
+
+      return redirect()->route('home');
     }
 
 }

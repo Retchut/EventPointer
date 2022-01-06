@@ -41,8 +41,7 @@
                 </div>
             </div>
             <div class="row-sm-2 d-flex justify-content-center">
-                <button type="submit button">
-                Login
+                <button type="submit button" class="btn btn-light"> Login
                     </button>
                     <a class="button button-outline" href="{{ route('register') }}">Register</a>
             </div>

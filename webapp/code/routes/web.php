@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+ 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,17 +14,20 @@
 */
 
 // Pages
-Route::get('/', 'HomeController@show');
+Route::get('/', 'HomeController@show')->name('home');
 Route::get('about', 'AboutController@show');
 Route::get('faq', 'FAQController@show');
 Route::get('contacts', 'ContactsController@show');
 Route::get('browse', 'BrowseController@show');
+Route::get('browse/{filter}', 'BrowseController@sort');
 
 // User Profile
-Route::get('user/{user_id}', 'UserController@show');
+Route::get('user/{user_id}', 'UserController@show')->name('user.show');
+Route::get('/user/{user_id}/delete', 'UserController@delete')->name('user.delete');
 
 //User Edit
-Route::get('user/{user_id}/edit', 'EditProfileController@index')->name('edit.show');
+Route::get('user/{user_id}/edit', 'EditUserController@index')->name('edit.show');
+Route::post('user/{user_id}/edit', 'EditUserController@update')->name('user.update');
 /* Cria-se novo controller para uma nova página para editar, onde se faz depois a edição, e aí sim, chama-se o método edit? */
 
 //User Create Event
@@ -44,8 +49,12 @@ Route::get('event/{event_id}', 'EventController@show')->name('edit.show');
 Route::delete('event/{event_id}/', 'EventController@delete'); 
 
 // Event Edit
-Route::get('event/{event_id}/edit', 'EditEventController@index')->name('create.show');
-Route::post('event/{event_id}/edit', 'EditEventController@create')->name('create');
+Route::get('event/{event_id}/edit', 'EditEventController@show')->name('edit.show');
+Route::post('event/{event_id}/edit', 'EditEventController@update');
+
+// Report Event
+Route::get('event/{event_id}/report', 'ReportEventController@index')->name('create.show');
+Route::post('event/{event_id}/report', 'ReportEventController@create')->name('create');
 
 // Event Invite
 Route::get('event/{event_id}/invite', 'InvitationController@index')->name('invite.show');

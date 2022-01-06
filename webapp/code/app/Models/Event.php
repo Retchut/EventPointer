@@ -8,11 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Event extends Model
 {
     use HasFactory;
+
+    protected $table = "eventg";
+
     public $timestamps  = false;
 
 
     protected $fillable = [
         'eventname', 'startdate', 'enddate', 'place','duration','state','isprivate'
+    ];
+
+    
+    protected $attributes = [
+        'isprivate' => false,
     ];
 
     
@@ -32,7 +40,5 @@ class Event extends Model
     }
 */
 
-    protected $attributes = [
-        'isprivate' => false,
-    ];
+   
 }

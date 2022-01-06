@@ -2,8 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+
+use App\Models\Event;
+
+use App\Models\Event_Role;
+
+
 
 /**
  * Class User
@@ -24,17 +31,19 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  */
 class User extends Authenticatable
 {
+
     use Notifiable;
     public $timestamps  = false;
-    protected $table = 'member';
+    protected $table = 'users';
 
     public $fillable = [
         'id',
         'username',
         'email',
-        'pass',
-        'profilePicturUrl',
-        'isAdmin'
+        'password',
+        'profilepictureurl',
+        'isadmin',
+        'registrationdate'
     ];
 
     /**
@@ -46,9 +55,9 @@ class User extends Authenticatable
         'id' => 'integer',
         'username' => 'string',
         'email' => 'string',
-        'pass' => 'string',
-        'profilePictureUrl' => 'string',
-        'isAdmin' => 'boolean'
+        'password' => 'string',
+        'profilepictureurl' => 'string',
+        'isadmin' => 'boolean'
     ];
 
     /**
@@ -57,7 +66,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'pass', 'remember_token', 'isAdmin',
+        'password', 'remember_token', 'isAdmin',
     ];
 
     /**
@@ -69,32 +78,35 @@ class User extends Authenticatable
 
     ];
 
+    protected $attributes = [
+        'isadmin' => false,
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      **/
     public function reviews()
     {
-        return $this->belongsToMany(\App\Models\Event::class, 'review');
+        return $this->belongsToMany(Event::class, 'review');
     }
 
     /**
      * The events this user owns.
      */
     public function host() {
-        return $this->hasMany('App\Models\Event_Role')->where(['host.ishost', '=', 'true'],['$this->id','=','host.memberid']);
-      }
+        return $this->hasMany('App\Models\Event_Role')->where(['host.ishost', '=', 'true'],['$this->id','=','host.userid']);
+    }
   
-      public function participant() {
-          return $this->hasMany('App\Models\Event_Role')->where(['host.ishost', '=', 'false'],['$this->id','=','host.memberid']);
-      }
+    public function participant() {
+        return $this->hasMany('App\Models\Event_Role')->where(['host.ishost', '=', 'false'],['$this->id','=','host.userid']);
+    }
   
-       /**
-       * @return \Illuminate\Database\Eloquent\Relations\HasMany
-       **/
-      public function events()
-      {
-          return $this->hasMany(\App\Models\Event::class);
-      }
+    public function events($user_id)
+    {
+        $eventroles = Event_Role::all();
+        $events = Event_Role::where('userid', $user_id)->join('eventg', 'event_role.eventid', '=', 'eventg.id')->get();
+        return $events;
+    }
 
     /**
      * @return mixed
@@ -103,8 +115,8 @@ class User extends Authenticatable
         return $this->is_admin;
     }
 
-    protected $attributes = [
-        'isadmin' => false,
-    ];
+    
+
+    
 }
 

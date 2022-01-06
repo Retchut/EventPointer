@@ -36,7 +36,7 @@
               </div>
               @if (Auth::check())
               <div class="col">
-                <a class="button" href="{{ url('/user/{user_id}') }}">My Page</a>
+                <a class="button" href="{{ url('/user/'.@Auth::user()->id) }}">My Page</a>
               </div>
               <div class="col">
                 <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>

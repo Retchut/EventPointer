@@ -82,6 +82,16 @@ input {
   border: 0.1rem solid var(--border);
 }
 
+.description {
+  padding: 12px 12px 4px; /* bootstrap: pt-3 px-3 pb-1*/
+  margin:  8px;      /* bootstrap: m-2 */
+}
+
+.home_image{
+  width: 40%;
+  height: 40%;
+}
+
 /* a:hover {
 
 } */

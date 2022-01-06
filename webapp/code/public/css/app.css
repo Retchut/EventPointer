@@ -87,6 +87,11 @@ input {
   margin:  8px;      /* bootstrap: m-2 */
 }
 
+.home_image{
+  width: 40%;
+  height: 40%;
+}
+
 /* a:hover {
 
 } */

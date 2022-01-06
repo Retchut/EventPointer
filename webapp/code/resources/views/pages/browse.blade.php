@@ -5,7 +5,7 @@
 @section('content')
 
 <section id="browse">
-    <script type="text/javascript" src="{{ asset('js/browseSort.js') }}"> </script>
+    <link href="{{ asset('css/browse.css') }}" rel="stylesheet">
     <h1>Browse</h1>
 
     <div class="row gap-5">
@@ -16,37 +16,42 @@
             <!-- search event methods-->
             <h3 class="m-1"> Order By: </h3>
 
-            <div id="sort-buttons">
+            <div>
                 <div>
                     <h5 class="m-2">Start Date:</h5>
-                    <button id = "sd_d" class="btn btn-dark m-2"> &#11014</button>
-                    <button id = "sd_a" class="btn btn-dark  m-2"> &#11015</button>
+                    <div class="row text-center btn btn-dark m-2 p-0 pb-1"><a class="sort-buttons" href="{{ url('/browse/sdate-asc') }}">&#11014</a></div>
+                    <div class="row text-center btn btn-dark m-2 p-0 pb-1"><a class="sort-buttons" href="{{ url('/browse/sdate-desc') }}">&#11015</a></div>
                 </div>
                 <div>
                     <h5 class="m-2">End Date:</h5>
-                    <button id = "ed_d" class="btn btn-dark  m-2"> &#11014</button>
-                    <button id = "ed_a" class="btn btn-dark  m-2"> &#11015</button>
+                    <div class="row text-center btn btn-dark m-2 p-0 pb-1"><a class="sort-buttons" href="{{ url('/browse/edate-asc') }}">&#11014</a></div>
+                    <div class="row text-center btn btn-dark m-2 p-0 pb-1"><a class="sort-buttons" href="{{ url('/browse/edate-desc') }}">&#11015</a></div>
                 </div>
 
                 <div>
                     <h5 class="m-2">Duration:</h5>
-                    <button id = "dur_d" type="button" class="btn btn-dark  m-2"> &#11014</button>
-                    <button id = "dur_a" type="button" class="btn btn-dark  m-2"> &#11015</button>
+                    <div class="row text-center btn btn-dark m-2 p-0 pb-1"><a class="sort-buttons" href="{{ url('/browse/dur-asc') }}">&#11014</a></div>
+                    <div class="row text-center btn btn-dark m-2 p-0 pb-1"><a class="sort-buttons" href="{{ url('/browse/dur-desc') }}">&#11015</a></div>
                 </div>
             </div>
 
             <div>
                 <h5 class="m-2">State:</h5>
-                <select class="form-select form-select-lg mb-3"" multiple aria-label=" multiple select example">
-                    <option>All</option>
-                    <option value="1" selected>Scheduled</option>
+                <select id="state-select" class="form-select form-select-lg mb-3"" multiple aria-label=" multiple select example" onchange="window.location.reload()">
+                    <option selected>All</option>
+                    <option value="1">Scheduled</option>
                     <option value="2">Ongoing</option>
                     <option value="3">Canceled</option>
                     <option value="4">Finished</option>
                 </select>
+                <!-- TODO: Fix this -->
+                <script>
+                function change(){
+                    let value = select.options[select.selectedIndex].value;
+                    window.location.href = window.location.href + "/" + value;
+                }
+                </script>
             </div>
-
-
         </div>
 
 
@@ -54,14 +59,12 @@
             <div class=" mb-3 bg-dark text-white">
                 <h3 class="m-1">Events:</h3>
             </div>
-            <div class="col">
-
+            <div class="col" id="browse-event">
                 @foreach ($events as $event)
                     @if($event->isprivate==FALSE)
                     @include('partials.browse_events')
                     @endif
                 @endforeach
-
             </div>
         </div>
     </div>

@@ -24,7 +24,7 @@
                                 <h5> {{ $event->startdate }} - {{ $event->enddate }}</h5>
                             </div>
                         </div>
-                        <div class="row pb-3">
+                        <div class="row pb-1">
                             <div class="col-1 text-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-map" viewBox="0 0 16 16">
@@ -34,6 +34,28 @@
                             </div>
                             <div class="col">
                                 <h5> {{ $event->place }} </h5>
+                            </div>
+                        </div>
+                        <div class="row pb-1">
+                            <div class="col-1 text-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-person-badge" viewBox="0 0 16 16">
+                                    <path
+                                        d="M6.5 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                    <path
+                                        d="M4.5 0A2.5 2.5 0 0 0 2 2.5V14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2.5A2.5 2.5 0 0 0 11.5 0h-7zM3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v10.795a4.2 4.2 0 0 0-.776-.492C11.392 12.387 10.063 12 8 12s-3.392.387-4.224.803a4.2 4.2 0 0 0-.776.492V2.5z" />
+                                </svg>
+                            </div>
+                            <div class="col">
+
+                                <h5> Hosts:
+                                    @foreach ($hosts as $host)
+                                        <a class = "m-2 .text-white  link-light" href="{{ url('/user/' . $host->id) }}">
+                                            {{ $host->username }} 
+                                        </a>
+                                    @endforeach
+
+                                </h5>
                             </div>
                         </div>
                         <div class="row"></div>
@@ -95,7 +117,8 @@
                     {{ $event->event_description }}
                 </div>
 
-                <div class="tab-pane fade" id="announcements-content" role="tabpanel" aria-labelledby="announcements-tab">
+                <div class="tab-pane fade pb-3" id="announcements-content" role="tabpanel"
+                    aria-labelledby="announcements-tab">
                     <h3 class=mb-3>Announcements</h3>
 
                     @if (count($announcements) > 0)
@@ -107,7 +130,7 @@
                     @endif
                 </div>
 
-                <div class="tab-pane fade" id="forum-content" role="tabpanel" aria-labelledby="forum-tab">
+                <div class="tab-pane fade pb-3" id="forum-content" role="tabpanel" aria-labelledby="forum-tab">
                     <h3 class=mb-3>Forum</h3>
                     @if (count($comments) != 0)
                         @include('partials.comments',$comments)
@@ -118,8 +141,9 @@
                     @endif
                 </div>
 
-                <div class="tab-pane fade" id="participants-content" role="tabpanel" aria-labelledby="participants-tab">
-                    <h3 class=mb-3>Participants</h3>
+                <div class="tab-pane fade pb-3" id="participants-content" role="tabpanel"
+                    aria-labelledby="participants-tab">
+                    <h3 class="mb-3">Participants</h3>
                     @if (count($participants) != 0)
                         @include('partials.participants',$participants)
                     @else

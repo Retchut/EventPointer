@@ -1,6 +1,7 @@
 @foreach ($announcements as $announcement)
-    <p class="card border-dark mb-3">
+<div class=" m-2 card border-dark">
+    <p class= "p-2">
         {{ $announcement->messagea }}
     </p>
-
+</div>
 @endforeach

@@ -22,8 +22,10 @@ class EventController extends Controller
     $announcements = $events->announcements($event_id);
     $comments = $events->comments($event_id);
     $participants = $events->participants($event_id);
+    $hosts = $events->hosts($event_id);
+
     // $this->authorize('show', $events);
-    return view('pages.event', ['event' => $events, 'comments' => $comments, 'announcements' => $announcements,'participants'=>$participants]);
+    return view('pages.event', ['event' => $events, 'comments' => $comments, 'announcements' => $announcements,'hosts'=> $hosts, 'participants'=>$participants]);
   }
 
 

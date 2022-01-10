@@ -57,7 +57,7 @@ CREATE TABLE event_role
         id SERIAL PRIMARY KEY,
         userid INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
         eventid INTEGER NOT NULL REFERENCES eventg(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-        isHost BOOLEAN NOT NULL
+        ishost BOOLEAN NOT NULL
 );
 
 DROP TABLE IF EXISTS invite CASCADE;
@@ -522,56 +522,55 @@ insert into eventg (eventname, event_description, startdate, enddate, place, dur
 , '2021-01-01', '2021-04-28', 'Sidi Yahia el Gharb', 103.45, 'Canceled', 8);
 
 
-insert into event_role (userid, eventid, isHost) values (19, 1, true);
-insert into event_role (userid, eventid, isHost) values (8, 4, false);
-insert into event_role (userid, eventid, isHost) values (5, 18, true);
-insert into event_role (userid, eventid, isHost) values (4, 17, false);
-insert into event_role (userid, eventid, isHost) values (27, 25, true);
-insert into event_role (userid, eventid, isHost) values (15, 17, false);
-insert into event_role (userid, eventid, isHost) values (30, 10, true);
-insert into event_role (userid, eventid, isHost) values (4, 21, true);
-insert into event_role (userid, eventid, isHost) values (7, 11, true);
-insert into event_role (userid, eventid, isHost) values (25, 29, false);
-insert into event_role (userid, eventid, isHost) values (16, 7, false);
-insert into event_role (userid, eventid, isHost) values (4, 12, true);
-insert into event_role (userid, eventid, isHost) values (27, 23, false);
-insert into event_role (userid, eventid, isHost) values (3, 26, true);
-insert into event_role (userid, eventid, isHost) values (2, 6, true);
-insert into event_role (userid, eventid, isHost) values (15, 12, false);
-insert into event_role (userid, eventid, isHost) values (23, 30, true);
-insert into event_role (userid, eventid, isHost) values (10, 28, false);
-insert into event_role (userid, eventid, isHost) values (14, 14, false);
-insert into event_role (userid, eventid, isHost) values (8, 2, true);
-insert into event_role (userid, eventid, isHost) values (23, 22, true);
-insert into event_role (userid, eventid, isHost) values (14, 1, false);
-insert into event_role (userid, eventid, isHost) values (1, 27, true);
-insert into event_role (userid, eventid, isHost) values (17, 5, true);
-insert into event_role (userid, eventid, isHost) values (28, 27, false);
-insert into event_role (userid, eventid, isHost) values (10, 22, false);
-insert into event_role (userid, eventid, isHost) values (12, 11, false);
-insert into event_role (userid, eventid, isHost) values (18, 13, false);
-insert into event_role (userid, eventid, isHost) values (21, 23, true);
-insert into event_role (userid, eventid, isHost) values (23, 9, true);
-insert into event_role (userid, eventid, isHost) values (16, 20, true);
-insert into event_role (userid, eventid, isHost) values (15, 21, false);
-insert into event_role (userid, eventid, isHost) values (28, 21, false);
-insert into event_role (userid, eventid, isHost) values (16, 9, false);
-insert into event_role (userid, eventid, isHost) values (30, 19, true);
-insert into event_role (userid, eventid, isHost) values (2, 24, true);
-insert into event_role (userid, eventid, isHost) values (22, 17, true);
-insert into event_role (userid, eventid, isHost) values (9, 7, true);
-insert into event_role (userid, eventid, isHost) values (21, 15, true);
-insert into event_role (userid, eventid, isHost) values (21, 8, true);
-insert into event_role (userid, eventid, isHost) values (23, 1, false);
-insert into event_role (userid, eventid, isHost) values (1, 16, true);
-insert into event_role (userid, eventid, isHost) values (30, 7, false);
-insert into event_role (userid, eventid, isHost) values (10, 15, false);
-insert into event_role (userid, eventid, isHost) values (25, 14, true);
-insert into event_role (userid, eventid, isHost) values (10, 13, true);
-insert into event_role (userid, eventid, isHost) values (24, 28, true);
-insert into event_role (userid, eventid, isHost) values (28, 3, true);
-insert into event_role (userid, eventid, isHost) values (25, 4, true);
-insert into event_role (userid, eventid, isHost) values (8, 29, true);
+insert into event_role (userid, eventid, ishost) values (19, 1, true);
+insert into event_role (userid, eventid, ishost) values (8, 4, false);
+insert into event_role (userid, eventid, ishost) values (24, 17, false);
+insert into event_role (userid, eventid, ishost) values (27, 25, true);
+insert into event_role (userid, eventid, ishost) values (15, 17, false);
+insert into event_role (userid, eventid, ishost) values (30, 10, true);
+insert into event_role (userid, eventid, ishost) values (14, 21, true);
+insert into event_role (userid, eventid, ishost) values (7, 11, true);
+insert into event_role (userid, eventid, ishost) values (25, 29, false);
+insert into event_role (userid, eventid, ishost) values (16, 7, false);
+insert into event_role (userid, eventid, ishost) values (14, 12, true);
+insert into event_role (userid, eventid, ishost) values (27, 23, false);
+insert into event_role (userid, eventid, ishost) values (13, 26, true);
+insert into event_role (userid, eventid, ishost) values (12, 6, true);
+insert into event_role (userid, eventid, ishost) values (15, 12, false);
+insert into event_role (userid, eventid, ishost) values (23, 30, true);
+insert into event_role (userid, eventid, ishost) values (10, 28, false);
+insert into event_role (userid, eventid, ishost) values (14, 14, false);
+insert into event_role (userid, eventid, ishost) values (8, 2, true);
+insert into event_role (userid, eventid, ishost) values (23, 22, true);
+insert into event_role (userid, eventid, ishost) values (14, 1, false);
+insert into event_role (userid, eventid, ishost) values (16, 27, true);
+insert into event_role (userid, eventid, ishost) values (17, 5, true);
+insert into event_role (userid, eventid, ishost) values (28, 27, false);
+insert into event_role (userid, eventid, ishost) values (10, 22, false);
+insert into event_role (userid, eventid, ishost) values (12, 11, false);
+insert into event_role (userid, eventid, ishost) values (18, 13, false);
+insert into event_role (userid, eventid, ishost) values (21, 23, true);
+insert into event_role (userid, eventid, ishost) values (23, 9, true);
+insert into event_role (userid, eventid, ishost) values (16, 20, true);
+insert into event_role (userid, eventid, ishost) values (15, 21, false);
+insert into event_role (userid, eventid, ishost) values (28, 21, false);
+insert into event_role (userid, eventid, ishost) values (16, 9, false);
+insert into event_role (userid, eventid, ishost) values (30, 19, true);
+insert into event_role (userid, eventid, ishost) values (26, 24, true);
+insert into event_role (userid, eventid, ishost) values (22, 17, true);
+insert into event_role (userid, eventid, ishost) values (9, 7, true);
+insert into event_role (userid, eventid, ishost) values (21, 15, true);
+insert into event_role (userid, eventid, ishost) values (21, 8, true);
+insert into event_role (userid, eventid, ishost) values (23, 1, false);
+insert into event_role (userid, eventid, ishost) values (16, 16, true);
+insert into event_role (userid, eventid, ishost) values (30, 7, false);
+insert into event_role (userid, eventid, ishost) values (10, 15, false);
+insert into event_role (userid, eventid, ishost) values (25, 14, true);
+insert into event_role (userid, eventid, ishost) values (10, 13, true);
+insert into event_role (userid, eventid, ishost) values (24, 28, true);
+insert into event_role (userid, eventid, ishost) values (28, 3, true);
+insert into event_role (userid, eventid, ishost) values (25, 4, true);
+insert into event_role (userid, eventid, ishost) values (8, 29, true);
 
 
 insert into invite (participant, host, eventid) values (30, 19, 1);

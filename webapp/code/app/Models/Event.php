@@ -39,10 +39,16 @@ class Event extends Model
 
     public function participants($event_id)
     {
-        $participants = Event_Role::where('ishost','=', 'False')->where('eventid', $event_id)->join('users', 'event_role.userid', '=', 'users.id')->get()->unique();
+        $participants = Event_Role::where('ishost',false)->where('eventid', $event_id)->join('users', 'event_role.userid', '=', 'users.id')->get()->unique();
         return $participants;
     }
 
+
+    public function hosts($event_id)
+    {
+        $hosts = Event_Role::where('ishost', true)->where('eventid', $event_id)->join('users', 'event_role.userid', '=', 'users.id')->get()->unique();
+        return $hosts;
+    }
 
     
     /*public function comments()

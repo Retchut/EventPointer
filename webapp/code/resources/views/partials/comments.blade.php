@@ -1,5 +1,8 @@
 @foreach ($comments as $comment)
-    <p class="card border-dark mb-3">
-        {{ $comment->messagec }}
-    </p>
+    <div class=" m-2 card border-dark">
+        <p class= "p-2">
+            {{ $comment->messagec }}
+        </p>
+    </div>
+
 @endforeach

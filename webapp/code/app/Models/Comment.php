@@ -16,7 +16,12 @@ class Comment extends Model
         'message'
     ];
 
-    public function user()
+
+    /* TODO  add commment author to event page*/
+    public function user($event_id)
     {
-        return $this->belongsTo('App\Models\Event_Role', 'idrole');
-    }}
+        $user = Event_Role::where('eventid', $event_id)->join('event_comment', 'event_role.userid', '=', 'event_comment.role_id')->get();
+        return $user;
+    }
+
+}

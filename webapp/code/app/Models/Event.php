@@ -23,6 +23,33 @@ class Event extends Model
         'isprivate' => false,
     ];
 
+    public function announcements($event_id)
+    {
+        $announcements = Event_Role::where('eventid', $event_id)->join('event_announcement', 'event_role.eventid', '=', 'event_announcement.role_id')->get()->unique();
+        return $announcements;
+    }
+
+
+    public function comments($event_id)
+    {
+        $comments = Event_Role::where('eventid', $event_id)->join('event_comment', 'event_role.eventid', '=', 'event_comment.role_id')->get()->unique();
+        return $comments;
+    }
+
+
+    public function participants($event_id)
+    {
+        $participants = Event_Role::where('ishost',false)->where('eventid', $event_id)->join('users', 'event_role.userid', '=', 'users.id')->get()->unique();
+        return $participants;
+    }
+
+
+    public function hosts($event_id)
+    {
+        $hosts = Event_Role::where('ishost', true)->where('eventid', $event_id)->join('users', 'event_role.userid', '=', 'users.id')->get()->unique();
+        return $hosts;
+    }
+
     
     /*public function comments()
     {

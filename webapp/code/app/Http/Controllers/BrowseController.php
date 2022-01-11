@@ -53,5 +53,12 @@ class BrowseController extends Controller
     return view('pages.browse', ['events' => $events_sorted]);
   }
 
+  public function search(Request $request)
+  {
+      // $events = Event::where('eventname', $request->parameters)->get();
+      $events = Event::where('eventname', 'like', '%'.$request->parameters.'%')->get();
+      return view('pages.browse', ['events' => $events]);
+  }
+
   
 }

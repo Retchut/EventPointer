@@ -46,7 +46,7 @@ Route::get('user/{user_id}/my_participations',/*view my participations controlle
 
 // Event
 Route::get('event/{event_id}', 'EventController@show')->name('edit.show');
-Route::delete('event/{event_id}/', 'EventController@delete'); 
+Route::get('event/{event_id}/edit/delete', 'EventController@delete')->name('event.delete'); 
 
 // Event Edit
 Route::get('event/{event_id}/edit', 'EditEventController@show')->name('edit.show');

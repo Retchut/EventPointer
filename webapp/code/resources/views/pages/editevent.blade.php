@@ -79,8 +79,7 @@
 
         <div class="row m-2 p-3">
             <div class="col-11">
-                <button type="button" class="btn btn-danger" href="">Delete
-                    Event</button>
+                <button type="button" class="btn btn-danger" href="">Delete Event</button>
             </div>
             <div class="col-1">
                 <button type="button" class="btn btn-success" href="">Save Changes</button>

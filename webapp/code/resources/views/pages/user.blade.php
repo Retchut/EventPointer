@@ -45,7 +45,7 @@
         <div class="row ">
             <div class="col-sm-12">
                 @if($user->isadmin)
-                @include('partials.adminuser')
+                @include('partials.admin_user')
                 @else
                 @include('partials.normal_user')
                 @endif

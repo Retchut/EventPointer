@@ -98,7 +98,6 @@ class EditEventController extends Controller
     {
         $event = Event::find($event_id);
 
-        $this->authorize('update', $user);
 
         Event::where('id', $event_id)->update(
             [
@@ -111,8 +110,8 @@ class EditEventController extends Controller
             ]
             );
     
-        $user->save();
+        $event->save();
 
-        return redirect()-> route('user.show', $user_id);
+        return redirect()-> route('event.show', $event_id);
     }
 }

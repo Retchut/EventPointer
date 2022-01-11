@@ -45,7 +45,7 @@ Route::get('user/{user_id}/my_events', 'MyEventsController@index');
 Route::get('user/{user_id}/my_participations',/*view my participations controller*/);
 
 // Event
-Route::get('event/{event_id}', 'EventController@show')->name('edit.show');
+Route::get('event/{event_id}', 'EventController@show')->name('event.show');
 Route::get('event/{event_id}/edit/delete', 'EventController@delete')->name('event.delete'); 
 
 // Event Edit

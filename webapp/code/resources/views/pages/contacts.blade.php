@@ -24,7 +24,7 @@
     <p><i class="fa fa-phone"></i>
       <abbr title="Phone"></abbr> (+351) 22 508 14 00</p>
     <p><i class="fa fa-envelope"></i>
-      <abbr title="Email"></abbr> <a href="mailto:up201904977@edu.fe.up.pt ">up201904977@edu.fe.up.pt </a>
+      <abbr title="Email"></abbr> <a class = "link-light"href="mailto:up201904977@edu.fe.up.pt ">up201904977@edu.fe.up.pt </a> (click the email to contact us)
     </p>
     <p><i class="fa fa-clock"></i>
       <abbr title="Hours"></abbr> Monday - Sunday: 24h</p>

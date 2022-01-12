@@ -8,16 +8,20 @@ use App\Models\Event_Role;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 
-class EventHostPolicy
+class EventPolicy
 {
     use HandlesAuthorization;
 
-    public function show(User $user, Event $event)
+    public function show()
     {
-        return true;
+
+        if (Auth::check())
+            return true;
+        else
+            return false;
     }
 
-    
+
     public function create(User $user)
     {
         return Auth::check();

@@ -21,7 +21,7 @@
                 </svg>
             </div>
             <div class="col">
-                <h5> {{$event->duration}} minutes</h5>
+                <h5> {{$event->duration}}</h5>
             </div>
         </div>
         <div class="row pb-3">

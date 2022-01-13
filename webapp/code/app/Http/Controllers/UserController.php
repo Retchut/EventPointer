@@ -24,8 +24,8 @@ class UserController extends Controller
     $user = User::find($user_id);
     if (is_null($user)) {
       return abort(404);
-    } else if ($user->isadmin)
-      return abort(403,"Access Denied");
+    } else if ($user->isadmin && !Auth::user()->isadmin)
+      return abort(403, "Access Denied");
 
 
     $events = $user->events($user_id);

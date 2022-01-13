@@ -12,10 +12,7 @@
         <div class="col-md-2 md-2 border rounded py-2 bg-light text-dark">
 
             <h3 class="m-1">Search event:</h3>
-            <form method="POST" action="{{ route('browse.search') }}">
-                {{ csrf_field() }}
-                <input id="parameters" type="text" name="parameters" value="{{ old('parameters') }}" required autofocus placeholder="Search for names.."></input>
-            </form>    
+            
             
             <!-- search event methods-->
             <h3 class="m-1"> Order By: </h3>

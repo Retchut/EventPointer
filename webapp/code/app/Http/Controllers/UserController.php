@@ -28,18 +28,21 @@ class UserController extends Controller
       return abort(403, "Access Denied");
 
 
-    $events = $user->events($user_id);
+    $events_as_participant = $user->events_as_participant($user_id);
+    $events_as_host = $user->events_as_host($user_id);
+
 
     $reports = Report::all();
 
     $user_stats = [
       'Upvotes' => 0,
       'Comments' => 0,
-      'Total Events' => count($events),
+      'Participations' => count($events_as_participant),
+      'Events Hosted' => count($events_as_host),
       'Member Since' => $user->registrationdate
     ];
     if (Auth::check())
-      return view('pages.user', ['user' => $user, 'events' => $events, 'user_stats' => $user_stats, 'reports' => $reports]);
+      return view('pages.user', ['user' => $user, 'events_as_host' => $events_as_host,'events_as_participant' => $events_as_participant, 'user_stats' => $user_stats, 'reports' => $reports]);
     else
       return redirect("/login");
   }

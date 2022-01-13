@@ -491,7 +491,7 @@ insert into eventg (eventname, event_description, startdate, enddate, place, eve
 insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Gadgets Unboxing and Review','Ever wondered if a online shop is reliable or not? Or being in doubt which product tp buy? Enjoy this sessiond with unboxings and reviews with from different websites and become a pro in online shopping.'
 , '2022-09-1', '2022-10-20', 'Online - Youtube', 'Scheduled', 8);
 insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Summer Sunset 2.2','During all summer enjoy the best music with us.'
-,'2021-07-01', '2021-08-31', 'Leça da Palmeira', 'Finished', 1);
+,'2022-07-01', '2022-08-31', 'Leça da Palmeira', 'Scheduled', 1);
 insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('World Cup 2022 Streaming','Streaming of all matches of the 2022 Football World Cup'
 ,'2022-11-21', '2022-12-18', 'Online - Cloud Sports', 'Scheduled', 2);
 insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Movie Nights','The first edition of movie nights is here. To celebrate the 4th of May we prepared  2 months of streaming of your favorite saga. Enjoy us and may the force be with you.'

@@ -13,6 +13,7 @@
             <h3 class="m-1">Search event:</h3>
             <form method="GET" action="{{ route('browse.search') }}">
                 <input id="search-input" type="text" name="search_query" value="{{ old('search_query') }}" autofocus placeholder="Search for events..">
+                <input type="submit" value="Search">
 
                 <h5 class="m-2">State:</h5>
                 <select id="state-select" name="event_state" class="form-select form-select-lg mb-3" multiple aria-label=" multiple select example">

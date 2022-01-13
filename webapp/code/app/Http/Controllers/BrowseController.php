@@ -36,22 +36,22 @@ class BrowseController extends Controller
     //sort
     switch ($request->sort) {
       case "sdate-asc":
-        $events = $events->sortBy(['startdate', 'asc']);
+        $events = $events->sortBy('startdate');
           break;
       case "sdate-desc":
-          $events = $events->sortBy(['startdate', 'desc']);
+          $events = $events->sortByDesc('startdate');
           break;
       case "edate-asc":
-          $events = $events->sortBy(['enddate', 'asc']);
+          $events = $events->sortBy('enddate');
           break;
       case "edate-desc":
-          $events = $events->sortBy(['enddate', 'desc']);
+          $events = $events->sortByDesc('enddate');
           break;
       case "dur-asc":
-          $events = $events->sortBy(['duration', 'asc']);
+          $events = $events->sortBy('duration');
           break;
       case "dur-desc":
-          $events = $events->sortBy(['duration', 'desc']);
+          $events = $events->sortByDesc('duration');
           break;
     }
     // $this->authorize('show', $events);

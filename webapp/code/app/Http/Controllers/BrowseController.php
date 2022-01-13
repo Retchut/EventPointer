@@ -15,50 +15,46 @@ class BrowseController extends Controller
    *
    * @return View
    */
-  public function show()
+  public function show(Request $request)
   {
-    $events = Event::all();
+    //search for query
+    if($request->search_query == "Null"){
+      $event_query=Event::all();
+    }
+    else{
+      $event_query=Event::where('eventname', 'like', '%'.$request->search_query.'%');
+    }
+
+    //search for state
+    if(!(is_null($request->event_state) || ($request->event_state == "All"))){
+      $event_query->where('eventstate', $request->event_state);
+    }
+
+    //fetch data
+    $events = $event_query->get();
+    
+    //sort
+    switch ($request->sort) {
+      case "sdate-asc":
+        $events = $events->sortBy(['startdate', 'asc']);
+          break;
+      case "sdate-desc":
+          $events = $events->sortBy(['startdate', 'desc']);
+          break;
+      case "edate-asc":
+          $events = $events->sortBy(['enddate', 'asc']);
+          break;
+      case "edate-desc":
+          $events = $events->sortBy(['enddate', 'desc']);
+          break;
+      case "dur-asc":
+          $events = $events->sortBy(['duration', 'asc']);
+          break;
+      case "dur-desc":
+          $events = $events->sortBy(['duration', 'desc']);
+          break;
+    }
     // $this->authorize('show', $events);
     return view('pages.browse', ['events' => $events]);
   }
-  
-
-  public function sort($order)
-  {
-    $events = Event::all();
-    $events_sd_asc = array();
-    switch ($order) {
-      case "sdate-asc":
-        $events_sorted = $events->sortBy(['startdate', 'asc']);
-          break;
-      case "sdate-desc":
-          $events_sorted = $events->sortBy(['startdate', 'desc']);
-          break;
-      case "edate-asc":
-          $events_sorted = $events->sortBy(['enddate', 'asc']);
-          break;
-      case "edate-desc":
-          $events_sorted = $events->sortBy(['enddate', 'desc']);
-          break;
-      case "dur-asc":
-          $events_sorted = $events->sortBy(['duration', 'asc']);
-          break;
-      case "dur-desc":
-          $events_sorted = $events->sortBy(['duration', 'desc']);
-          break;
-    }
-
-    $scheduled = $events->sortBy(['duration', 'desc']);
-    // $this->authorize('show', $events);
-    return view('pages.browse', ['events' => $events_sorted]);
-  }
-
-  public function search(Request $request)
-  {
-      // $events = Event::where('eventname', $request->parameters)->get();
-      $events = Event::where('eventname', 'like', '%'.$request->parameters.'%')->get();
-      return view('pages.browse', ['events' => $events]);
-  }
-
-  
 }

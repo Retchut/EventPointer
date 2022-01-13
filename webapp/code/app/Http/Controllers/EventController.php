@@ -25,15 +25,15 @@ class EventController extends Controller
     $comments = $events->comments($event_id);
     $participants = $events->participants($event_id);
     $hosts = $events->hosts($event_id);
-
-    /* 403 exception apge*/
+    $tag = $events->tag($event_id);
+        /* 403 exception apge*/
     /*
     $this->authorize('show', $events);
     return view('pages.event', ['event' => $events, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants]);
     */
 
     if (Auth::check())
-      return view('pages.event', ['event' => $events, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants]);
+      return view('pages.event', ['event' => $events, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants,'tag'=>$tag]);
     else
       return redirect("/login");
   }

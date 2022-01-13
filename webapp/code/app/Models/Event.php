@@ -50,6 +50,12 @@ class Event extends Model
         return $hosts;
     }
 
+    public function tag($event_id){
+        $event = Event::find($event_id);
+        $tag = Tag::find($event->tagid);
+        return $tag;
+    }
+
     
     /*public function comments()
     {

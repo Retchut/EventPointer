@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Event;
+use Illuminate\Auth\Middleware\Authorize;
 
 class EventController extends Controller
 {
@@ -18,14 +19,23 @@ class EventController extends Controller
    */
   public function show($event_id)
   {
+
     $events = Event::find($event_id);
     $announcements = $events->announcements($event_id);
     $comments = $events->comments($event_id);
     $participants = $events->participants($event_id);
     $hosts = $events->hosts($event_id);
+    $tag = $events->tag($event_id);
+        /* 403 exception apge*/
+    /*
+    $this->authorize('show', $events);
+    return view('pages.event', ['event' => $events, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants]);
+    */
 
-    // $this->authorize('show', $events);
-    return view('pages.event', ['event' => $events, 'comments' => $comments, 'announcements' => $announcements,'hosts'=> $hosts, 'participants'=>$participants]);
+    if (Auth::check())
+      return view('pages.event', ['event' => $events, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants,'tag'=>$tag]);
+    else
+      return redirect("/login");
   }
 
 

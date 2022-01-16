@@ -9,7 +9,10 @@ class Tag extends Model
 {
     use HasFactory;
     public $timestamps = false;
-        protected $fillable = ['tagname'];
+    protected $table = 'event_tag';
+    protected $fillable = ['tagname'];
+
+
 
         public function events(){
             return $this->belongsToMany('App\Models\Event');

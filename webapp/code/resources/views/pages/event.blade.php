@@ -27,6 +27,18 @@
                         <div class="row pb-1">
                             <div class="col-1 text-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-hourglass-split" viewBox="0 0 16 16">
+                                    <path
+                                        d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2h-7zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48V8.35zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z" />
+                                </svg>
+                            </div>
+                            <div class="col">
+                                <h5> Duration: {{ $event->duration }}</h5>
+                            </div>
+                        </div>
+                        <div class="row pb-1">
+                            <div class="col-1 text-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-map" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd"
                                         d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.502.502 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103zM10 1.91l-4-.8v12.98l4 .8V1.91zm1 12.98 4-.8V1.11l-4 .8v12.98zm-6-.8V1.11l-4 .8v12.98l4-.8z" />
@@ -47,15 +59,25 @@
                                 </svg>
                             </div>
                             <div class="col">
-
                                 <h5> Hosts:
                                     @foreach ($hosts as $host)
-                                        <a class = "m-2 .text-white  link-light" href="{{ url('/user/' . $host->id) }}">
-                                            {{ $host->username }} 
+                                        <a class="m-2 .text-white  link-light" href="{{ url('/user/' . $host->id) }}">
+                                            {{ $host->username }}
                                         </a>
                                     @endforeach
 
                                 </h5>
+                            </div>
+                        </div>
+                        <div class="row pb-1">
+                            <div class="col-1 text-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tag" viewBox="0 0 16 16">
+                                    <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z"/>
+                                    <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z"/>
+                                  </svg>
+                            </div>
+                            <div class="col">
+                                <h5> {{ $tag->tagname }}</h5>
                             </div>
                         </div>
                         <div class="row"></div>

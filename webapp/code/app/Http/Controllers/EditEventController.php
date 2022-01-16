@@ -27,7 +27,7 @@ class EditEventController extends Controller
         //$user = User::find(Auth::user()->id);
         //$event_role = User::events_host($user->$id);
         //if(Auth::check() and this)
-    return view('pages.editevent'/*, ['event' => $events]*/);
+        return view('pages.editevent'/*, ['event' => $events]*/);
     }
 /*
     public function create(Request $request)
@@ -79,6 +79,7 @@ class EditEventController extends Controller
 
         return redirect()-> route('event.show', $id);
     }*/
+    /*
     public function update(Request $request, $id)
     {
         $event = Event::find($id);
@@ -91,5 +92,26 @@ class EditEventController extends Controller
         $event->save();
         return redirect()-> route('event.show', $id);
 
-}
+    } */
+
+    public function update(Request $request, $event_id)
+    {
+        $event = Event::find($event_id);
+
+
+        Event::where('id', $event_id)->update(
+            [
+                'eventname' => $request->name,
+                'place' => $request->event_place,
+                'startdate' => $request->start_date,
+                'enddate' => $request->end_date,
+                'eventstate' => $request->event_state,
+                'isprivate' => $request->private_event,
+            ]
+            );
+    
+        $event->save();
+
+        return redirect()-> route('event.show', $event_id);
+    }
 }

@@ -68,6 +68,18 @@
                             </select>
                         </div>
 
+                        <div class="row m-2 p-3">
+                            <div class="col-11">
+                                <button type="button" class="btn btn-danger"><a class="text-light" href="{{ url('/event/'.$event->id.'/edit/delete') }}">Delete Event</a></button>
+                                
+                            </div>
+                            <div class="col-1">
+                                <a class="text-light" >
+                                    <button type="submit" class="btn btn-success" style="width:100%; margin-right: 0.5rem">Save Changes</button>
+                                </a>
+                            </div>
+                        </div>
+
                     </form>
                 </div>
             </div>
@@ -77,18 +89,7 @@
         </div>
 
 
-        <div class="row m-2 p-3">
-            <div class="col-11">
-                <a class="text-light" href="{{ url('/event/'.$event->id.'/edit/delete') }}">
-                    <button type="button" class="btn btn-danger" href="">Delete Event</button>
-                </a>
-            </div>
-            <div class="col-1">
-                <a class="text-light" href="{{ url('/event/'.$event->id.'/edit/delete') }}">
-                    <button type="button" class="btn btn-success" href="">Save Changes</button>
-                </a>
-            </div>
-        </div>
+        
     </section>
 
 @endsection

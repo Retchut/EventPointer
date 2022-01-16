@@ -346,7 +346,7 @@ CREATE FUNCTION edit_vote() RETURNS TRIGGER AS
 $BODY$
 BEGIN
         IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
-           RAISE EXCEPTION ' Only participating userss can edit and vote on their own comments on the discussion of events.';
+           RAISE EXCEPTION ' Only participating users can edit and vote on their own comments on the discussion of events.';
         END IF;
         RETURN NEW;
 END

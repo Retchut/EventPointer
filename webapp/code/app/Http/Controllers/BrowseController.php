@@ -30,6 +30,10 @@ class BrowseController extends Controller
       $event_query->where('eventstate', $request->event_state);
     }
 
+    if(!(is_null($request->event_tag) || ($request->event_tag == "All"))){
+      $event_query->where('tagid', $request->event_tag);
+    }
+
     //fetch data
     $events = $event_query->get();
     

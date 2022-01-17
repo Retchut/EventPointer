@@ -1,16 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'editevent')
+@section('title', 'report_event')
 
 @section('content')
 
 <section id="report_event">
     <h1>Report Event</h1>
-    <div class="form-group m-3">
-        <label for="report">Write here</label>
-        <textarea id="report"  class="form-control" aria-label="With textarea"></textarea>
-    </div>
-    <div class = "text-center mt-3"><button type="button" class="btn btn-danger">Send</button></div>
+    @include('partials.text_form')
 </section>
 
 @endsection

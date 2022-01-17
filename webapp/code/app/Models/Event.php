@@ -25,14 +25,14 @@ class Event extends Model
 
     public function announcements($event_id)
     {
-        $announcements = Event_Role::where('eventid', $event_id)->join('event_announcement', 'event_role.eventid', '=', 'event_announcement.role_id')->get()->unique();
+        $announcements = Event_Role::where('eventid', $event_id)->join('event_announcement', 'event_role.id', '=', 'event_announcement.role_id')->get()->unique();
         return $announcements;
     }
 
 
     public function comments($event_id)
     {
-        $comments = Event_Role::where('eventid', $event_id)->join('event_comment', 'event_role.eventid', '=', 'event_comment.role_id')->get()->unique();
+        $comments = Event_Role::where('eventid', $event_id)->join('event_comment', 'event_role.id', '=', 'event_comment.role_id')->get()->unique();
         return $comments;
     }
 
@@ -48,6 +48,12 @@ class Event extends Model
     {
         $hosts = Event_Role::where('ishost', true)->where('eventid', $event_id)->join('users', 'event_role.userid', '=', 'users.id')->get()->unique();
         return $hosts;
+    }
+
+    public function tag($event_id){
+        $event = Event::find($event_id);
+        $tag = Tag::find($event->tagid);
+        return $tag;
     }
 
     

@@ -24,8 +24,3 @@
   width: 50%;
   height: auto;
 }
-
-.user-info {
-  padding: 12px, 0px, 4px; /* bootstrap: pt-3 pb-1 */
-  border-radius: 0.25rem; /* bootstrap: rounded */
-}

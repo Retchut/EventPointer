@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Models\User;
-use App\Models\Event;
-use App\Models\Event_Role;
+use App\User;
+use App\Event;
+
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,20 +17,22 @@ class EventHostPolicy
         return true;
     }
 
-    
-    public function create(User $user)
-    {
-        return Auth::check();
-    }
-
-
     public function list(User $user)
     {
+        // Any user can list its own events
         return Auth::check();
     }
 
-    public function update(User $user, Event $event, Event_Role $event_role)
+    public function create(User $user)
     {
-        return $user->id == $event_role->userid  and $event_role->eventid == $event->id and $event_role->ishost;
+        // Any user can create a new event
+        return Auth::check();
+    }
+
+    public function delete(User $user, Event $event)
+    {
+        // Only a host can delete it 
+        //TODO fix crossover
+        return $user->id == $event->user_id;
     }
 }

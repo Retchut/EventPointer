@@ -23,7 +23,9 @@
                     <h3 class="m-1">Please enter new event details:</h3>
                 </div>
                 <div class="col">
-                    <form>
+                    <form method="POST" action="{{ route('event.update', $event->id) }}">
+                        {{ csrf_field() }}
+
                         <div class="form-group mb-2">
                             <label for="eventname">Event Name</label>
                             <input type="text" class="form-control" id="eventname" name="eventname">
@@ -66,6 +68,18 @@
                             </select>
                         </div>
 
+                        <div class="row m-2 p-3">
+                            <div class="col-11">
+                                <button type="button" class="btn btn-danger"><a class="text-light" href="{{ url('/event/'.$event->id.'/edit/delete') }}">Delete Event</a></button>
+
+                            </div>
+                            <div class="col-1">
+                                <a class="text-light" >
+                                    <button type="submit" class="btn btn-success" style="width:140%; margin-right: 0.5rem">Save Changes</button>
+                                </a>
+                            </div>
+                        </div>
+
                     </form>
                 </div>
             </div>
@@ -75,11 +89,6 @@
         </div>
 
 
-        <div class="row mt-4 me-2 flex-row-reverse">
-            <button type="button" class="btn btn-success w-auto me-5" href="">Save Changes</button>
-            <button type="button" class="btn btn-danger w-auto me-3" href="">Delete
-                Event</button>
-        </div>
     </section>
 
 @endsection

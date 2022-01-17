@@ -27,7 +27,7 @@ class EditEventController extends Controller
         //$user = User::find(Auth::user()->id);
         //$event_role = User::events_host($user->$id);
         //if(Auth::check() and this)
-    return view('pages.editevent'/*, ['event' => $events]*/);
+        return view('pages.editevent'/*, ['event' => $events]*/);
     }
 /*
     public function create(Request $request)
@@ -79,6 +79,7 @@ class EditEventController extends Controller
 
         return redirect()-> route('event.show', $id);
     }*/
+    /*
     public function update(Request $request, $id)
     {
         $event = Event::find($id);
@@ -91,5 +92,52 @@ class EditEventController extends Controller
         $event->save();
         return redirect()-> route('event.show', $id);
 
-}
+    } */
+
+    public function update(Request $request, $event_id)
+    {
+        /*
+        $event = Event::find($event_id);
+
+
+        Event::where('id', $event_id)->update(
+            [
+                'eventname' => $request->name,
+                'place' => $request->event_place,
+                'startdate' => $request->start_date,
+                'enddate' => $request->end_date,
+                'eventstate' => $request->event_state,
+                'isprivate' => $request->private_event,
+            ]
+            ); */
+
+        $event = Event::find($request->event_id);
+
+        $this->authorize('update', $event);
+
+        if ($request->input('name') != null)
+            $event->eventname = $request->input('name');
+
+
+        if ($request->input('event_place') != null)
+            $event->place = $request->input('event_place');
+
+
+        if ($request->input('start_date') != null)
+            $event->description = $request->input('startdate');
+
+
+        if ($request->input('end_date') != null)
+            $event->enddate = $request->input('end_date');
+
+        if ($request->input('event_state') != null)
+            $event->eventstate = $request->input('event_state');
+
+        if ($request->input('private_event') != null)
+            $event->isprivate = $request->input('private_event');
+    
+        $event->save();
+
+        return redirect()-> route('event.show', $event_id);
+    }
 }

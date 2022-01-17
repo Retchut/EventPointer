@@ -18,8 +18,7 @@ Route::get('/', 'HomeController@show')->name('home');
 Route::get('about', 'AboutController@show');
 Route::get('faq', 'FAQController@show');
 Route::get('contacts', 'ContactsController@show');
-Route::get('browse', 'BrowseController@show');
-Route::get('browse/{filter}', 'BrowseController@sort');
+Route::get('browse', 'BrowseController@show')->name('browse.search');
 
 // User Profile
 Route::get('user/{user_id}', 'UserController@show')->name('user.show');
@@ -45,12 +44,12 @@ Route::get('user/{user_id}/my_events', 'MyEventsController@index');
 Route::get('user/{user_id}/my_participations',/*view my participations controller*/);
 
 // Event
-Route::get('event/{event_id}', 'EventController@show')->name('edit.show');
-Route::delete('event/{event_id}/', 'EventController@delete'); 
+Route::get('event/{event_id}', 'EventController@show')->name('event.show');
+Route::get('event/{event_id}/edit/delete', 'EventController@delete')->name('event.delete'); 
 
 // Event Edit
 Route::get('event/{event_id}/edit', 'EditEventController@show')->name('edit.show');
-Route::post('event/{event_id}/edit', 'EditEventController@update');
+Route::post('event/{event_id}/edit', 'EditEventController@update')->name('event.update');
 
 // Report Event
 Route::get('event/{event_id}/report', 'ReportEventController@index')->name('create.show');

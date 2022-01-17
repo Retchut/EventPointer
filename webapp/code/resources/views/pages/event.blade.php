@@ -61,7 +61,7 @@
                             <div class="col-sm-auto my-auto">
                                 <h5 class="my-auto"> Hosts:
                                     @foreach ($hosts as $host)
-                                        <a class = "m-2 .text-white  link-light" href="{{ url('/user/' . $host->id) }}">
+                                        <a class = "m-2 .text-black link-black" href="{{ url('/user/' . $host->id) }}">
                                             {{ $host->username }}
                                         </a>
                                     @endforeach

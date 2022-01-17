@@ -9,12 +9,12 @@
     <div class="row gap-5">
         <div class="h-50 col-md-2 ms-3 border border-primary rounded p-3 bg-light text-dark align-center">
             <h2 class="m-1">Search event:</h2>
-            <form method="GET" action="{{ route('browse.search') }}">
-                <input id="search-input" type="text" name="search_query" value="{{ old('search_query') }}" autofocus placeholder="Search for events..">
-                <input type="submit" value="Search">
+            <form method="GET" class="form-group" action="{{ route('browse.search') }}">
+                <input id="search-input" class="mb-1 form-control ms-2 w-75 input-sm p-1" type="text" name="search_query" value="{{ old('search_query') }}" autofocus placeholder="Search for events..">
+                <input type="submit" value="Search" class="btn btn-sm btn-outline-success p-1 ms-2 mb-2">
 
-                <h5 class="m-2">State:</h5>
-                <select id="state-select" name="event_state" class="form-select form-select-lg mb-3" multiple aria-label=" multiple select example">
+                <h3 class="m-1">State:</h3>
+                <select id="state-select" name="event_state" class="form-select form-select-sm ms-2 mb-3 w-75" multiple aria-label=" multiple select example">
                     <option selected>All</option>
                     <option value="Scheduled">Scheduled</option>
                     <option value="Ongoing">Ongoing</option>
@@ -24,7 +24,7 @@
             </form>
 
             <!-- orderevents-->
-            <h3 class="m-1"> Order By: </h3>
+            <h3 class="m-1 mt-2"> Order By: </h3>
             <div>
                 <div>
                     <h5 class="m-2 mb-1">Start Date:</h5>

@@ -19,10 +19,10 @@
 
 
             <div class="col-md-1 w-75 border rounded py-2 bg-light text-dark align-center border-primary">
-                <div class=" mb-3">
+                <div class="mb-3 m-2">
                     <h3 class="m-1">Please enter new event details:</h3>
                 </div>
-                <div class="col">
+                <div class="col m-2">
                     <form method="POST" action="{{ route('event.update', $event->id) }}">
                         {{ csrf_field() }}
 
@@ -64,22 +64,13 @@
                             <select class="form-control" id="private_event">
                                 <option value="1">Yes</option>
                                 <option value="0" selected>No</option>
-
                             </select>
                         </div>
 
-                        <div class="row m-2 p-3">
-                            <div class="col-11">
-                                <button type="button" class="btn btn-danger"><a class="text-light" href="{{ url('/event/'.$event->id.'/edit/delete') }}">Delete Event</a></button>
-
-                            </div>
-                            <div class="col-1">
-                                <a class="text-light" >
-                                    <button type="submit" class="btn btn-success" style="width:140%; margin-right: 0.5rem">Save Changes</button>
-                                </a>
-                            </div>
+                        <div class="row mt-4 me-1 flex-row-reverse">
+                            <button type="submit" class="btn btn-success w-auto">Save Changes</button>
+                            <div class="w-auto me-3 row-sm-auto"><a class="btn btn-danger" href="{{ url('/event/'.$event->id.'/edit/delete') }}">Delete Event</a></div>
                         </div>
-
                     </form>
                 </div>
             </div>

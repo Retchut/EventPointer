@@ -1,7 +1,5 @@
 @foreach ($announcements as $announcement)
-<div class=" m-2 card border-dark">
-    <p class= "p-2">
+    <div class="m-2 p-2 border border-primary rounded">
         {{ $announcement->messagea }}
-    </p>
-</div>
+    </div>
 @endforeach

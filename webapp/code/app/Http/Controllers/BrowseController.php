@@ -22,7 +22,7 @@ class BrowseController extends Controller
       $event_query=Event::all();
     }
     else{
-      $event_query=Event::where('eventname', 'like', '%'.$request->search_query.'%');
+      $event_query=Event::where('eventname', 'ilike', '%'.$request->search_query.'%');
     }
 
     //search for state

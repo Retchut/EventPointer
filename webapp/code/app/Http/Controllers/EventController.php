@@ -46,9 +46,7 @@ class EventController extends Controller
 
       $this->authorize('delete', $event);
 
-      $event->eventname = 'deleted'.$event->id;
-
-      $event->save();
+      $event->delete();
 
       return redirect()->route('home');
     }

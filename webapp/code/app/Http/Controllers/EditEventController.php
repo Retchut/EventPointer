@@ -96,6 +96,7 @@ class EditEventController extends Controller
 
     public function update(Request $request, $event_id)
     {
+        /*
         $event = Event::find($event_id);
 
 
@@ -108,7 +109,32 @@ class EditEventController extends Controller
                 'eventstate' => $request->event_state,
                 'isprivate' => $request->private_event,
             ]
-            );
+            ); */
+
+        $event = Event::find($request->event_id);
+
+        $this->authorize('update', $event);
+
+        if ($request->input('name') != null)
+            $event->eventname = $request->input('name');
+
+
+        if ($request->input('event_place') != null)
+            $event->place = $request->input('event_place');
+
+
+        if ($request->input('start_date') != null)
+            $event->description = $request->input('startdate');
+
+
+        if ($request->input('end_date') != null)
+            $event->enddate = $request->input('end_date');
+
+        if ($request->input('event_state') != null)
+            $event->eventstate = $request->input('event_state');
+
+        if ($request->input('private_event') != null)
+            $event->isprivate = $request->input('private_event');
     
         $event->save();
 

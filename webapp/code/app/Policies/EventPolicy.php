@@ -35,6 +35,8 @@ class EventPolicy
 
     public function update(User $user, Event $event, Event_Role $event_role)
     {
-        return $user->id == $event_role->userid  and $event_role->eventid == $event->id and $event_role->ishost;
+        //return $user->id == $event_role->userid  and $event_role->eventid == $event->id and $event_role->ishost;
+
+        return DB::table('event_role')->where('eventid', '=', $event->id)->where('userid', '=', Auth::user()->id)->exists() || $user->ishost;
     }
 }

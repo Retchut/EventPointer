@@ -24,8 +24,10 @@
                 <div class=" mb-3 bg-dark text-white">
                     <h3 class="m-1">Please enter new event details:</h3>
                 </div>
-                <div class="col">
-                    <form>
+                <div class="col p-2">
+                    <form method="POST" action="{{ route('event.update', $event->id) }}">
+                        {{ csrf_field() }}
+
                         <div class="form-group">
                             <label for="eventname">Event Name</label>
                             <input type="text" class="form-control" id="eventname" name="eventname" placeholder="Event Name...">
@@ -75,7 +77,7 @@
                             </div>
                             <div class="col-1">
                                 <a class="text-light" >
-                                    <button type="submit" class="btn btn-success" style="width:100%; margin-right: 0.5rem">Save Changes</button>
+                                    <button type="submit" class="btn btn-success" style="width:140%; margin-right: 0.5rem">Save Changes</button>
                                 </a>
                             </div>
                         </div>

@@ -49,7 +49,7 @@ Route::get('event/{event_id}/edit/delete', 'EventController@delete')->name('even
 
 // Event Edit
 Route::get('event/{event_id}/edit', 'EditEventController@show')->name('edit.show');
-Route::post('event/{event_id}/edit', 'EditEventController@update');
+Route::post('event/{event_id}/edit', 'EditEventController@update')->name('event.update');
 
 // Report Event
 Route::get('event/{event_id}/report', 'ReportEventController@index')->name('create.show');

@@ -1,10 +1,10 @@
-<div class="row mb-3">
+<div class="row mb-4">
     <div class="col my-auto" style="max-width: 200px;">
         <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1112&q=80"
             class="img-fluid rounded" style="height: 150px; width: 100%; object-fit: cover;">
     </div>
     <div class="col-10">
-        <h2 class="font-weight-bold pt-4 pb-2">{{ $event->eventname }}</h2>
+        <h2 class="font-weight-bold">{{ $event->eventname }}</h2>
         <div class="row mb-2">
             <div class="col-1 text-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

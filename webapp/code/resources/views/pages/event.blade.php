@@ -18,7 +18,7 @@
                     setup_popup_btn();
                 </script>
             @endif
-            
+
             <div class="event-details pb-5">
                 <div class="row">
                     <div class="col-sm-8 event-info">
@@ -105,18 +105,21 @@
                             <!-- only show if host -->
                             @foreach ($hosts as $host)
                                 @if($host->id == Auth::user()->id)
-                                    <div class="row-sm-auto text-center mb-1"><a class="btn btn-sm btn-outline-primary"
-                                            href="{{ url('/event/' . $event->id) . '/edit' }}">Edit Event</a></div>
-                                    <div class="row-sm-auto text-center mb-1"><a class="btn btn-sm btn-outline-primary"
-                                            href="{{ url('/event/' . $event->id) . '/addparticipant' }}">Add Participant</a></div>
-                                    <div class="row-sm-auto text-center mb-1"><a class="btn btn-sm btn-outline-primary"
-                                            href="{{ url('/event/' . $event->id) . '/cancel' }}">Cancel Event</a></div>
-                                    <div class="row-sm-auto text-center mb-1"><a class="btn btn-sm btn-outline-danger"
-                                            href="{{ url('/event/'.$event->id.'/delete') }}">Delete Event</a></div>
-                                    
+                                    <div class="col-auto">
+                                        <div class="row-sm-auto text-center mb-1"><a class="btn btn-sm btn-outline-primary"
+                                                href="{{ url('/event/' . $event->id) . '/edit' }}">Edit Event</a></div>
+                                        <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-outline-success"
+                                                href="{{ url('/event/' . $event->id) . '/addparticipant' }}">Add Participant</a></div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-warning"
+                                                href="{{ url('/event/' . $event->id) . '/cancel' }}">Cancel Event</a></div>
+                                        <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-danger"
+                                                href="{{ url('/event/'.$event->id.'/delete') }}">Delete Event</a></div>
+                                    </div>
                                 @endif
                             @endforeach
-                            
+
                             <div class="row-sm-auto text-center"><a class="btn btn-sm btn-outline-danger"
                                     href="{{ url('/event/' . $event->id) . '/report' }}">Report Event</a></div>
                         </div>

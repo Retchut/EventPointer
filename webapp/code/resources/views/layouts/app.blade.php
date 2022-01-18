@@ -43,8 +43,15 @@
                   <a class="nav-link" href="{{ url('/login') }}">Log In</a>
                 </li>
                 @endif
+                <li class="nav-item">
+                  <form class="d-flex" style="width: 300px;">
+                    <input class="form-control form-control-sm me-sm-2" type="text" placeholder="Search">
+                    <button class="btn btn-secondary btn-sm my-2 my-sm-0" type="submit">Search</button>
+                  </form>
+                </li>
               </ul>
             </div>
+
           </div>
         </nav>
       </header>

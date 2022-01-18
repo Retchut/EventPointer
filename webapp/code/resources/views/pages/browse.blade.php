@@ -10,11 +10,10 @@
             <div class="h-50 col-md-2 ms-3 border border-primary rounded p-3 bg-light text-dark align-center">
                 <h2 class="m-1">Search event:</h2>
                 <form method="GET" class="form-group" action="{{ route('browse.search') }}">
-                    <input id="search-input" class="mb-1 form-control ms-2 w-75 input-sm p-1" type="text" name="search_query"
+                    <input id="search-input" class="mb-2 form-control ms-2 w-75 input-sm p-1" type="text" name="search_query"
                         value="{{ old('search_query') }}" autofocus placeholder="Search for events..">
-                    <input type="submit" value="Search" class="btn btn-sm btn-outline-success p-1 ms-2 mb-2">
 
-                    <h3 class="m-1">State:</h3>
+                    <h4 class="m-1">State:</h4>
                     <select id="state-select" name="event_state" class="form-select form-select-sm ms-2 mb-3 w-75" multiple
                         aria-label=" multiple select example">
                         <option selected>All</option>
@@ -24,7 +23,7 @@
                         <option value="Finished">Finished</option>
                     </select>
 
-                    <h3 class="m-1">Tag:</h3>
+                    <h4 class="m-1">Tag:</h4>
                     <select id="state-select" name="event_tag" class="form-select form-select-sm ms-2 mb-3 w-75" multiple
                         aria-label=" multiple select example">
                         <option selected>All</option>
@@ -38,6 +37,9 @@
                         <option value = "8"> Tech</option>
                         <option value = "9">Streaming </option>
                     </select>
+
+                    <input type="submit" value="Search" class="btn btn-sm btn-outline-success p-1 ms-2 mb-2">
+
                 </form>
 
                 <!-- orderevents-->

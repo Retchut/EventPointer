@@ -40,16 +40,26 @@ class EventController extends Controller
 
 
 
-    public function delete($event_id)
-    {
-      $event = Event::find($event_id);
+  public function delete($event_id)
+  {
+    $event = Event::find($event_id);
 
-      $this->authorize('delete', $event);
+    //$this->authorize('delete', $event);
 
-      $event->delete();
+    $event->delete();
 
-      return redirect()->route('home');
-    }
+    return redirect()->route('home');
+  }
+
+  public function cancel($event_id)
+  {
+      //TODO
+  }
+
+  public function addparticipant($event_id)
+  {
+      //TODO
+  }
 
   public function index()
   {

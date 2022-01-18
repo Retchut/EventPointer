@@ -28,6 +28,7 @@ Route::get('/user/{user_id}/delete', 'UserController@delete')->name('user.delete
 Route::get('user/{user_id}/edit', 'EditUserController@index')->name('edit.show');
 Route::post('user/{user_id}/edit', 'EditUserController@update')->name('user.update');
 
+
 //User Create Event
 Route::get('user/{user_id}/create_event', 'EventController@index')->name('create.show');
 Route::post('user/{user_id}/create_event', 'EventController@create')->name('create');
@@ -44,11 +45,14 @@ Route::get('user/{user_id}/my_participations',/*view my participations controlle
 
 // Event
 Route::get('event/{event_id}', 'EventController@show')->name('event.show');
-Route::get('event/{event_id}/edit/delete', 'EventController@delete')->name('event.delete'); 
+Route::get('event/{event_id}/delete', 'EventController@delete')->name('event.delete'); 
 
 // Event Edit
 Route::get('event/{event_id}/edit', 'EditEventController@show')->name('edit.show');
 Route::post('event/{event_id}/edit', 'EditEventController@update')->name('event.update');
+
+// Event Cancel
+Route::get('event/{event_id}/cancel', 'EventController@cancel')->name('event.cancel');
 
 // Report Event
 Route::get('event/{event_id}/report', 'ReportEventController@index')->name('create.show');

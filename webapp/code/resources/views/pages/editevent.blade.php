@@ -69,7 +69,6 @@
 
                         <div class="row mt-4 me-1 flex-row-reverse">
                             <button type="submit" class="btn btn-success w-auto">Save Changes</button>
-                            <div class="w-auto me-3 row-sm-auto"><a class="btn btn-danger" href="{{ url('/event/'.$event->id.'/edit/delete') }}">Delete Event</a></div>
                         </div>
                     </form>
                 </div>

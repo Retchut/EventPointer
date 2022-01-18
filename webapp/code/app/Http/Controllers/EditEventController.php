@@ -96,45 +96,30 @@ class EditEventController extends Controller
 
     public function update(Request $request, $event_id)
     {
-        /*
-        $event = Event::find($event_id);
-
-
-        Event::where('id', $event_id)->update(
-            [
-                'eventname' => $request->name,
-                'place' => $request->event_place,
-                'startdate' => $request->start_date,
-                'enddate' => $request->end_date,
-                'eventstate' => $request->event_state,
-                'isprivate' => $request->private_event,
-            ]
-            ); */
 
         $event = Event::find($request->event_id);
 
-        $this->authorize('update', $event);
 
-        if ($request->input('name') != null)
-            $event->eventname = $request->input('name');
-
-
-        if ($request->input('event_place') != null)
-            $event->place = $request->input('event_place');
+        if ($request->eventname != null)
+            $event->eventname = $request->eventname;
 
 
-        if ($request->input('start_date') != null)
-            $event->description = $request->input('startdate');
+        if ($request->place != null)
+            $event->place = $request->place;
 
 
-        if ($request->input('end_date') != null)
-            $event->enddate = $request->input('end_date');
+        if ($request->startdate != null)
+            $event->startdate = $request->startdate;
 
-        if ($request->input('event_state') != null)
-            $event->eventstate = $request->input('event_state');
 
-        if ($request->input('private_event') != null)
-            $event->isprivate = $request->input('private_event');
+        if ($request->enddate != null)
+            $event->enddate = $request->enddate;
+
+        if ($request->eventstate != null)
+            $event->eventstate = $request->eventstate;
+
+        if ($request->isprivate != null)
+            $event->isprivate = $request->isprivate;
     
         $event->save();
 

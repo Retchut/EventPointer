@@ -33,10 +33,11 @@ class EventPolicy
         return Auth::check();
     }
 
+    /*
     public function update(User $user, Event $event, Event_Role $event_role)
     {
         //return $user->id == $event_role->userid  and $event_role->eventid == $event->id and $event_role->ishost;
 
         return DB::table('event_role')->where('eventid', $event->id)->join('users', 'event_role.userid', '=', 'users.id')->exists();
-    }
+    }*/
 }

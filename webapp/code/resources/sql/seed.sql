@@ -182,7 +182,7 @@ BEGIN
         );
  END IF;
  IF TG_OP = 'UPDATE' THEN
-         IF (NEW.name <> OLD.name) THEN
+         IF (NEW.eventname <> OLD.eventname) THEN
            NEW.tsvectors = (
              setweight(to_tsvector('english', NEW.eventname), 'A')
            );

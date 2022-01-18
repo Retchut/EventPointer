@@ -6,8 +6,8 @@
             <div class="row user-event m-3 p-2 info-div rounded">
 
                 <h4> Description: {{ $report->descriptions }}</h4>
-                <h5> Reported by user with id={{$report->userid}}</h5>
-                <h5> Report on event with id={{$report->eventid}} </h5>
+                <h5 class="ms-1"> Reported by user with id={{$report->userid}}</h5>
+                <h5 class="ms-1"> Report on event with id={{$report->eventid}} </h5>
             </div>
 
         @endforeach

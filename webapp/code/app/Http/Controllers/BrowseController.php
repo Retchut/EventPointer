@@ -22,12 +22,16 @@ class BrowseController extends Controller
       $event_query=Event::all();
     }
     else{
-      $event_query=Event::where('eventname', 'like', '%'.$request->search_query.'%');
+      $event_query=Event::where('eventname', 'ilike', '%'.$request->search_query.'%');
     }
 
     //search for state
     if(!(is_null($request->event_state) || ($request->event_state == "All"))){
       $event_query->where('eventstate', $request->event_state);
+    }
+
+    if(!(is_null($request->event_tag) || ($request->event_tag == "All"))){
+      $event_query->where('tagid', $request->event_tag);
     }
 
     //fetch data

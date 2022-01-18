@@ -20,20 +20,20 @@ class EventController extends Controller
   public function show($event_id)
   {
 
-    $events = Event::find($event_id);
-    $announcements = $events->announcements($event_id);
-    $comments = $events->comments($event_id);
-    $participants = $events->participants($event_id);
-    $hosts = $events->hosts($event_id);
-    $tag = $events->tag($event_id);
+    $event = Event::find($event_id);
+    $announcements = $event->announcements($event_id);
+    $comments = $event->comments($event_id);
+    $participants = $event->participants($event_id);
+    $hosts = $event->hosts($event_id);
+    $tag = $event->tag($event_id);
         /* 403 exception apge*/
     /*
-    $this->authorize('show', $events);
-    return view('pages.event', ['event' => $events, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants]);
+    $this->authorize('show', $event);
+    return view('pages.event', ['event' => $event, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants]);
     */
 
     if (Auth::check())
-      return view('pages.event', ['event' => $events, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants,'tag'=>$tag]);
+      return view('pages.event', ['event' => $event, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants,'tag'=>$tag]);
     else
       return redirect("/login");
   }

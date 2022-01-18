@@ -27,7 +27,6 @@ Route::get('/user/{user_id}/delete', 'UserController@delete')->name('user.delete
 //User Edit
 Route::get('user/{user_id}/edit', 'EditUserController@index')->name('edit.show');
 Route::post('user/{user_id}/edit', 'EditUserController@update')->name('user.update');
-/* Cria-se novo controller para uma nova página para editar, onde se faz depois a edição, e aí sim, chama-se o método edit? */
 
 //User Create Event
 Route::get('user/{user_id}/create_event', 'EventController@index')->name('create.show');

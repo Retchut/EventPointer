@@ -8,10 +8,10 @@
         <form method="POST" action="{{ route('login') }}">
             {{ csrf_field() }}
             <div class="row">
-                <div class="col-sm-6 m-4">
-                    <div class="row">
-                        <label for="email">E-mail</label>
-                        <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
+                <div class="col-sm-5 m-4">
+                    <div class="form-group mb-2">
+                        <label for="email">E-mail</label><p>
+                        <input id="email" type="email" name="email" class="form-control" value="{{ old('email') }}" required autofocus>
                         @if ($errors->has('email'))
                             <span class="error">
                             {{ $errors->first('email') }}
@@ -19,31 +19,27 @@
                         @endif
                     </div>
 
-                    <div class="row">
-                        <label for="password">Password</label>
-                        <input id="password" type="password" name="password" required>
+                    <div class="form-group mb-2">
+                        <label for="password">Password</label><p>
+                        <input id="password" type="password" name="password" class="form-control" required>
                         @if ($errors->has('password'))
                             <span class="error">
                                 {{ $errors->first('password') }}
                             </span>
                         @endif
                     </div>
-                </div>
 
-                <div class="col-sm-4 m-4">
                     <div class="row">
                         <label>
                             <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
                         </label>
                     </div>
-
-            
+                </div>
                 </div>
             </div>
             <div class="row-sm-2 d-flex justify-content-center">
-                <button type="submit button" class="btn btn-light"> Login
-                    </button>
-                    <a class="button button-outline" href="{{ route('register') }}">Register</a>
+                <button type="submit" class="btn btn-primary me-2">Login</button>
+                <a class="btn btn-outline-primary" href="{{ route('register') }}" role="button">Register</a>
             </div>
         </form>
     </div>

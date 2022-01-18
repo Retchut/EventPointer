@@ -11,9 +11,9 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <!-- <link href="{{ asset('css/milligram.min.css') }}" rel="stylesheet"> -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script type="text/javascript">
         // Fix for Firefox autofocus CSS bug
@@ -25,49 +25,49 @@
   <body>
     <main>
     <header>
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-sm-8">
-              <h1><a class="title" href="{{ url('/') }}">Event Pointer</a></h1>
-            </div>
-            <div class="col d-flex align-items-center">
-              <div class="col">
-                <a class="button" href="{{ url('/browse') }}">Browse</a>
-              </div>
-              @if (Auth::check())
-              <div class="col">
-                <a class="button" href="{{ url('/user/'.@Auth::user()->id) }}">My Page</a>
-              </div>
-              <div class="col">
-                <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
-              </div>
-              @else
-              <div class="col">
-                <a class="button" href="{{ url('/login') }}"> Log In </a>
-              </div>
-              @endif
+        <nav class="navbar navbar-expand-lg bg-primary navbar-dark nav-justified">
+          <div class="container-fluid">
+            <a class="ms-4 navbar-brand" href="{{ url('/') }}">Event Pointer</a>
 
+            <div class="justify-content-end" id="navbarColor01">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url('/browse') }}">Browse</a>
+                </li>
+                @if (Auth::check())
+                <li class="nav-item">
+                  <a class="nav-link" style="width: 85px;" href="{{ url('/user/'.@Auth::user()->id) }}">My Page</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url('/logout') }}">Logout</a> <span>{{ Auth::user()->name }}</span>
+                </li>
+                @else
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url('/login') }}">Log In</a>
+                </li>
+                @endif
+              </ul>
             </div>
           </div>
-        </div>
+        </nav>
       </header>
 
 
-      <section id="content">
+      <section class="m-3" id="content">
         @yield('content')
       </section>
 
       <footer>
-        <div class="container-fluid">
+        <div class="container-fluid mt-4">
           <div class="row">
-            <div class="col-sm-1">
-              <a class="text" href="{{ url('/about') }}">About</a>
+            <div class="col-sm-auto">
+              <a class="btn btn-link" href="{{ url('/about') }}">About</a>
             </div>
-            <div class="col-sm-10">
-              <a class="text" href="{{ url('/faq') }}">FAQ</a>
+            <div class="col-sm">
+              <a class="btn btn-link" href="{{ url('/faq') }}">FAQ</a>
             </div>
-            <div class="col-sm-1 float-end">
-              <a class="text" href="{{ url('/contacts') }}">Contacts</a>
+            <div class="col-sm-auto">
+              <a class="btn btn-link" href="{{ url('/contacts') }}">Contacts</a>
             </div>
           </div>
         </div>

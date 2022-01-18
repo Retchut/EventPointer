@@ -212,7 +212,7 @@ DROP FUNCTION IF EXISTS comment_in_event_poll() CASCADE;
 CREATE FUNCTION comment_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
+        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
            RAISE EXCEPTION 'A users can only comment in an event poll, if he is enrolled in that specific event.';
         END IF;
         RETURN NEW;
@@ -221,7 +221,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 DROP TRIGGER IF EXISTS comment_in_event_poll ON event_comment CASCADE;
-CREATE TRIGGER delete_comment_in_event_poll
+CREATE TRIGGER comment_in_event_poll
         BEFORE INSERT OR UPDATE ON event_comment
         FOR EACH ROW
         EXECUTE PROCEDURE comment_in_event_poll();
@@ -231,7 +231,7 @@ DROP FUNCTION IF EXISTS delete_comment_in_event_poll() CASCADE;
 CREATE FUNCTION delete_comment_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
+        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
            RAISE EXCEPTION 'A users can only delete a comment in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
         END IF;
         RETURN NEW;
@@ -269,7 +269,7 @@ DROP FUNCTION IF EXISTS delete_vote_in_event_poll() CASCADE;
 CREATE FUNCTION delete_vote_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
+        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
            RAISE EXCEPTION 'A users can only delete a vote in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
         END IF;
         RETURN NEW;
@@ -345,7 +345,7 @@ DROP FUNCTION IF EXISTS edit_vote() CASCADE;
 CREATE FUNCTION edit_vote() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
+        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
            RAISE EXCEPTION ' Only participating users can edit and vote on their own comments on the discussion of events.';
         END IF;
         RETURN NEW;

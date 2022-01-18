@@ -17,9 +17,8 @@ class EventController extends Controller
    * @param  int  $id
    * @return View
    */
-  public function show($event_id)
+  public function show($event_id, Request $request)
   {
-
     $event = Event::find($event_id);
     $announcements = $event->announcements($event_id);
     $comments = $event->comments($event_id);
@@ -29,11 +28,11 @@ class EventController extends Controller
         /* 403 exception apge*/
     /*
     $this->authorize('show', $event);
-    return view('pages.event', ['event' => $event, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants]);
+    return view('pages.event', ['event' => $event, 'reported' => False, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants]);
     */
 
     if (Auth::check())
-      return view('pages.event', ['event' => $event, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants,'tag'=>$tag]);
+      return view('pages.event', ['event' => $event, 'reported' => $request->reported, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants,'tag'=>$tag]);
     else
       return redirect("/login");
   }

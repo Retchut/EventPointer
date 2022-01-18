@@ -6,6 +6,19 @@
 
     <section id="event">
         <div class="container-fluid p-4">
+            @if(!is_null($reported) && ($reported == True))
+                <div id="report_popup" class="popup-container">
+                    <div class="popup">
+                        <p class="popup-elems">Event reported successfully</p>
+                        <button id="close_popup" type="button" class="popup-elems btn-close"></button>
+                    </div>
+                </div>
+
+                <script>
+                    setup_popup_btn();
+                </script>
+            @endif
+            
             <div class="event-details pb-5">
                 <div class="row">
                     <div class="col-sm-8 event-info">

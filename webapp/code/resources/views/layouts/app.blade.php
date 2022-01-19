@@ -26,6 +26,11 @@
           <div class="container-fluid">
             <a class="ms-4 navbar-brand" href="{{ url('/') }}">Event Pointer</a>
 
+            <form class="d-flex" style="width: 300px;">
+              <input class="form-control form-control-sm me-sm-2" type="text" placeholder="Search">
+              <button class="btn btn-secondary btn-sm my-2 my-sm-0" type="submit">Search</button>
+            </form>
+
             <div class="justify-content-end" id="navbarColor01">
               <ul class="navbar-nav">
                 <li class="nav-item">
@@ -43,12 +48,9 @@
                   <a class="nav-link" href="{{ url('/login') }}">Log In</a>
                 </li>
                 @endif
-                <li class="nav-item">
-                  <form class="d-flex" style="width: 300px;">
-                    <input class="form-control form-control-sm me-sm-2" type="text" placeholder="Search">
-                    <button class="btn btn-secondary btn-sm my-2 my-sm-0" type="submit">Search</button>
-                  </form>
-                </li>
+                <!-- <li class="nav-item">
+                  
+                </li> -->
               </ul>
             </div>
 

@@ -498,7 +498,7 @@ insert into eventg (eventname, event_description, startdate, enddate, place, eve
 insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('League of Legends Tournament','Prepare yourself for the best esports experience in this fully organized tournament. We have amazing prizes for the winners and a small gift for all participants.'
 , '2022-07-10', '2022-07-17', 'Online', 'Scheduled', 7);
 insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('QuiZZ Tournament 2022','Test your knowlodge in this online quiz tournament. 3 modes available - individual, pairs, teams (4 elements). The prizes for each category are going to be announced soon. '
-, '2022-11-14', '2023-12-02', 'Online - QuiZZ Official Website', 'Scheduled', 7);
+, '2022-11-14', '2022-12-02', 'Online - QuiZZ Official Website', 'Scheduled', 7);
 insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Gadgets Unboxing and Review','Ever wondered if a online shop is reliable or not? Or being in doubt which product tp buy? Enjoy this sessiond with unboxings and reviews with from different websites and become a pro in online shopping.'
 , '2022-09-1', '2022-10-20', 'Online - Youtube', 'Scheduled', 8);
 insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Summer Sunset 2.2','During all summer enjoy the best music with us.'

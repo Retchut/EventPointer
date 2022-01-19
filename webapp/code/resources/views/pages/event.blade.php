@@ -6,7 +6,7 @@
 
     <section id="event">
         <div class="container-fluid p-4">
-            @if(!is_null($reported) && ($reported == True))
+            @if (!is_null($reported) && $reported == true)
                 <div id="report_popup" class="popup-container">
                     <div class="popup">
                         <p class="popup-elems">Event reported successfully</p>
@@ -74,7 +74,7 @@
                             <div class="col-sm-auto my-auto">
                                 <h5 class="my-auto"> Hosts:
                                     @foreach ($hosts as $host)
-                                        <a class = "m-2 .text-black link-black" href="{{ url('/user/' . $host->id) }}">
+                                        <a class="m-2 .text-black link-black" href="{{ url('/user/' . $host->id) }}">
                                             {{ $host->username }}
                                         </a>
                                     @endforeach
@@ -84,10 +84,13 @@
                         </div>
                         <div class="row pb-1">
                             <div class="col-1 text-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tag" viewBox="0 0 16 16">
-                                    <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z"/>
-                                    <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z"/>
-                                  </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-tag" viewBox="0 0 16 16">
+                                    <path
+                                        d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z" />
+                                    <path
+                                        d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z" />
+                                </svg>
                             </div>
                             <div class="col">
                                 <h5> {{ $tag->tagname }}</h5>
@@ -104,18 +107,21 @@
                         <div class="row justify-content-center">
                             <!-- only show if host -->
                             @foreach ($hosts as $host)
-                                @if($host->id == Auth::user()->id)
+                                @if ($host->id == Auth::user()->id)
                                     <div class="col-auto">
                                         <div class="row-sm-auto text-center mb-1"><a class="btn btn-sm btn-outline-primary"
                                                 href="{{ url('/event/' . $event->id) . '/edit' }}">Edit Event</a></div>
                                         <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-outline-success"
-                                                href="{{ url('/event/' . $event->id) . '/addparticipant' }}">Add Participant</a></div>
+                                                href="{{ url('/event/' . $event->id) . '/addparticipant' }}">Add
+                                                Participant</a></div>
                                     </div>
                                     <div class="col-auto">
                                         <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-warning"
-                                                href="{{ url('/event/' . $event->id) . '/cancel' }}">Cancel Event</a></div>
+                                                href="{{ url('/event/' . $event->id) . '/cancel' }}">Cancel Event</a>
+                                        </div>
                                         <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-danger"
-                                                href="{{ url('/event/'.$event->id.'/delete') }}">Delete Event</a></div>
+                                                href="{{ url('/event/' . $event->id . '/delete') }}">Delete Event</a>
+                                        </div>
                                     </div>
                                 @endif
                             @endforeach
@@ -145,8 +151,9 @@
                     </button>
                 </li>
                 <li class="nav-item m-2 rounded">
-                    <button class="nav-link text-light rounded-top" id="forum-tab" data-bs-toggle="tab" data-bs-target="#forum-content"
-                        type="button" role="tab" aria-controls="forum-content" aria-selected="false">
+                    <button class="nav-link text-light rounded-top" id="forum-tab" data-bs-toggle="tab"
+                        data-bs-target="#forum-content" type="button" role="tab" aria-controls="forum-content"
+                        aria-selected="false">
                         <h3 class="m-2">Forum</h3>
                     </button>
                 </li>
@@ -169,8 +176,20 @@
 
                 <div class="tab-pane fade pb-3" id="announcements-content" role="tabpanel"
                     aria-labelledby="announcements-tab">
-                    <h3 class=mb-3>Announcements</h3>
+                    <div class="row mb-3  pb-2">
+                        <div class="col-10">
+                            <h3>Announcements</h3>
+                        </div>
+                        @foreach ($hosts as $host)
+                            @if ($host->id == Auth::user()->id)
+                                <div class="col">
+                                    <a class="btn btn-sm btn-outline-success"
+                                        href="{{ url('/event/' . $event->id) . '/announcement' }}">Add Announcement</a>
+                                </div>
+                            @endif
+                        @endforeach
 
+                    </div>
                     @if (count($announcements) > 0)
                         @include('partials.announcements',$announcements)
                     @else
@@ -181,7 +200,20 @@
                 </div>
 
                 <div class="tab-pane fade pb-3" id="forum-content" role="tabpanel" aria-labelledby="forum-tab">
-                    <h3 class=mb-3>Forum</h3>
+                    <div class="row mb-3  pb-2">
+                        <div class="col-11">
+                            <h3>Forum</h3>
+                        </div>
+                        @foreach ($participants as $participant)
+                            @if ($participant->id == Auth::user()->id)
+                                <div class="col">
+                                    <a class="btn btn-sm btn-outline-success"
+                                        href="{{ url('/event/' . $event->id) . '/comment' }}">Add Comment</a>
+                                </div>
+                            @endif
+                        @endforeach
+
+                    </div>
                     @if (count($comments) != 0)
                         @include('partials.comments',$comments)
                     @else

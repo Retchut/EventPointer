@@ -54,10 +54,12 @@ Route::post('event/{event_id}/edit', 'EditEventController@update')->name('event.
 // Event Cancel
 Route::get('event/{event_id}/cancel', 'EventController@cancel')->name('event.cancel');
 
+//Hosts add participant to event 
+Route::get('event/{event_id}/addparticipant', 'EventController@addparticipant')->name('event.addparticipant');
+
 // Report Event
 Route::get('event/{event_id}/report', 'ReportEventController@index')->name('create.show');
 Route::post('event/{event_id}/report', 'ReportEventController@create')->name('create');
-Route::post('event/{event_id}/report', 'ReportEventController@report')->name('event.report');
 
 // Event Invite
 Route::get('event/{event_id}/invite', 'InvitationController@index')->name('invite.show');

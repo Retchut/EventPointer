@@ -53,13 +53,16 @@ class UserController extends Controller
 
     $this->authorize('delete', $user);
 
+    /*
     Auth::logout();
 
     $user->username = 'deleted' . $user->id;
     $user->email = 'deleted' . $user->id . '@deleted.com';
     $user->password = bcrypt('deleted');
 
-    $user->save();
+    $user->save();*/
+
+    $user->delete();
 
     return redirect()->route('home');
   }

@@ -56,7 +56,7 @@
                   <a href="{{ url('/user/'.@Auth::user()->id) }}"><h4 class="nav-link">My Page</h4></a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ url('/logout') }}"><h4 class="nav-link">Logout</h4></a> <span>{{ Auth::user()->name }}</span>
+                  <a href="{{ url('/logout') }}"><h4 class="nav-link">Logout</h4></a>
                 </li>
                 @else
                 <li class="nav-item">

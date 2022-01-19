@@ -64,10 +64,10 @@ DROP TABLE IF EXISTS invite CASCADE;
 CREATE TABLE invite
 (
     id SERIAL PRIMARY KEY,
-    participant INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    host INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    receiverid INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    senderid INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     eventid INTEGER NOT NULL REFERENCES eventg(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CHECK (participant <> host)
+    CHECK (receiverid <> senderid)
 );
 
 
@@ -721,11 +721,11 @@ insert into event_role(userid,eventid,ishost) values (29,20,false);
 insert into event_role(userid,eventid,ishost) values (31,20,false);
 
 
-insert into invite (participant, host, eventid) values (30, 6, 1);
-insert into invite (participant, host, eventid) values (1, 21, 3);
-insert into invite (participant, host, eventid) values (28, 25, 7);
-insert into invite (participant, host, eventid) values (2, 10, 9);
-insert into invite (participant, host, eventid) values (10, 9, 10);
+insert into invite (receiverid, senderid, eventid) values (30, 6, 1);
+insert into invite (receiverid, senderid, eventid) values (1, 21, 3);
+insert into invite (receiverid, senderid, eventid) values (28, 25, 7);
+insert into invite (receiverid, senderid, eventid) values (2, 10, 9);
+insert into invite (receiverid, senderid, eventid) values (10, 9, 10);
 
 
 insert into ask_access (participant, eventid) values (25, 12);

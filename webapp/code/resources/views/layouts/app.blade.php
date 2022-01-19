@@ -41,6 +41,9 @@
                   <a class="nav-link" style="width: 85px;" href="{{ url('/user/'.@Auth::user()->id) }}">My Page</a>
                 </li>
                 <li class="nav-item">
+                  <a class="nav-link" style="width: 150px;" href="{{ url('/user/'.@Auth::user()->id.'/createevent') }}">Create Event</a>
+                </li>
+                <li class="nav-item">
                   <a class="nav-link" href="{{ url('/logout') }}">Logout</a> <span>{{ Auth::user()->name }}</span>
                 </li>
                 @else

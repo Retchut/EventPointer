@@ -26,11 +26,11 @@
           <div class="container-fluid">
             <a class="ms-4 navbar-brand text-nowrap" href="{{ url('/') }}">Event Pointer</a>
 
-            <form method="GET"class="d-flex" style="width: 300px;">
-              <input class="form-control form-control-sm me-sm-2" type="text" placeholder="Search">
+            <form method="GET" class="d-inline-flex w-25" action="{{ route('browse.search') }}">
+              <input id="search-input" class="form-control form-control-sm me-sm-2" type="text" name="search_query" value="{{ old('search_query') }}" required placeholder="Search">
               <button class="btn btn-secondary btn-sm my-2 my-sm-0" type="submit">Search</button>
             </form>
-            
+
             <div class="justify-content-end" id="navbarColor01">
               <ul class="navbar-nav text-nowrap">
                 @if (Auth::check())

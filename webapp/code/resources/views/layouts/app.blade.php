@@ -24,24 +24,31 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-primary navbar-dark nav-justified">
           <div class="container-fluid">
-            <a class="ms-4 navbar-brand" href="{{ url('/') }}">Event Pointer</a>
+            <a class="ms-4 navbar-brand text-nowrap" href="{{ url('/') }}">Event Pointer</a>
 
-            <form class="d-flex" style="width: 300px;">
+            <form method="GET"class="d-flex" style="width: 300px;">
               <input class="form-control form-control-sm me-sm-2" type="text" placeholder="Search">
               <button class="btn btn-secondary btn-sm my-2 my-sm-0" type="submit">Search</button>
             </form>
-
+            
             <div class="justify-content-end" id="navbarColor01">
-              <ul class="navbar-nav">
+              <ul class="navbar-nav text-nowrap">
+                @if (Auth::check())
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url('/user/'.@Auth::user()->id.'/createevent') }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                      <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                      <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                  </a>
+                </li>               
+                @endif
                 <li class="nav-item">
                   <a class="nav-link" href="{{ url('/browse') }}">Browse</a>
                 </li>
                 @if (Auth::check())
                 <li class="nav-item">
-                  <a class="nav-link" style="width: 85px;" href="{{ url('/user/'.@Auth::user()->id) }}">My Page</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" style="width: 150px;" href="{{ url('/user/'.@Auth::user()->id.'/createevent') }}">Create Event</a>
+                  <a class="nav-link " href="{{ url('/user/'.@Auth::user()->id) }}">My Page</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{{ url('/logout') }}">Logout</a> <span>{{ Auth::user()->name }}</span>

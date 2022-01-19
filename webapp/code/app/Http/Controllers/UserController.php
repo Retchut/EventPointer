@@ -51,7 +51,7 @@ class UserController extends Controller
   {
     $user = User::find($user_id);
 
-    $this->authorize('delete', $user);
+    //$this->authorize('delete', $user);
 
     /*
     Auth::logout();

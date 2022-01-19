@@ -231,10 +231,12 @@ DROP FUNCTION IF EXISTS delete_comment_in_event_poll() CASCADE;
 CREATE FUNCTION delete_comment_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.id = event_role.eventid) THEN
-           RAISE EXCEPTION 'A user can only delete a comment in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
+        IF NOT EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON 
+        event_role.userid = users.id WHERE OLD.id = event_role.eventid) THEN
+           RAISE EXCEPTION 'A user can only delete a comment in an event poll, if he is enrolled in that specific event and the 
+           comment belongs to him.';
         END IF;
-        RETURN NEW;
+        RETURN OLD;
 END
 $BODY$
 LANGUAGE plpgsql;
@@ -269,10 +271,10 @@ DROP FUNCTION IF EXISTS delete_vote_in_event_poll() CASCADE;
 CREATE FUNCTION delete_vote_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF NOT EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.id = event_role.eventid) THEN
+        IF NOT EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE OLD.id = event_role.eventid) THEN
            RAISE EXCEPTION 'A users can only delete a vote in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
         END IF;
-        RETURN NEW;
+        RETURN OLD;
 END
 $BODY$
 LANGUAGE plpgsql;
@@ -364,10 +366,10 @@ DROP FUNCTION IF EXISTS delete_account() CASCADE;
 CREATE FUNCTION delete_account() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM users WHERE NEW.id = users.id ) THEN
-           RAISE EXCEPTION ' Only userss can delete their account.';
+        IF NOT EXISTS (SELECT * FROM users WHERE OLD.id = users.id ) THEN
+           RAISE EXCEPTION ' Only users can delete their account.';
         END IF;
-        RETURN NEW;
+        RETURN OLD;
 END
 $BODY$
 LANGUAGE plpgsql;
@@ -383,10 +385,10 @@ DROP FUNCTION IF EXISTS delete_account_effects() CASCADE;
 CREATE FUNCTION delete_account_effects() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM vote INNER JOIN event_role ON vote.event_roleid = event_role.id INNER JOIN users ON users.id = event_role.userid WHERE NEW.event_roleid = vote.event_roleid AND event_role.userid = users.id) THEN
+        IF EXISTS (SELECT * FROM event_role INNER JOIN vote ON vote.event_roleid = event_role.id INNER JOIN users ON users.id = event_role.userid WHERE OLD.id = vote.event_roleid AND event_role.userid = users.id) THEN
            RAISE EXCEPTION 'Only votes from previous users will be deleted.';
         END IF;
-        RETURN NEW;
+        RETURN OLD;
 END
 $BODY$
 LANGUAGE plpgsql;

@@ -56,6 +56,7 @@ class User extends Authenticatable
         'username' => 'string',
         'email' => 'string',
         'password' => 'string',
+        'description' => 'string',
         'profilepictureurl' => 'string',
         'isadmin' => 'boolean'
     ];

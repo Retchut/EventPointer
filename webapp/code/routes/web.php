@@ -59,6 +59,16 @@ Route::get('event/{event_id}/report', 'ReportEventController@index')->name('crea
 Route::post('event/{event_id}/report', 'ReportEventController@create')->name('create');
 Route::post('event/{event_id}/report', 'ReportEventController@report')->name('event.report');
 
+// Announcement Event
+Route::get('event/{event_id}/announcement', 'AnnouncementEventController@index')->name('create.show');
+Route::post('event/{event_id}/announcement', 'AnnouncementEventController@create')->name('create');
+Route::post('event/{event_id}/announcement', 'AnnouncementEventController@announcement')->name('event.announcement');
+
+// Comment Event
+Route::get('event/{event_id}/comment', 'CommentEventController@index')->name('create.show');
+Route::post('event/{event_id}/comment', 'CommentEventController@create')->name('create');
+Route::post('event/{event_id}/comment', 'CommentEventController@comment')->name('event.comment');
+
 // Event Invite
 Route::get('event/{event_id}/invite', 'InvitationController@index')->name('invite.show');
 Route::post('event/{event_id}/invite', 'InvitationController@invite')->name('invite');

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\User;
+use App\Models\Event;
 use App\Models\Report;
 
 
@@ -64,5 +65,19 @@ class UserController extends Controller
     $user->delete();
 
     return redirect()->route('home');
+  }
+
+  public static function report_author($report_id)
+  {
+      $report = Report::find($report_id);
+      $user = User::find($report->userid);
+      return $user;
+  }
+
+  public static function report_event($report_id)
+  {
+      $report = Report::find($report_id);
+      $event = Event::find($report->eventid);
+      return $event;
   }
 }

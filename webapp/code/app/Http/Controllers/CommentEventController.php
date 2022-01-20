@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\User;
 use App\Models\Event_Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,12 +32,5 @@ class CommentEventController extends Controller
 
         return redirect()->route('event.show', ['event_id' => $event_id]);
     }
+
 }
-
-
-
-
-
-
-// reported true
-// botao

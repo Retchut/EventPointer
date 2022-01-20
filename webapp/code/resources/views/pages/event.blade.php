@@ -22,7 +22,62 @@
             <div class="event-details pb-5">
                 <div class="row">
                     <div class="col-sm-8 event-info">
-                        <h1 class="font-weight-bold pb-2">{{ $event->eventname }}</h1>
+                        <div class="row">
+                            <div class="col-auto">
+                                <h1 class="font-weight-bold">{{ $event->eventname }}
+                                </h1>
+                            </div>
+                            <div class="col-auto mb-2">
+                                <div class="dropdown dropend">
+                                    <button class="btn btn-secondary dropdown-toggle pt-1" type="button"
+                                        id="settings_dropdown" data-bs-toggle="dropdown">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                            class="bi bi-gear" viewBox="0 0 16 16">
+                                            <path
+                                                d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z" />
+                                            <path
+                                                d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z" />
+                                        </svg> </button>
+                                    <ul class="dropdown-menu" aria-labelledby="settings_dropdown">
+                                        @foreach ($hosts as $host)
+                                            @if ($host->id == Auth::user()->id)
+                                                <li><a href="{{ url('/event/' . $event->id) . '/announcement' }}"
+                                                        class="dropdown-item">Add
+                                                        Announcement</a></li>
+                                                <li class="dropdown-divider"></li>
+                                                <li><a href="{{ url('/event/' . $event->id) . '/addparticipant' }}"
+                                                        class="dropdown-item">Add
+                                                        Participant</a></li>
+                                                <li class="dropdown-divider"></li>
+                                                <li><a href="{{ url('/event/' . $event->id) . '/edit' }}"
+                                                        class="dropdown-item">Edit
+                                                        Event</a></li>
+                                                <li><a href="{{ url('/event/' . $event->id) . '/cancel' }}"
+                                                        class="dropdown-item">Cancel
+                                                        Event</a></li>
+                                                <li><a href="{{ url('/event/' . $event->id . '/delete') }}"
+                                                        class="dropdown-item">Delete
+                                                        Event</a></li>
+                                                <li class="dropdown-divider"></li>
+
+                                            @endif
+                                        @endforeach
+                                        @foreach ($participants as $participant)
+                                            @if ($participant->id == Auth::user()->id)
+                                                <li><a href="{{ url('/event/' . $event->id) . '/comment' }}"
+                                                        class="dropdown-item">Add
+                                                        Comment</a></li>
+                                                <li class="dropdown-divider"></li>
+                                            @endif
+                                        @endforeach
+
+                                        <li> <a href="{{ url('/event/' . $event->id) . '/report' }}"
+                                                class="dropdown-item">Report Event</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row mb-2">
                             <div class="col-1 text-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -104,31 +159,6 @@
                             <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1112&q=80"
                                 class="img-fluid rounded-start" style="height: 150px; width: 100%; object-fit: cover;">
                         </div>
-                        <div class="row justify-content-center">
-                            <!-- only show if host -->
-                            @foreach ($hosts as $host)
-                                @if ($host->id == Auth::user()->id)
-                                    <div class="col-auto">
-                                        <div class="row-sm-auto text-center mb-1"><a class="btn btn-sm btn-outline-primary"
-                                                href="{{ url('/event/' . $event->id) . '/edit' }}">Edit Event</a></div>
-                                        <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-outline-success"
-                                                href="{{ url('/event/' . $event->id) . '/addparticipant' }}">Add
-                                                Participant</a></div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-warning"
-                                                href="{{ url('/event/' . $event->id) . '/cancel' }}">Cancel Event</a>
-                                        </div>
-                                        <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-danger"
-                                                href="{{ url('/event/' . $event->id . '/delete') }}">Delete Event</a>
-                                        </div>
-                                    </div>
-                                @endif
-                            @endforeach
-
-                            <div class="row-sm-auto text-center"><a class="btn btn-sm btn-outline-danger"
-                                    href="{{ url('/event/' . $event->id) . '/report' }}">Report Event</a></div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -176,20 +206,7 @@
 
                 <div class="tab-pane fade pb-3" id="announcements-content" role="tabpanel"
                     aria-labelledby="announcements-tab">
-                    <div class="row mb-3  pb-2">
-                        <div class="col-10">
-                            <h3>Announcements</h3>
-                        </div>
-                        @foreach ($hosts as $host)
-                            @if ($host->id == Auth::user()->id)
-                                <div class="col">
-                                    <a class="btn btn-sm btn-outline-success"
-                                        href="{{ url('/event/' . $event->id) . '/announcement' }}">Add Announcement</a>
-                                </div>
-                            @endif
-                        @endforeach
-
-                    </div>
+                    <h3>Announcements</h3>
                     @if (count($announcements) > 0)
                         @include('partials.announcements',$announcements)
                     @else
@@ -200,20 +217,7 @@
                 </div>
 
                 <div class="tab-pane fade pb-3" id="forum-content" role="tabpanel" aria-labelledby="forum-tab">
-                    <div class="row mb-3  pb-2">
-                        <div class="col-11">
-                            <h3>Forum</h3>
-                        </div>
-                        @foreach ($participants as $participant)
-                            @if ($participant->id == Auth::user()->id)
-                                <div class="col">
-                                    <a class="btn btn-sm btn-outline-success"
-                                        href="{{ url('/event/' . $event->id) . '/comment' }}">Add Comment</a>
-                                </div>
-                            @endif
-                        @endforeach
-
-                    </div>
+                    <h3>Forum</h3>
                     @if (count($comments) != 0)
                         @include('partials.comments',$comments)
                     @else

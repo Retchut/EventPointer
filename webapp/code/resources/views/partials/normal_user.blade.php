@@ -11,7 +11,7 @@
 </div>
 
 <h3 class="pt-4">Host</h3>
-<div class="user-events info-div bg-light text-dark rounded">
+<div class="border border-primary  bg-light text-dark rounded">
     @if (count($events_as_host) > 0)
         @foreach ($events_as_host as $event)
             @include('partials.userevent', ['event' => $event])

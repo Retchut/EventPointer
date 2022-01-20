@@ -19,6 +19,10 @@
                         <label for="address">Email</label><p>
                         <input type="email" class="form-control" id="address" name="address" placeholder="{{$user->email}}" >
                     </div>
+                    <div class="form-group mb-2">
+                        <label for="description">Description</label><p>
+                        <input type="description" class="form-control" id="description" name="description" placeholder="Description" >
+                    </div>
                 </div>
                 <div class="col-5 m-4">
                     <div class="form-group mb-2">
@@ -33,6 +37,7 @@
                         <label for="profilePictureUrl">Profile Picture (URL)</label><p>
                         <input type="profilepictureurl" class="form-control" id="profilepictureurl" name="profilePictureUrl" placeholder="Profile Picture URL" >
                     </div>
+                
                 </div>
             </div>
         </div>

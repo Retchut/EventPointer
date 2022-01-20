@@ -30,6 +30,7 @@ class EditUserController extends Controller
                 'email' => $request->address,
                 'password' => bcrypt($request->password),
                 'profilepictureurl' => $request->profilePictureUrl,
+                'description' => $request->description,
             ]
             );
     

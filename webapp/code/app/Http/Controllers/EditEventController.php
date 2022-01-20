@@ -110,18 +110,18 @@ class EditEventController extends Controller
             $event->place = $request->place;
 
 
-        if ($request->startdate != null)
-            $event->startdate = $request->startdate;
+        if ($request->get('startdate') != null)
+            $event->startdate = $request->get('startdate');
 
 
-        if ($request->enddate != null)
-            $event->enddate = $request->enddate;
+        if ($request->get('enddate') != null)
+            $event->enddate = $request->get('enddate');
 
-        if ($request->eventstate != null)
-            $event->eventstate = $request->eventstate;
+        if ($request->get('eventstate') != null)
+            $event->eventstate = $request->get('eventstate');
 
-        if ($request->isprivate != null)
-            $event->isprivate = $request->isprivate;
+        if ($request->get('isprivate') != null)
+            $event->isprivate = $request->get('isprivate');
     
         $event->save();
 

@@ -41,6 +41,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'description',
         'profilepictureurl',
         'isadmin',
         'registrationdate'

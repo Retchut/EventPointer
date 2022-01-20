@@ -38,24 +38,24 @@
 
 
                         <div class="form-group mb-2">
-                            <label for="event_place">Place</label>
-                            <input type="text" class="form-control" id="event_place">
+                            <label for="place">Place</label>
+                            <input type="text" class="form-control" id="place" name="place">
                         </div>
 
                         <div class="form-group mb-2">
-                            <label for="event_start_date"> Start-Date</label>
-                            <input id="start_date" class="form-control" type="date">
+                            <label for="startdate"> Start-Date</label>
+                            <input id="startdate" class="form-control" type="date" name ="startdate">
                         </div>
 
                         <div class="form-group mb-2">
-                            <label for="event_end_date"> End-Date</label>
-                            <input id="end_date" class="form-control" type="date">
+                            <label for="enddate"> End-Date</label>
+                            <input id="enddate" class="form-control" type="date" name="enddate">
                         </div>
 
 
                         <div class="form-group mb-2">
-                            <label for="event_state">State</label>
-                            <select class="form-control" id="event_state">
+                            <label >State</label>
+                            <select class="form-control" id="eventstate" name="eventstate">
                                 <option value="1">Scheduled</option>
                                 <option value="2">Finished</option>
                                 <option value="3">Cancelled</option>
@@ -65,8 +65,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="private_event">Private</label>
-                            <select class="form-control" id="private_event">
+                            <label >Private</label>
+                            <select class="form-control" id="isprivate" name="isprivate">
                                 <option value="1">Yes</option>
                                 <option value="0" selected>No</option>
                             </select>

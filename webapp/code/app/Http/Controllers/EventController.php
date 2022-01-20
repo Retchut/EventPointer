@@ -7,6 +7,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Event;
+use App\Models\Event_Role;
+use App\Models\Comment;
+use App\Models\Announcement;
+use App\Models\User;
+
+
 use Illuminate\Auth\Middleware\Authorize;
 
 class EventController extends Controller
@@ -100,4 +106,22 @@ class EventController extends Controller
       return $event;
     });
   }
+
+  public static function comment_author($comment_id)
+  {
+      $comment = Comment::find($comment_id);
+      $role =Event_Role::find($comment->role_id);
+      $user = User::find($role->userid);
+      return $user;
+  }
+
+
+  public static function announcement_author($announcement_id)
+  {
+      $announcement = Announcement::find($announcement_id);
+      $role =Event_Role::find($announcement->role_id);
+      $user = User::find($role->userid);
+      return $user;
+  }
+
 }

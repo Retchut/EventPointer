@@ -3,14 +3,23 @@
 
     @if (count($reports) > 0)
         @foreach ($reports as $report)
-            <div class="row user-event m-3 p-2 info-div rounded">
 
-                <h4> Description: {{ $report->descriptions }}</h4>
-                <h5 class="ms-1"> Reported by user with id={{$report->userid}}</h5>
-                <h5 class="ms-1"> Report on event with id={{$report->eventid}} </h5>
+            <div class=" m-2 p-2 border border-primary rounded"><span class="text-bold pl-1">
+                User '
+                    @php
+                        echo App\Http\Controllers\UserController::report_author($report->id)->username;
+                    @endphp
+                    ' made a report in Event
+                    @php
+                        echo App\Http\Controllers\UserController::report_event($report->id)->eventname;
+                    @endphp
+                    :
+                </span>
+                <p class="text-bold m-2 p-2">{{ $report->descriptions }}</p>
             </div>
 
         @endforeach
+
     @else
         <h2 class="font-weight-bold pb-2 m-3">No reports found</h2>
     @endif

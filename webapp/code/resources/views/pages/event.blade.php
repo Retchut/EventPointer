@@ -29,7 +29,7 @@
                             </div>
                             <div class="col-auto mb-2">
                                 <div class="dropdown dropend">
-                                    <button class="btn btn-secondary dropdown-toggle pt-1 hover" type="button"
+                                    <button class="btn btn-secondary dropdown-toggle pt-1" type="button"
                                         id="settings_dropdown" data-bs-toggle="dropdown">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                             class="bi bi-gear" viewBox="0 0 16 16">

@@ -27,15 +27,15 @@
                     <select id="state-select" name="event_tag" class="form-select form-select-sm ms-2 mb-3 w-75" multiple
                         aria-label=" multiple select example">
                         <option selected>All</option>
-                        <option value = "1">Music </option>
-                        <option value = "2"> Sports</option>
-                        <option value = "3">Movies and TV Shows </option>
-                        <option value = "4">Arts and leisure </option>
-                        <option value = "5">Programming </option>
-                        <option value = "6">Lifestyle</option>
-                        <option value = "7">Gaming</option>
-                        <option value = "8"> Tech</option>
-                        <option value = "9">Streaming </option>
+                        <option value="1">Music </option>
+                        <option value="2"> Sports</option>
+                        <option value="3">Movies and TV Shows </option>
+                        <option value="4">Arts and leisure </option>
+                        <option value="5">Programming </option>
+                        <option value="6">Lifestyle</option>
+                        <option value="7">Gaming</option>
+                        <option value="8"> Tech</option>
+                        <option value="9">Streaming </option>
                     </select>
 
                     <input type="submit" value="Search" class="btn btn-sm btn-outline-success p-1 ms-2 mb-2">
@@ -49,7 +49,11 @@
                         <h5 class="m-2 mb-1">Start Date:</h5>
                         <div class="text-center btn btn-dark m-2 me-3 mt-0 ps-2 pe-2 pt-1 pb-1"><a class="sort-buttons"
                                 href="{{ request()->fullUrlWithQuery(['sort' => 'sdate-asc']) }}"">&#11014</a></div>
-                        <div class=" text-center btn btn-dark m-2 mt-0 ps-2 pe-2 pt-1 pb-1"><a class="sort-buttons"
+                                                        <div class="
+                                
+                                
+                                      text-center btn btn-dark m-2 mt-0 ps-2 pe-2 pt-1 pb-1"><a
+                                    class="sort-buttons"
                                     href="{{ request()->fullUrlWithQuery(['sort' => 'sdate-desc']) }}">&#11015</a></div>
                     </div>
                     <div>
@@ -76,15 +80,15 @@
                     <h2 class="m-1">Events:</h2>
                 </div>
                 <div class="col" id="browse-event">
-                    @foreach ($events as $event)
-                        @if (!Auth::user()->isadmin)
-                            @if ($event->isprivate == false)
+                        @foreach ($events as $event)
+                            @if (Auth::check() && !Auth::user()->isadmin)
+                                @if ($event->isprivate == false)
+                                    @include('partials.browse_events')
+                                @endif
+                            @else
                                 @include('partials.browse_events')
                             @endif
-                        @else
-                            @include('partials.browse_events')
-                        @endif
-                    @endforeach
+                        @endforeach
                 </div>
             </div>
         </div>

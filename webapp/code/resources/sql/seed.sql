@@ -286,7 +286,7 @@ CREATE TRIGGER delete_vote_in_event_poll
         FOR EACH ROW
         EXECUTE PROCEDURE delete_vote_in_event_poll();
 
-
+/*
 DROP FUNCTION IF EXISTS search_event() CASCADE;
 CREATE FUNCTION search_event() RETURNS TRIGGER AS
 $BODY$
@@ -305,7 +305,7 @@ CREATE TRIGGER search_event
         FOR EACH ROW
         EXECUTE PROCEDURE search_event();
 
-
+*/
 DROP FUNCTION IF EXISTS private_event_invite_only() CASCADE;
 CREATE FUNCTION private_event_invite_only() RETURNS TRIGGER AS
 $BODY$
@@ -324,7 +324,7 @@ CREATE TRIGGER private_event_invite_only
         FOR EACH ROW
         EXECUTE PROCEDURE private_event_invite_only();
 
-
+/*
 DROP FUNCTION IF EXISTS event_schedule() CASCADE;
 CREATE FUNCTION event_schedule() RETURNS TRIGGER AS
 $BODY$
@@ -343,7 +343,7 @@ CREATE TRIGGER event_schedule
         FOR EACH ROW
         EXECUTE PROCEDURE event_schedule();
 
-
+*/
 DROP FUNCTION IF EXISTS edit_vote() CASCADE;
 CREATE FUNCTION edit_vote() RETURNS TRIGGER AS
 $BODY$

@@ -11,15 +11,15 @@ use Illuminate\Support\Facades\Auth;
 
 class EditEventController extends Controller
 {
-   // protected $redirectTo = 'event';
+    // protected $redirectTo = 'event';
 
 
-   public function show($event_id)
-   {
-     $events = Event::find($event_id);
-     // $this->authorize('show', $events);
-     return view('pages.editevent', ['event' => $events]);
-   }
+    public function show($event_id)
+    {
+        $events = Event::find($event_id);
+        // $this->authorize('show', $events);
+        return view('pages.editevent', ['event' => $events]);
+    }
 
     public function index($event_id)
     {
@@ -29,7 +29,7 @@ class EditEventController extends Controller
         //if(Auth::check() and this)
         return view('pages.editevent'/*, ['event' => $events]*/);
     }
-/*
+    /*
     public function create(Request $request)
     {
         $event = DB::transaction(function () use ($request) {
@@ -102,7 +102,7 @@ class EditEventController extends Controller
 
         if ($request->eventname != null)
             $event->eventname = $request->eventname;
-        
+
         if ($request->event_description != null)
             $event->event_description = $request->event_description;
 
@@ -123,8 +123,20 @@ class EditEventController extends Controller
         if ($request->get('isprivate') != null)
             $event->isprivate = $request->get('isprivate');
     
-        $event->save();
+            $today = today()->format('Y-m-d');
 
+            if ($event->startdate < $today)
+                return view('pages.editeventerror', ['event' => $event]);
+    
+            try {
+                $event->save();
+            } catch (\Illuminate\Database\QueryException $e) {
+    
+                return view('pages.editeventerror', ['event' => $event]);
+            }
         return redirect()-> route('event.show', $event_id);
     }
 }
+
+/*
+*/

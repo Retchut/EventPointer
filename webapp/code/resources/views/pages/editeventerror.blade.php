@@ -6,6 +6,10 @@
 
     <section id="edit_event">
         <h1>Edit Event</h1>
+        <div class="alert alert-danger" role="alert">
+            Error in dates. Either Start Date entered is earlier than today's date or End Date is earlier than Start
+            Date.
+        </div>
         <div class="row gap-5">
             <div class="h-50 col-md-2 md-2 ms-3 border rounded p-3 border-primary align-center">
                 <h4 class="mb-3">Current configuration:</h4>

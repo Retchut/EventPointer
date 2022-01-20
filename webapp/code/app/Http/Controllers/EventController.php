@@ -85,8 +85,12 @@ class EventController extends Controller
     $event->eventstate = $request->get('eventstate');
     $event->isprivate = $request->get('isprivate');
 
-
-    $event->save();
+    try {
+      $event->save();
+    
+    } catch (\Illuminate\Database\QueryException $e) {
+      return redirect()->route('event.create', Auth::user()->id);
+    }
 
     //$picture = $request->file('cover');
     //$extension = $picture->getClientOriginalExtension();

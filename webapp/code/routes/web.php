@@ -59,6 +59,7 @@ Route::get('event/{event_id}/addparticipant', 'EventController@addparticipant')-
 
 // Report Event
 Route::get('event/{event_id}/report', 'ReportEventController@index')->name('event.report');
+Route::get('report/{report_id}/delete', 'ReportEventController@delete')->name('report.delete');
 Route::post('event/{event_id}/report', 'ReportEventController@report')->name('report');
 
 // Announcement Event

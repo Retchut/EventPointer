@@ -33,6 +33,28 @@ class ReportEventController extends Controller
         
         return redirect()->route('event.show', ['event_id' => $event_id, 'reported' => True]);
     }
+
+
+    public function delete($report_id)
+  {
+    $report = Report::find($report_id);
+
+    //$this->authorize('delete', $user);
+
+    /*
+    Auth::logout();
+
+    $user->username = 'deleted' . $user->id;
+    $user->email = 'deleted' . $user->id . '@deleted.com';
+    $user->password = bcrypt('deleted');
+
+    $user->save();*/
+
+    $report->delete();
+
+    return redirect()->route('user.show',Auth::user()->id);
+  }
+
 /*
     public function create(Request $request)
     {

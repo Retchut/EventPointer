@@ -66,13 +66,25 @@ class EventController extends Controller
     return redirect()->route('home');
   }
 
+  public function join($event_id)
+  {
+    $event_role = new Event_Role;
+
+    $event_role->userid = Auth::user()->id;
+    $event_role->eventid = $event_id;
+    $event_role->ishost = false;
+    $event_role->save();
+
+    return redirect()->route('event.show', $event_id);
+  }
+
 
   public function cancel($event_id)
   {
     $event = Event::find($event_id);
     $event->eventstate = 'Canceled';
     $event->save();
-    
+
     return redirect()->route('event.show', $event->id);
 
   }
@@ -100,6 +112,7 @@ class EventController extends Controller
     $event->enddate = $request->get('enddate');
     $event->eventstate = $request->get('eventstate');
     $event->isprivate = $request->get('isprivate');
+    $event->pictureurl = $request->pictureurl;
 
     $today = today()->format('Y-m-d');
 

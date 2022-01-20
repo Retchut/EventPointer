@@ -64,13 +64,10 @@
                                         @endforeach
                                         @foreach ($participants as $participant)
                                             @if ($participant->id == Auth::user()->id)
-                                                <li><a href="{{ url('/event/' . $event->id) . '/comment' }}"
-                                                        class="dropdown-item">Add
-                                                        Comment</a></li>
                                                 <li><a href="{{ url('/event/' . $event->id) . '/leave' }}"
                                                         class="dropdown-item">Leave Event
                                                     </a></li>
-                                                <li class="dropdown-divider"></li>
+                                                <li class="dropdown-divider"></li> 
                                             @endif
                                         @endforeach
 
@@ -172,8 +169,25 @@
 
                     <div class="col-sm-4 event-image">
                         <div class="row justify-content-center mb-2">
-                            <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1112&q=80"
+                            <img src="{{ $event->pictureurl }}"
                                 class="img-fluid rounded-start" style="height: 150px; width: 100%; object-fit: cover;">
+                        </div>
+                        <div class = "col-auto">
+                            @php
+                                $aux = True;
+                            @endphp
+                         
+                            @foreach ($participants as $participant)
+                                @if($participant->id == Auth::user()->id)
+                                    <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-outline-success"
+                                        href="{{ url('/event/' . $event->id) . '/comment' }}">Add Comment</a></div>
+                                    {{$aux = False}}
+                                @endif
+                            @endforeach
+                            @if($aux)
+                                    <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-outline-success"
+                                        href="{{ url('/event/' . $event->id) . '/join' }}">Join Event</a></div>
+                            @endif
                         </div>
                     </div>
                 </div>

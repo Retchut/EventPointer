@@ -122,18 +122,21 @@ class EditEventController extends Controller
 
         if ($request->get('isprivate') != null)
             $event->isprivate = $request->get('isprivate');
+        
+        if ($request->pictureurl != null)
+            $event->pictureurl = $erques->pictureurl;
     
-            $today = today()->format('Y-m-d');
+        $today = today()->format('Y-m-d');
 
-            if ($event->startdate < $today)
-                return view('pages.editeventerror', ['event' => $event]);
-    
-            try {
-                $event->save();
-            } catch (\Illuminate\Database\QueryException $e) {
-    
-                return view('pages.editeventerror', ['event' => $event]);
-            }
+        if ($event->startdate < $today)
+            return view('pages.editeventerror', ['event' => $event]);
+
+        try {
+            $event->save();
+        } catch (\Illuminate\Database\QueryException $e) {
+
+            return view('pages.editeventerror', ['event' => $event]);
+        }
         return redirect()-> route('event.show', $event_id);
     }
 }

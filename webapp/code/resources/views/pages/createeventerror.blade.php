@@ -78,6 +78,11 @@
                         </select>
                     </div>
 
+                    <div class="form-group mb-2">
+                        <label for="pictureurl">Picture URL</label>
+                        <input required type="text" class="form-control" id="pictureurl" name="pictureurl">
+                    </div>
+
                     <div class="row mt-4 me-1 flex-row-reverse">
                         <button type="submit" class="btn btn-success w-auto">Save Changes</button>
                     </div>

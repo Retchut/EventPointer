@@ -47,6 +47,7 @@ CREATE TABLE eventg
     duration INTERVAL NOT NULL,
     eventstate eventstate NOT NULL,
     isprivate BOOLEAN NOT NULL DEFAULT FALSE,
+    pictureurl TEXT,
     tagid INTEGER NOT NULL REFERENCES event_tag(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT dates CHECK (startdate <= enddate)
 );
@@ -383,6 +384,7 @@ CREATE TRIGGER delete_account
 
 
 
+
 DROP FUNCTION IF EXISTS calc_duration() CASCADE;
 CREATE FUNCTION calc_duration() RETURNS TRIGGER AS 
 $$
@@ -462,46 +464,46 @@ insert into event_tag (tagname) values('Tech');                 -- 8
 insert into event_tag (tagname) values('Streaming');           -- 9          
 
 
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Python Workshop', 'In this course, you will learn the fundamentals of the Python programming language, along with programming best practices.'
-,'2022-01-11', '2022-02-24', 'Online - Discord', 'Ongoing', 5);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Movie Nights', 'The second edition of movie nights is here. This time we bring the Harry Potter Saga.'
-,'2022-01-01', '2022-02-28', 'Online - Twitch', 'Ongoing', 3);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('The Cooking Surviving Course','Are you that kind of person who does not know how to fry an egg? Dont worry we have the solution for you. In this course you will be able to learn the basics of cooking, in order to become capable to cook your meals and, whio knows, to impress your friends.'
-, '2022-11-01', '2022-11-04', 'Online - Youtube', 'Scheduled',6);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Web Course for experts','Do you want to improve your web development skills? Enter here for learn the best practices as well as new techniques. Not recommended for people who have no experiece either with HTML, CSS and JavaScript!!'
-, '2022-11-16', '2022-12-16', 'Online - Teams', 'Scheduled', 5);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('CS:GO Tournament','Join your friends, make a team and get the ready for the best tournament.'
-, '2022-07-10', '2022-07-17', 'Online - Steam', 'Scheduled', 7);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('CS:GO Tournament - Streaming','If you dont want to play, but are a big fan of the game you can enjoy the streaming of the tournament matches.'
-, '2022-07-10', '2022-07-17', 'Online - Twitch', 'Scheduled', 9);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Comedy Nights - Porto',' Every weekend (Friday and Saturday) 3 comedians are invited to present you their best jokes. Although only 2 of them will be announced, the third one will be a surprise...'
-, '2022-04-20', '2022-09-12', 'Porto - Comedy Bar', 'Scheduled', 4);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Movie Nights','After 2 incredible editions, the 3rd one is coming. We can confirm that all the Marvel Cinematic Universe movies are going to be on your screen.'
-, '2022-05-01', '2022-08-31', 'Online - Twitch', 'Scheduled', 1);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Yoga Workshop','We all have heard about yoga, but few os us have tried it. Enjoy now this unique lifestyle and improve your practices with this tips.'
-, '2022-02-05', '2022-02-25', 'Aveiro', 'Scheduled', 2);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('League of Legends Tournament','Prepare yourself for the best esports experience in this fully organized tournament. We have amazing prizes for the winners and a small gift for all participants.'
-, '2022-07-10', '2022-07-17', 'Online', 'Scheduled', 7);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('QuiZZ Tournament 2022','Test your knowlodge in this online quiz tournament. 3 modes available - individual, pairs, teams (4 elements). The prizes for each category are going to be announced soon. '
-, '2022-11-14', '2022-12-02', 'Online - QuiZZ Official Website', 'Scheduled', 7);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Gadgets Unboxing and Review','Ever wondered if a online shop is reliable or not? Or being in doubt which product tp buy? Enjoy this sessiond with unboxings and reviews with from different websites and become a pro in online shopping.'
-, '2022-09-1', '2022-10-20', 'Online - Youtube', 'Scheduled', 8);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Summer Sunset 2.2','During all summer enjoy the best music with us.'
-,'2022-07-01', '2022-08-31', 'Leça da Palmeira', 'Scheduled', 1);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('World Cup 2022 Streaming','Streaming of all matches of the 2022 Football World Cup'
-,'2022-11-21', '2022-12-18', 'Online - Cloud Sports', 'Scheduled', 2);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Movie Nights','The first edition of movie nights is here. To celebrate the 4th of May we prepared  2 months of streaming of your favorite saga. Enjoy us and may the force be with you.'
-,  '2021-05-04', '2021-07-07', 'Online - Twitch', 'Finished', 3);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('QuiZZ Tournament 2021','Test your knowlodge in this online quiz tournament. 3 modes available - individual, pairs, teams (4 elements). The prizes for each category are going to be announced soon. '
-, '2021-11-14', '2021-12-02', 'Online - QuiZZ Official Website', 'Finished', 7);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Summer Sunset 2.1',' During all summer enjoy the best music with us.'
-,'2021-07-01', '2021-08-31', 'Leça da Palmeira', 'Finished', 1);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Euro 2020 - (2021 Edition) Streaming','After being postponed we maintain the streaming of all matches of the 2020 European Football Cup'
-,'2021-06-11', '2021-07-11', 'Online - Cloud Sports', 'Finished', 2);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Rocket League Lan Party','Meet new people or just bring your friends to an incredible rocket league lan party.'
-,  '2021-03-04', '2021-03-07', 'Porto', 'Canceled', 7);
-insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, tagid) values ('Euro 2020 Streaming','Streaming of all matches of the 2020 European Football Cup'
-,'2020-06-10', '2020-07-10', 'Online - Cloud Sports', 'Canceled', 2);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Python Workshop', 'In this course, you will learn the fundamentals of the Python programming language, along with programming best practices.'
+,'2022-01-11', '2022-02-24', 'Online - Discord', 'Ongoing', 'https://i2.wp.com/idsc.miami.edu/wp-content/uploads/2020/10/Python-image-with-logo-940x530-1.jpg?resize=940%2C530&ssl=1', 5);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Movie Nights', 'The second edition of movie nights is here. This time we bring the Harry Potter Saga.'
+,'2022-01-01', '2022-02-28', 'Online - Twitch', 'Ongoing', 'https://www.foothillsbaptist.org/wp-content/uploads/2016/01/movie-night-featured.jpg', 3);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('The Cooking Surviving Course','Are you that kind of person who does not know how to fry an egg? Dont worry we have the solution for you. In this course you will be able to learn the basics of cooking, in order to become capable to cook your meals and, whio knows, to impress your friends.'
+, '2022-11-01', '2022-11-04', 'Online - Youtube', 'Scheduled', 'https://postarticles.org/wp-content/uploads/2021/05/cooking-at-home.png', 6);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Web Course for experts','Do you want to improve your web development skills? Enter here for learn the best practices as well as new techniques. Not recommended for people who have no experiece either with HTML, CSS and JavaScript!!'
+, '2022-11-16', '2022-12-16', 'Online - Teams', 'Scheduled', 'https://miro.medium.com/max/3060/1*rGiHBnlqf6-koapA2DzUoA.jpeg',  5);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('CS:GO Tournament','Join your friends, make a team and get the ready for the best tournament.'
+, '2022-07-10', '2022-07-17', 'Online - Steam', 'Scheduled', 'https://midias.jb.com.br/_midias/jpg/2021/03/11/csgo-586394.jpg',  7);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('CS:GO Tournament - Streaming','If you dont want to play, but are a big fan of the game you can enjoy the streaming of the tournament matches.'
+, '2022-07-10', '2022-07-17', 'Online - Twitch', 'Scheduled', 'https://midias.jb.com.br/_midias/jpg/2021/03/11/csgo-586394.jpg', 9);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Comedy Nights - Porto',' Every weekend (Friday and Saturday) 3 comedians are invited to present you their best jokes. Although only 2 of them will be announced, the third one will be a surprise...'
+, '2022-04-20', '2022-09-12', 'Porto - Comedy Bar', 'Scheduled', 'https://m.media-amazon.com/images/G/01/seo/siege-lists/best-comedy-audiobooks-collection-card._CB1579018750_.png', 4);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Movie Nights','After 2 incredible editions, the 3rd one is coming. We can confirm that all the Marvel Cinematic Universe movies are going to be on your screen.'
+, '2022-05-01', '2022-08-31', 'Online - Twitch', 'Scheduled', 'https://www.foothillsbaptist.org/wp-content/uploads/2016/01/movie-night-featured.jpg', 3);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Yoga Workshop','We all have heard about yoga, but few os us have tried it. Enjoy now this unique lifestyle and improve your practices with this tips.'
+, '2022-02-05', '2022-02-25', 'Aveiro', 'Scheduled', 'https://uploads.metropoles.com/wp-content/uploads/2019/01/08165756/WhatsApp-Image-2019-01-08-at-16.51.29.jpeg', 2);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('League of Legends Tournament','Prepare yourself for the best esports experience in this fully organized tournament. We have amazing prizes for the winners and a small gift for all participants.'
+, '2022-07-10', '2022-07-17', 'Online', 'Scheduled', 'https://s2.glbimg.com/y6nngNdKtYKEZx9QiZIa-bW4cq4=/0x0:1200x675/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2019/E/T/z4H0MFRxKrUlZijtEnAQ/20190522035739-1200-675-league-of-legends.jpg', 7);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('QuiZZ Tournament 2022','Test your knowlodge in this online quiz tournament. 3 modes available - individual, pairs, teams (4 elements). The prizes for each category are going to be announced soon. '
+, '2022-11-14', '2022-12-02', 'Online - QuiZZ Official Website', 'Scheduled', 'https://img.freepik.com/fotos-gratis/quiz-ou-palavra-quizz-inscricao-jogo-divertido-com-perguntas_361816-1115.jpg?size=626&ext=jpg', 7);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Gadgets Unboxing and Review','Ever wondered if a online shop is reliable or not? Or being in doubt which product tp buy? Enjoy this sessiond with unboxings and reviews with from different websites and become a pro in online shopping.'
+, '2022-09-1', '2022-10-20', 'Online - Youtube', 'Scheduled', 'http://revistaminha.pt/wp-content/uploads/2018/12/Gadgets.jpg', 8);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Summer Sunset 2.2','During all summer enjoy the best music with us.'
+,'2022-07-01', '2022-08-31', 'Leça da Palmeira', 'Scheduled', 'https://cdn3.dpmag.com/2020/06/challenge-003-summer-sunset.jpg', 1);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('World Cup 2022 Streaming','Streaming of all matches of the 2022 Football World Cup'
+,'2022-11-21', '2022-12-18', 'Online - Cloud Sports', 'Scheduled', 'https://www.marketplace.org/wp-content/uploads/2018/07/GettyImages-453347919.jpg?fit=1800%2C1000', 2);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Movie Nights','The first edition of movie nights is here. To celebrate the 4th of May we prepared  2 months of streaming of your favorite saga. Enjoy us and may the force be with you.'
+,  '2021-05-04', '2021-07-07', 'Online - Twitch', 'Finished','https://www.foothillsbaptist.org/wp-content/uploads/2016/01/movie-night-featured.jpg', 3);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('QuiZZ Tournament 2021','Test your knowlodge in this online quiz tournament. 3 modes available - individual, pairs, teams (4 elements). The prizes for each category are going to be announced soon. '
+, '2021-11-14', '2021-12-02', 'Online - QuiZZ Official Website', 'Finished', 'https://img.freepik.com/fotos-gratis/quiz-ou-palavra-quizz-inscricao-jogo-divertido-com-perguntas_361816-1115.jpg?size=626&ext=jpg', 7);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Summer Sunset 2.1',' During all summer enjoy the best music with us.'
+,'2021-07-01', '2021-08-31', 'Leça da Palmeira', 'Finished', 'https://cdn3.dpmag.com/2020/06/challenge-003-summer-sunset.jpg', 1);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Euro 2020 - (2021 Edition) Streaming','After being postponed we maintain the streaming of all matches of the 2020 European Football Cup'
+,'2021-06-11', '2021-07-11', 'Online - Cloud Sports', 'Finished', 'https://editorial.uefa.com/resources/0258-0e2236eb500b-4dac4439c8b9-1000/2502796.jpg', 2);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Rocket League Lan Party','Meet new people or just bring your friends to an incredible rocket league lan party.'
+,  '2021-03-04', '2021-03-07', 'Porto', 'Canceled', 'https://cdn1.epicgames.com/offer/9773aa1aa54f4f7b80e44bef04986cea/6609d2e1-62d9-4094-9cb7-26d9a7f5ba3f_2560x1440-071db7b0d39d5635f684940c1e3c4ec3', 7);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Euro 2020 Streaming','Streaming of all matches of the 2020 European Football Cup'
+,'2020-06-10', '2020-07-10', 'Online - Cloud Sports', 'Canceled', 'https://editorial.uefa.com/resources/0258-0e2236eb500b-4dac4439c8b9-1000/2502796.jpg', 2);
 
 
 insert into event_role (userid, eventid, ishost) values(6,1,true);

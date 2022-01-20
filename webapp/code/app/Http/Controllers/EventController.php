@@ -159,4 +159,18 @@ class EventController extends Controller
     $user = User::find($role->userid);
     return $user;
   }
+
+  public function showRemove($event_id)
+  {
+    $event = Event::find($event_id);
+    $participants = $event->participants($event_id);
+    return view('pages.removeparticipants', ['event' => $event, 'participants' => $participants]);
+  }
+
+  public function remove($event_id, $user_id)
+  {
+    $role = Event_Role::where('ishost', false)->where('eventid', $event_id)->where('userid', $user_id)->get()->first();
+    $role->delete();
+    return redirect()->route('event.removeparticipants', $event_id);
+  }
 }

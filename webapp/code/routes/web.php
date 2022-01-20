@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
- 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -45,7 +45,7 @@ Route::get('user/{user_id}/my_participations',/*view my participations controlle
 
 // Event
 Route::get('event/{event_id}', 'EventController@show')->name('event.show');
-Route::get('event/{event_id}/delete', 'EventController@delete')->name('event.delete'); 
+Route::get('event/{event_id}/delete', 'EventController@delete')->name('event.delete');
 
 // Event Edit
 Route::get('event/{event_id}/edit', 'EditEventController@show')->name('edit.show');
@@ -62,6 +62,10 @@ Route::get('event/{user_id}/leave', 'EventController@leave')->name('event.leave'
 
 //Hosts add participant to event 
 Route::get('event/{event_id}/addparticipant', 'EventController@addparticipant')->name('event.addparticipant');
+
+//Hosts remove participant from event 
+Route::get('event/{event_id}/removeparticipants', 'EventController@showRemove')->name('event.removeparticipants');
+Route::get('event/{event_id}/removeparticipant/{user_id}', 'EventController@remove')->name('event.remove');
 
 // Report Event
 Route::get('event/{event_id}/report', 'ReportEventController@index')->name('event.report');
@@ -82,9 +86,6 @@ Route::post('event/{event_id}/comment', 'CommentEventController@comment')->name(
 Route::get('event/{event_id}/invite', 'InvitationController@index')->name('invite.show');
 Route::post('event/{event_id}/invite', 'InvitationController@invite')->name('invite');
 
-// Event Participants
-Route::get('event/{event_id}/participants',/*participants controller*/);
-Route::delete('event/{event_id}/participants/{participant_id}',/*delete participant controller*/);
 
 // Authentication
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
@@ -105,8 +106,8 @@ Route::get('api/users',/*search users controller*/);
 Route::get('admin/{admin_id}', 'AdminController@show');
 
 // Admin Create Report
-Route::get('admin/create_report','AdminReportController@index')->name('create.show');
-Route::post('admin/create_report','AdminReportController@create')->name('create');
+Route::get('admin/create_report', 'AdminReportController@index')->name('create.show');
+Route::post('admin/create_report', 'AdminReportController@create')->name('create');
 
 // Admin manage user
 Route::get('admin/user/{user_id}/', /* admin used edit page contoller */);
@@ -114,4 +115,4 @@ Route::get('admin/user/{user_id}/delete', 'AdminUserController@remove');
 
 // Admin report
 Route::get('admin/report/{report_id}/',/* see reports controller*/);
-Route::get('admin/report/{report_id}/delete','AdminReportController@remove');
+Route::get('admin/report/{report_id}/delete', 'AdminReportController@remove');

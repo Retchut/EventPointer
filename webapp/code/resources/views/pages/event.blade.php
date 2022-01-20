@@ -48,6 +48,9 @@
                                                 <li><a href="{{ url('/event/' . $event->id) . '/addparticipant' }}"
                                                         class="dropdown-item">Add
                                                         Participant</a></li>
+                                                <li><a href="{{ url('/event/' . $event->id) . '/removeparticipants' }}"
+                                                        class="dropdown-item">Remove
+                                                        Participant(s)</a></li>
                                                 <li class="dropdown-divider"></li>
                                                 <li><a href="{{ url('/event/' . $event->id) . '/edit' }}"
                                                         class="dropdown-item">Edit
@@ -67,7 +70,7 @@
                                                 <li><a href="{{ url('/event/' . $event->id) . '/leave' }}"
                                                         class="dropdown-item">Leave Event
                                                     </a></li>
-                                                <li class="dropdown-divider"></li> 
+                                                <li class="dropdown-divider"></li>
                                             @endif
                                         @endforeach
 
@@ -155,10 +158,12 @@
 
                         <div class="row pb-1">
                             <div class="col-1 text-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
-                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                                  </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-info-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                    <path
+                                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                                </svg>
                             </div>
                             <div class="col">
                                 <h5> {{ $event->eventstate }}</h5>
@@ -169,23 +174,23 @@
 
                     <div class="col-sm-4 event-image">
                         <div class="row justify-content-center mb-2">
-                            <img src="{{ $event->pictureurl }}"
-                                class="img-fluid rounded-start" style="height: 150px; width: 100%; object-fit: cover;">
+                            <img src="{{ $event->pictureurl }}" class="img-fluid rounded-start"
+                                style="height: 150px; width: 100%; object-fit: cover;">
                         </div>
-                        <div class = "col-auto">
+                        <div class="col-auto">
                             @php
-                                $aux = True;
+                                $aux = true;
                             @endphp
-                         
+
                             @foreach ($participants as $participant)
-                                @if($participant->id == Auth::user()->id)
+                                @if ($participant->id == Auth::user()->id)
                                     <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-outline-success"
-                                        href="{{ url('/event/' . $event->id) . '/comment' }}">Add Comment</a></div>
-                                    {{$aux = False}}
+                                            href="{{ url('/event/' . $event->id) . '/comment' }}">Add Comment</a></div>
+                                    {{ $aux = false }}
                                 @endif
                             @endforeach
-                            @if($aux)
-                                    <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-outline-success"
+                            @if ($aux)
+                                <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-outline-success"
                                         href="{{ url('/event/' . $event->id) . '/join' }}">Join Event</a></div>
                             @endif
                         </div>

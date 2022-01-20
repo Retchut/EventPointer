@@ -77,7 +77,11 @@
                 </div>
                 <div class="col" id="browse-event">
                     @foreach ($events as $event)
-                        @if ($event->isprivate == false)
+                        @if (!Auth::user()->isadmin)
+                            @if ($event->isprivate == false)
+                                @include('partials.browse_events')
+                            @endif
+                        @else
                             @include('partials.browse_events')
                         @endif
                     @endforeach

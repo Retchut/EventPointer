@@ -31,14 +31,14 @@ class EventController extends Controller
     $participants = $event->participants($event_id);
     $hosts = $event->hosts($event_id);
     $tag = $event->tag($event_id);
-        /* 403 exception apge*/
+    /* 403 exception apge*/
     /*
     $this->authorize('show', $event);
     return view('pages.event', ['event' => $event, 'reported' => False, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants]);
     */
 
     if (Auth::check())
-      return view('pages.event', ['event' => $event, 'reported' => $request->reported, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants,'tag'=>$tag]);
+      return view('pages.event', ['event' => $event, 'reported' => $request->reported, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants, 'tag' => $tag]);
     else
       return redirect("/login");
   }
@@ -58,12 +58,12 @@ class EventController extends Controller
 
   public function cancel($event_id)
   {
-      //TODO
+    //TODO
   }
 
   public function addparticipant($event_id)
   {
-      //TODO
+    //TODO
   }
 
   public function showCreateForm()
@@ -85,11 +85,15 @@ class EventController extends Controller
     $event->eventstate = $request->get('eventstate');
     $event->isprivate = $request->get('isprivate');
 
+    $today = today()->format('Y-m-d');
+
+    if ($event->startdate < $today)
+      return view('pages.createeventerror');
+
     try {
       $event->save();
-    
     } catch (\Illuminate\Database\QueryException $e) {
-      return redirect()->route('event.create', Auth::user()->id);
+      return view('pages.createeventerror');
     }
 
     //$picture = $request->file('cover');
@@ -107,24 +111,23 @@ class EventController extends Controller
     $event_role->ishost = true;
     $event_role->save();
 
-    return redirect()-> route('event.show', $event->id);
+    return redirect()->route('event.show', $event->id);
   }
 
   public static function comment_author($comment_id)
   {
-      $comment = Comment::find($comment_id);
-      $role =Event_Role::find($comment->role_id);
-      $user = User::find($role->userid);
-      return $user;
+    $comment = Comment::find($comment_id);
+    $role = Event_Role::find($comment->role_id);
+    $user = User::find($role->userid);
+    return $user;
   }
 
 
   public static function announcement_author($announcement_id)
   {
-      $announcement = Announcement::find($announcement_id);
-      $role =Event_Role::find($announcement->role_id);
-      $user = User::find($role->userid);
-      return $user;
+    $announcement = Announcement::find($announcement_id);
+    $role = Event_Role::find($announcement->role_id);
+    $user = User::find($role->userid);
+    return $user;
   }
-
 }

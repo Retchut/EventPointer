@@ -102,7 +102,9 @@ class EditEventController extends Controller
 
         if ($request->eventname != null)
             $event->eventname = $request->eventname;
-
+        
+        if ($request->event_description != null)
+            $event->event_description = $request->event_description;
 
         if ($request->place != null)
             $event->place = $request->place;

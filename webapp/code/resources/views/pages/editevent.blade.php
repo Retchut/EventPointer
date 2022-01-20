@@ -31,6 +31,11 @@
                             <input type="text" class="form-control" id="eventname" name="eventname">
                         </div>
 
+                        <div class="form-group mb-2">
+                            <label for="event_description">Event Description</label>
+                            <input type="text" class="form-control" id="event_description" name="event_description">
+                        </div>
+
 
                         <div class="form-group mb-2">
                             <label for="event_place">Place</label>

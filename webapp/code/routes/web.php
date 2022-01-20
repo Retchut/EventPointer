@@ -30,8 +30,8 @@ Route::post('user/{user_id}/edit', 'EditUserController@update')->name('user.upda
 
 
 //User Create Event
-Route::get('user/{user_id}/createevent', 'EventController@index')->name('create.show');
-Route::post('user/{user_id}/createevent', 'EventController@create')->name('create');
+Route::get('user/{user_id}/createevent', 'EventController@showCreateForm')->name('create.show');
+Route::post('user/{user_id}/createevent', 'EventController@create')->name('event.create');
 
 // User Invite
 Route::get('user/{user_id}/invite/{invite_id}', 'InviteController@index')->name('create.show');

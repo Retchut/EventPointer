@@ -60,44 +60,45 @@ class EventController extends Controller
       //TODO
   }
 
-  public function index()
+  public function showCreateForm()
   {
-    return view('pages.createEvent', [
-      'place' => Place::all(),
-      'duration' => Duration::all(),
-      'name' => Name::all(),
-    ]);
+    return view('pages.createevent');
   }
 
   public function create(Request $request)
   {
-    $event = DB::transaction(function () use ($request) {
-      $event = new Event();
-      $this->authorize('create', $event);
-      $event->name = $request->input('name');
-      $event->startDate = $request->input('startDate');
-      $event->endDate = $request->input('endDate');
-      $event->place = $request->input('place');
-      $event->duration = $request->input('duration');
-      $event->isPrivate = $request->input('isPrivate');
-      $event->save();
+    $event = new Event();
+    $this->authorize('create', $event);
 
-      //$picture = $request->file('cover');
-      //$extension = $picture->getClientOriginalExtension();
-      //$path = $event->id . '.' . $extension;
-      //Storage::disk('public')->put('/event/' . $path,  File::get($picture));
-      //$photo = new Photo();
-      //$photo->name = $path;
-      //$photo->idevent = $event->id;
-      //$photo->save();
+    $event->eventname = $request->eventname;
+    $event->event_description = $request->event_description;
+    $event->place = $request->place;
+    $event->startdate = $request->get('startdate');
+    $event->enddate = $request->get('enddate');
+    $event->eventstate = $request->get('eventstate');
+    $event->isprivate = $request->get('isprivate');
 
-      $event_host = new EventHost();
-      $this->authorize('create', Auth::user());
-      $event_host->iduser = Auth::user()->id;
-      $event_host->idevent = $event->id;
-      $event_host->save();
+    dd($event->get('tagid'));
 
-      return $event;
-    });
+    $event->save();
+
+    //$picture = $request->file('cover');
+    //$extension = $picture->getClientOriginalExtension();
+    //$path = $event->id . '.' . $extension;
+    //Storage::disk('public')->put('/event/' . $path,  File::get($picture));
+    //$photo = new Photo();
+    //$photo->name = $path;
+    //$photo->idevent = $event->id;
+    //$photo->save();
+
+    $event_role = new Event_Role;
+    $event_role->userid = Auth::user()->id;
+    $event_role->eventid = $event->id;
+    $event_role->ishost = true;
+    $event_role->save();
+
+    return redirect()-> route('event.show', $event->id);
   }
+    
+
 }

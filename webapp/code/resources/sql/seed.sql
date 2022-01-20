@@ -472,7 +472,7 @@ insert into users (username, email, password, description, profilepictureurl) va
 insert into event_tag (tagname) values('Music');               -- 1       
 insert into event_tag (tagname) values('Sports');              -- 2      
 insert into event_tag (tagname) values('Movies and TV Shows');         -- 3            
-insert into event_tag (tagname) values('Arts and leisure');    -- 4                 
+insert into event_tag (tagname) values('Arts and Leisure');    -- 4                 
 insert into event_tag (tagname) values('Programming');         -- 5            
 insert into event_tag (tagname) values('Lifestyle');         -- 6            
 insert into event_tag (tagname) values('Gaming');             -- 7       

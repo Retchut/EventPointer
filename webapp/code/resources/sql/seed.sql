@@ -382,24 +382,6 @@ CREATE TRIGGER delete_account
         EXECUTE PROCEDURE delete_account();
 
 
-DROP FUNCTION IF EXISTS delete_account_effects() CASCADE;
-CREATE FUNCTION delete_account_effects() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-        IF EXISTS (SELECT * FROM event_role INNER JOIN vote ON vote.event_roleid = event_role.id INNER JOIN users ON users.id = event_role.userid WHERE OLD.id = vote.event_roleid AND event_role.userid = users.id) THEN
-           RAISE EXCEPTION 'Only votes from previous users will be deleted.';
-        END IF;
-        RETURN OLD;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS delete_account_effects ON users CASCADE;
-CREATE TRIGGER delete_account_effects
-        AFTER DELETE ON users
-        FOR EACH ROW
-        EXECUTE PROCEDURE delete_account_effects();
-
 
 DROP FUNCTION IF EXISTS calc_duration() CASCADE;
 CREATE FUNCTION calc_duration() RETURNS TRIGGER AS 

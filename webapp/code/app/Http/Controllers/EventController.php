@@ -69,7 +69,12 @@ class EventController extends Controller
 
   public function cancel($event_id)
   {
-    //TODO
+    $event = Event::find($event_id);
+    $event->eventstate = 'Canceled';
+    $event->save();
+    
+    return redirect()->route('event.show', $event->id);
+
   }
 
   public function addparticipant($event_id)

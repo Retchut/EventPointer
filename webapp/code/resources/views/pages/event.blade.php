@@ -67,6 +67,9 @@
                                                 <li><a href="{{ url('/event/' . $event->id) . '/comment' }}"
                                                         class="dropdown-item">Add
                                                         Comment</a></li>
+                                                <li><a href="{{ url('/event/' . $event->id) . '/leave' }}"
+                                                        class="dropdown-item">Leave Event
+                                                    </a></li>
                                                 <li class="dropdown-divider"></li>
                                             @endif
                                         @endforeach

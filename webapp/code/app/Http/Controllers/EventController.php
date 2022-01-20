@@ -56,6 +56,17 @@ class EventController extends Controller
     return redirect()->route('home');
   }
 
+
+  public function leave($event_id)
+  {
+    $role = Event_Role::where('ishost', false)->where('eventid', $event_id)->where('userid', Auth::user()->id)->get()->first();
+    if ($role != null)
+      $role->delete();
+
+    return redirect()->route('home');
+  }
+
+
   public function cancel($event_id)
   {
     //TODO

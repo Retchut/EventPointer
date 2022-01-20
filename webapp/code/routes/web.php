@@ -54,6 +54,9 @@ Route::post('event/{event_id}/edit', 'EditEventController@update')->name('event.
 // Event Cancel
 Route::get('event/{event_id}/cancel', 'EventController@cancel')->name('event.cancel');
 
+// Leave Event
+Route::get('event/{user_id}/leave', 'EventController@leave')->name('event.leave');
+
 //Hosts add participant to event 
 Route::get('event/{event_id}/addparticipant', 'EventController@addparticipant')->name('event.addparticipant');
 

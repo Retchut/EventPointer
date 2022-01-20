@@ -78,13 +78,13 @@ class EventController extends Controller
 
     $event->eventname = $request->eventname;
     $event->event_description = $request->event_description;
+    $event->tagid = $request->tagid;
     $event->place = $request->place;
     $event->startdate = $request->get('startdate');
     $event->enddate = $request->get('enddate');
     $event->eventstate = $request->get('eventstate');
     $event->isprivate = $request->get('isprivate');
 
-    dd($event->get('tagid'));
 
     $event->save();
 

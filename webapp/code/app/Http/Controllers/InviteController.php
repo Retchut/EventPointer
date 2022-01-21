@@ -23,12 +23,19 @@ class InviteController extends Controller
         $users = $user_query->get();
 
 
-        return view('pages.inviteuser', ['users' => $users, 'event' => $event]);
+        return view('pages.invite', ['users' => $users, 'event' => $event]);
     }
 
 
     public function invite($event_id, $user_id)
-    {
+    {   
+        $test_invite = Invite::where('receiverid', $user_id)->where('eventid', $event_id)->get();
+        // If the user was already invited to this event
+        if(count($test_invite) > 0){
+            return redirect()->route('event.show', [ 'event_id' =>$event_id,
+            'popup_message' => 'Error: That user has already been invited to this event.']);
+        }
+
         $invite = new Invite;
         $invite->receiverid = $user_id;
         $receiver = User::find($user_id);
@@ -43,7 +50,8 @@ class InviteController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return abort(403, "Duplicate found");
         }
-        return redirect()->route('invite.show', $event_id);
+        return redirect()->route('event.show', [ 'event_id' =>$event_id,
+        'popup_message' => 'User successfully invited.']);
     }
 
     public function delete($user_id, $invite_id)

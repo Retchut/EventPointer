@@ -31,7 +31,7 @@ class ReportEventController extends Controller
         $report->descriptions = $request->report_message;
         $report->save();
         
-        return redirect()->route('event.show', ['event_id' => $event_id, 'reported' => True]);
+        return redirect()->route('event.show', ['event_id' => $event_id, 'popup_message' => 'Event reported successfully.']);
     }
 
 

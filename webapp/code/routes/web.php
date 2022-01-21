@@ -92,7 +92,7 @@ Route::post('event/{event_id}/poll', 'PollEventController@create')->name('poll.c
 Route::post('event/{event_id}/poll', 'PollEventController@poll')->name('event.poll');
 
 // Event Invite
-Route::get('event/{event_id}/inviteuser', 'InviteController@showusers')->name('invite.show');
+Route::get('event/{event_id}/invite', 'InviteController@showusers')->name('invite.show');
 Route::get('event/{event_id}/invite/{user_id}', 'InviteController@invite')->name('event.invite');
 Route::get('user/{user_id}/invite/{invite_id}/delete', 'InviteController@delete')->name('invite.delete');
 

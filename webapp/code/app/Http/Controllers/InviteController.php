@@ -31,7 +31,7 @@ class InviteController extends Controller
     {   
         $test_invite = Invite::where('receiverid', $user_id)->where('eventid', $event_id)->get();
         // If the user was already invited to this event
-        if(count($test_invite) > 0){
+        if(count($test_invite) != 0){
             return redirect()->route('event.show', [ 'event_id' =>$event_id,
             'popup_message' => 'Error: That user has already been invited to this event.']);
         }

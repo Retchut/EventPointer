@@ -77,8 +77,6 @@ class InviteController extends Controller
 
         $invite->delete();
 
-        // if()
-
         return redirect()->route('user.show', [ 'user_id' => $user_id,
         'popup_message' => 'Invitation to join "'.$event->eventname.'" accepted from '.$user->username.'.']);
     }
@@ -86,8 +84,10 @@ class InviteController extends Controller
     public function delete($user_id, $invite_id)
     {
         $invite = Invite::find($invite_id);
+        $user = User::find($invite->senderid);
         $invite->delete();
 
-        return redirect()->route('user.show', $user_id);
+        return redirect()->route('user.show', [ 'user_id' => $user_id,
+        'popup_message' => 'Invitation from '.$user->username.' deleted successfully.']);
     }
 }

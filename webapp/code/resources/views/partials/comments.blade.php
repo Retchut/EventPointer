@@ -10,7 +10,7 @@
                 </span>
                 <p class="text-bold m-2 p-2" s>{{ $comment->messagec }}</p>
             </div>
-            @if (is_null($current_role) || ($current_role->id == $comment->role_id))
+            @if (Auth::user()->isadmin  ||  ( (!is_null($current_role)) &&($current_role->id == $comment->role_id) ) )
                 <div class="col d-flex justify-content-end">
                     <!-- admin can't edit -->
                     @if(!is_null($current_role))

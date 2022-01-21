@@ -1,5 +1,5 @@
 <div class="row mb-4">
-    <div class="col my-auto" style="max-width: 200px;">
+    <div class="col my-auto" style="max-width: 300px;">
         <img src="{{ $event->pictureurl }}"
             class="img-fluid rounded" style="height: 150px; width: 100%; object-fit: cover;">
     </div>

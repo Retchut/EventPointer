@@ -12,12 +12,6 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
-    /*
-    public function delete(User $user1, User $user2)
-    {
-        return $user1->id == $user2->id || $user1->admin;
-    }*/
-
     public function create(User $user)
     {
         return Auth::check();

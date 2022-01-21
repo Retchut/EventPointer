@@ -34,24 +34,19 @@ class EventController extends Controller
     $announcements = $event->announcements($event_id);
     $comments = $event->comments($event_id);
     $polls = $event->polls($event_id);
+    $pollOptions = $event->pollOptions($event_id);
     $participants = $event->participants($event_id);
     $hosts = $event->hosts($event_id);
     $tag = $event->tag($event_id);
     //TODO: fix non-logged user
-    if(Auth::check()){
+    if (Auth::check()) {
       $current_role = Event_Role::where('eventid', $event_id)->where('userid', Auth::user()->id)->get()->first();
-    }
-    else{
+    } else {
       $current_role = NULL;
     }
-    /* 403 exception apge*/
-    /*
-    $this->authorize('show', $event);
-    return view('pages.event', ['event' => $event, 'reported' => False, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants]);
-    */
 
     if (Auth::check())
-      return view('pages.event', ['event' => $event, 'current_role' => $current_role, 'reported' => $request->reported, 'comments' => $comments, 'polls' => $polls, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants, 'tag' => $tag]);
+      return view('pages.event', ['event' => $event, 'current_role' => $current_role, 'popup_message' => $request->popup_message, 'comments' => $comments, 'polls' => $polls, 'pollOptions' => $pollOptions, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants, 'tag' => $tag]);
     else
       return redirect("/login");
   }
@@ -62,11 +57,9 @@ class EventController extends Controller
   {
     $event = Event::find($event_id);
 
-    //$this->authorize('delete', $event);
-
     $event->delete();
 
-    return redirect()->route('home');
+    return redirect()->route('browse.search',['popup_message' => "Event deleted"]);
   }
 
 
@@ -76,8 +69,8 @@ class EventController extends Controller
     if ($role != null)
       $role->delete();
 
-    return redirect()->route('browse.search');
-  }
+      return redirect()->route('browse.search',['popup_message' => "You just left the event"]);
+    }
 
   public function join($event_id)
   {
@@ -102,7 +95,7 @@ class EventController extends Controller
   }
 
 
-  //TODO
+
   public function showAdd(Request $request, $event_id)
   {
     $event = Event::find($event_id);
@@ -116,12 +109,12 @@ class EventController extends Controller
     $users = $user_query->get();
 
 
-    return view('pages.addparticipants', ['users' => $users, 'event' => $event]);
+    return view('pages.addparticipants', ['users' => $users, 'event' => $event, 'popup_message' => $request->popup_message]);
   }
 
-  public function showCreateForm()
+  public function showCreateForm(Request $request)
   {
-    return view('pages.createevent');
+    return view('pages.createevent',['popup_message' => $request->popup_message]);
   }
 
   public function create(Request $request)
@@ -142,23 +135,15 @@ class EventController extends Controller
     $today = today()->format('Y-m-d');
 
     if ($event->startdate < $today)
-      return view('pages.createeventerror');
-
+    return view('pages.createevent',['popup_message' => "Error in dates. Either Start Date entered is earlier than today's date or End Date is earlier than Start
+    Date."]);
     try {
       $event->save();
     } catch (\Illuminate\Database\QueryException $e) {
-      return view('pages.createeventerror');
+      return view('pages.createevent',['popup_message' => "Error in dates. Either Start Date entered is earlier than today's date or End Date is earlier than Start
+      Date."]);
     }
-
-    //$picture = $request->file('cover');
-    //$extension = $picture->getClientOriginalExtension();
-    //$path = $event->id . '.' . $extension;
-    //Storage::disk('public')->put('/event/' . $path,  File::get($picture));
-    //$photo = new Photo();
-    //$photo->name = $path;
-    //$photo->idevent = $event->id;
-    //$photo->save();
-
+    
     $event_role = new Event_Role;
     $event_role->userid = Auth::user()->id;
     $event_role->eventid = $event->id;
@@ -193,18 +178,18 @@ class EventController extends Controller
     return $user;
   }
 
-  public function showRemove($event_id)
+  public function showRemove(Request $request, $event_id)
   {
     $event = Event::find($event_id);
     $participants = $event->participants($event_id);
-    return view('pages.removeparticipants', ['event' => $event, 'participants' => $participants]);
+    return view('pages.removeparticipants', ['event' => $event, 'participants' => $participants, 'popup_message' => $request->popup_message]);
   }
 
   public function remove($event_id, $user_id)
   {
     $role = Event_Role::where('ishost', false)->where('eventid', $event_id)->where('userid', $user_id)->get()->first();
     $role->delete();
-    return redirect()->route('event.removeparticipants', $event_id);
+    return redirect()->route('event.removeparticipants', [$event_id, 'popup_message' => "Participant removed"]);
   }
 
   public function add($event_id, $user_id)
@@ -216,8 +201,8 @@ class EventController extends Controller
     try {
       $role->save();
     } catch (\Illuminate\Database\QueryException $e) {
-      return abort(403, "Duplicate found");
+      return redirect()->route('event.showaddparticipants', [$event_id, 'popup_message' => "Participant already assigned"]);
     }
-    return redirect()->route('event.showaddparticipants', $event_id);
+    return redirect()->route('event.showaddparticipants', [$event_id, 'popup_message' => "Participant added"]);
   }
 }

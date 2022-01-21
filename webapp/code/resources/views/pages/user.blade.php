@@ -7,6 +7,18 @@
 <section id="user">
     <link href="{{ asset('css/user.css') }}" rel="stylesheet">
     <div class="container-fluid p-4">
+        @if (!is_null($popup_message))
+            <div id="report_popup" class="popup-container">
+                <div class="popup">
+                    <p class="popup-elems">{{$popup_message}}</p>
+                    <button id="close1" type="button" class="popup-elems btn-close"></button>
+                </div>
+            </div>
+
+            <script>
+                setup_popup_btn("close1","report_popup");
+            </script>
+        @endif
 
         <!-- user personal data -->
         <div class="row">
@@ -58,7 +70,7 @@
         </div>
 
         <!-- User control buttons -->
-        @if ((Auth::user()->id == $user->id) || (Auth::user()->isadmin))
+        @if ((Auth::user()->id == $user->id) && !(Auth::user()->isadmin))
         <div class="d-flex justify-content-end">
             <div class="row-sm-1  m-2 p-3">
                 <a class="btn btn-outline-primary" href="{{ url('/user/'.@Auth::user()->id.'/edit') }}">Edit Account</a>

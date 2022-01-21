@@ -21,16 +21,15 @@
     @endif
 </div>
 
+@if ((Auth::user()->id == $user->id))
 <h3 class="pt-4">Invites</h3>
 <div class="border border-primary  bg-light text-dark rounded">
-    <!-- TODO: restrict to only the user's invites -->
-    @if ((Auth::user()->id == $user->id))
         @if (count($user_invites) > 0)
             @foreach ($user_invites as $user_invite)
-                @include('partials.userinvite', ['user_invite', $user_invite])
+                @include('partials.userinvite', ['user_invite' => $user_invite, 'user_id' => $user->id])
             @endforeach
         @else
             <p class="font-weight-bold pb-2 m-3">You have no pending invites.</p>
         @endif
-    @endif
 </div>
+@endif

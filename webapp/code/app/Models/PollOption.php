@@ -13,7 +13,8 @@ class PollOption extends Model
 
 
     protected $fillable = [
-        'message'
+        'message',
+        'countvote'
     ];
 
 }

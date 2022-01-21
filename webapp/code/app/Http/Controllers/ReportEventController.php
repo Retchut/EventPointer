@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ReportEventController extends Controller
 {
-   // protected $redirectTo = 'event';
+    // protected $redirectTo = 'event';
 
 
     public function index($event_id)
@@ -21,27 +21,28 @@ class ReportEventController extends Controller
         //$user = User::find(Auth::user()->id);
         //$event_role = User::events_host($user->$id);
         //if(Auth::check() and this)
-    return view('pages.reportevent', ['event_id' => $event_id]);
+        return view('pages.reportevent', ['event_id' => $event_id]);
     }
 
-    public function report(Request $request, $event_id){
+    public function report(Request $request, $event_id)
+    {
         $report = new Report;
         $report->eventid = $event_id;
         $report->userid = Auth::user()->id;
         $report->descriptions = $request->report_message;
         $report->save();
-        
-        return redirect()->route('event.show', ['event_id' => $event_id, 'reported' => True]);
+
+        return redirect()->route('event.show', ['event_id' => $event_id, 'popup_message' => 'Event reported successfully.']);
     }
 
 
     public function delete($report_id)
-  {
-    $report = Report::find($report_id);
+    {
+        $report = Report::find($report_id);
 
-    //$this->authorize('delete', $user);
+        //$this->authorize('delete', $user);
 
-    /*
+        /*
     Auth::logout();
 
     $user->username = 'deleted' . $user->id;
@@ -49,13 +50,14 @@ class ReportEventController extends Controller
     $user->password = bcrypt('deleted');
 
     $user->save();*/
+        if ($report == null)
+            abort(404);
+        $report->delete();
 
-    $report->delete();
+        return redirect()->route('user.show', [Auth::user()->id, 'popup_message' => "Report deleted"]);
+    }
 
-    return redirect()->route('user.show',Auth::user()->id);
-  }
-
-/*
+    /*
     public function create(Request $request)
     {
         $event = DB::transaction(function () use ($request) {

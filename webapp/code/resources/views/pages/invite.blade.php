@@ -1,30 +1,18 @@
 @extends('layouts.app')
 
-@section('title', 'addparticipants')
+@section('title', 'inviteuser')
 
 @section('content')
 
     <section id="add_participants">
-        @if (!is_null($popup_message))
-            <div id="popup" class="popup-container">
-                <div class="popup">
-                    <p class="popup-elems">{{ $popup_message }}</p>
-                    <button id="close" type="button" class="popup-elems btn-close"></button>
-                </div>
-            </div>
-
-            <script>
-                setup_popup_btn("close", "popup");
-            </script>
-        @endif
         <h1 class="p-2"> <a role="button" href="{{ url('/event/' . $event->id) }}" class="btn w-auto mx-3"><svg
                     xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                     class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
                         d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z" />
-                </svg></a>Add Participants
+                </svg></a>Invite Users
         </h1>
-        <form method="GET" class="d-inline-flex w-75" action="{{ route('event.showaddparticipants', $event) }}">
+        <form method="GET" class="d-inline-flex w-75" action="{{ route('invite.show', $event) }}">
             <input id="search-input" class="form-control form-control-sm me-sm-2" type="text" name="search_query"
                 value="{{ old('search_query') }}" required placeholder="Search">
             <button class="btn btn-secondary btn-sm my-2 my-sm-0" type="submit">Search</button>
@@ -33,7 +21,7 @@
             @if (count($users) > 0)
                 <div class="col-md-1 w-75 border rounded py-2 bg-light text-dark align-center border-primary">
                     <div class="mb-3 m-2">
-                        <h3 class="m-1 p-1">Please choose participants to add to event:</h3>
+                        <h3 class="m-1 p-1">Please choose users you want to invite:</h3>
                     </div>
                     <div class="col m-2 p-3">
 
@@ -48,7 +36,7 @@
 
                                     <div class="col d-flex justify-content-end">
                                         <a class="btn btn-success"
-                                            href="{{ url('/event/' . $event->id . '/addparticipant/' . $user->id) }}"><svg
+                                            href="{{ url('/event/' . $event->id . '/invite/' . $user->id) }}"><svg
                                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                 fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                                                 <path

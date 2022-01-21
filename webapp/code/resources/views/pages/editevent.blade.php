@@ -5,6 +5,18 @@
 @section('content')
 
     <section id="edit_event">
+        @if (!is_null($popup_message))
+            <div id="popup" class="popup-container">
+                <div class="popup">
+                    <p class="popup-elems">{{ $popup_message }}</p>
+                    <button id="close" type="button" class="popup-elems btn-close"></button>
+                </div>
+            </div>
+
+            <script>
+                setup_popup_btn("close", "popup");
+            </script>
+        @endif
         <h1 class="p-2"> <a role="button" href="{{ url('/event/' . $event->id) }}" class="btn w-auto mx-3"><svg
                     xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                     class="bi bi-arrow-left-circle" viewBox="0 0 16 16">

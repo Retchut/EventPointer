@@ -42,6 +42,12 @@ class Event extends Model
         return $polls;
     }
 
+    public function pollOptions($event_id)
+    {
+        $pollOptions = PollOption::all();
+        return $pollOptions;
+    }
+
 
     public function participants($event_id)
     {
@@ -61,23 +67,6 @@ class Event extends Model
         $tag = Tag::find($event->tagid);
         return $tag;
     }
-
-    
-    /*public function comments()
-    {
-        return $this->hasMany('App\Comment');
-    }
-
-    public function announcements()
-    {
-        return $this->hasMany('App\Announcement');
-    }
-
-    public function polls()
-    {
-        return $this->hasMany('App\Poll');
-    }
-*/
 
    
 }

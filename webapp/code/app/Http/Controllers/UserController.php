@@ -21,7 +21,7 @@ class UserController extends Controller
    * @param  int  $id
    * @return View
    */
-  public function show($user_id)
+  public function show($user_id, Request $request)
   {
     $user = User::find($user_id);
     if (is_null($user)) {
@@ -30,11 +30,7 @@ class UserController extends Controller
       return abort(403, "Access Denied");
     }
 
-    $invites_data = Invite::all();
-    // $user_invites = Invite::where('receiverid', $user_id) -> get();
-    $invite_events = array();
-    $invite_senders = array();
-    $invite_receivers = array(); //remove later
+    $invites_data = Invite::where('receiverid', $user_id) -> get();
 
     $user_invites = array();
 
@@ -42,19 +38,12 @@ class UserController extends Controller
       $user_invite = array();
       $inv_event = Event::find($invites_datum->eventid);
       $inv_sender = User::find($invites_datum->senderid);
-      $inv_receiver = User::find($invites_datum->receiverid);
-      // array_push($invite_events, $inv_event);
-      // array_push($invite_senders, $inv_sender);
-      // array_push($invite_receivers, $inv_receiver);
-
+  
       array_push($user_invite, $inv_event);
       array_push($user_invite, $inv_sender);
-      array_push($user_invite, $inv_receiver);
+      array_push($user_invite, $invites_datum->id);
       array_push($user_invites, $user_invite);
     }
-    // dd($user_invites[0][0]->eventname);
-    // dd($user_invites[0][1]->username);
-    // dd($user_invites[0][2]->username);
 
     $events_as_participant = $user->events_as_participant($user_id);
     $events_as_host = $user->events_as_host($user_id);
@@ -69,10 +58,8 @@ class UserController extends Controller
       'Member Since' => $user->registrationdate
     ];
 
-    // dd($invite_senders[0]);
-
     if (Auth::check())
-      return view('pages.user', ['user' => $user, 'user_invites' => $user_invites, 'events_as_host' => $events_as_host,'events_as_participant' => $events_as_participant, 'user_stats' => $user_stats, 'reports' => $reports]);
+      return view('pages.user', ['popup_message' => $request->popup_message, 'user' => $user, 'user_invites' => $user_invites,'popup_message' => $request->popup_message, 'events_as_host' => $events_as_host,'events_as_participant' => $events_as_participant, 'user_stats' => $user_stats, 'reports' => $reports]);
     else
       return redirect("/login");
   }
@@ -80,17 +67,6 @@ class UserController extends Controller
   public function delete($user_id)
   {
     $user = User::find($user_id);
-
-    //$this->authorize('delete', $user);
-
-    /*
-    Auth::logout();
-
-    $user->username = 'deleted' . $user->id;
-    $user->email = 'deleted' . $user->id . '@deleted.com';
-    $user->password = bcrypt('deleted');
-
-    $user->save();*/
 
     $user->delete();
 

@@ -70,8 +70,8 @@ CREATE TABLE invite
     receiverid INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     senderid INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     eventid INTEGER NOT NULL REFERENCES eventg(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CHECK (receiverid <> senderid)
-);
+    CHECK (receiverid <> senderid),
+    UNIQUE (receiverid,eventid));
 
 
 
@@ -108,7 +108,6 @@ CREATE TABLE event_poll
     id SERIAL PRIMARY KEY,
     messagep TEXT NOT NULL,
     role_id INTEGER NOT NULL REFERENCES event_role (id) ON DELETE CASCADE ON UPDATE CASCADE
-
 );
 
 
@@ -117,7 +116,8 @@ CREATE TABLE poll_option
 (
     id SERIAL PRIMARY KEY,
     messagepo TEXT NOT NULL,
-    pollId INTEGER NOT NULL REFERENCES event_poll (id) ON DELETE CASCADE ON UPDATE CASCADE
+    countvote INTEGER DEFAULT 0,
+    pollid INTEGER NOT NULL REFERENCES event_poll (id) ON DELETE CASCADE ON UPDATE CASCADE
 
 );
 
@@ -400,6 +400,25 @@ CREATE TRIGGER calc_duration
         BEFORE INSERT ON eventg
         FOR EACH ROW
         EXECUTE PROCEDURE calc_duration();
+
+/*
+DROP FUNCTION IF EXISTS delete_account_effects() CASCADE;
+CREATE FUNCTION delete_account_effects() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+        DELETE FROM eventg WHERE id IN (SELECT id FROM eventg INNER JOIN event_role eventid ON eventg.id = event_role.eventid 
+        INNER JOIN users id ON users.id = event_role.userid WHERE OLD.id = event_role.eventid);
+
+END
+$BODY$
+LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS delete_account_effects ON users CASCADE;
+CREATE TRIGGER delete_account_effects
+        AFTER DELETE ON users
+        FOR EACH ROW
+        EXECUTE PROCEDURE delete_account_effects();
+*/ 
 
 
 -----------------------------------------
@@ -755,18 +774,18 @@ insert into event_poll (messagep, role_id) values ('Who do you thin will win thi
 
 
 
-insert into poll_option (messagepo, pollId) values ('Yes', 1);
-insert into poll_option (messagepo, pollId) values ('No', 1);
-insert into poll_option (messagepo, pollId) values ('Yes', 2);
-insert into poll_option (messagepo, pollId) values ('No', 2);
-insert into poll_option (messagepo, pollId) values ('Yes', 3);
-insert into poll_option (messagepo, pollId) values ('No', 3);
-insert into poll_option (messagepo, pollId) values ('Already brought a diaper', 4);
-insert into poll_option (messagepo, pollId) values ('I am gonna find out', 4);
-insert into poll_option (messagepo, pollId) values ('Going to Decathlon', 5);
-insert into poll_option (messagepo, pollId) values ('Already using them', 5);
-insert into poll_option (messagepo, pollId) values ('BalckKnight365', 6);
-insert into poll_option (messagepo, pollId) values ('Assassin23', 6);
+insert into poll_option (messagepo, pollid, countvote) values ('Yes', 1, 5);
+insert into poll_option (messagepo, pollid, countvote) values ('No', 1, 7);
+insert into poll_option (messagepo, pollid, countvote) values ('Yes', 2, 8);
+insert into poll_option (messagepo, pollid, countvote) values ('No', 2, 2);
+insert into poll_option (messagepo, pollid, countvote) values ('Yes', 3, 5);
+insert into poll_option (messagepo, pollid, countvote) values ('No', 3, 4);
+insert into poll_option (messagepo, pollid, countvote) values ('Already brought a diaper', 4, 9);
+insert into poll_option (messagepo, pollid, countvote) values ('I am gonna find out', 4, 2);
+insert into poll_option (messagepo, pollid, countvote) values ('Going to Decathlon', 5, 3);
+insert into poll_option (messagepo, pollid, countvote) values ('Already using them', 5, 5);
+insert into poll_option (messagepo, pollid, countvote) values ('BalckKnight365', 6, 12);
+insert into poll_option (messagepo, pollid, countvote) values ('Assassin23', 6, 4);
 
 
 insert into vote (votetype, event_roleid, commentid, announcementid) values (true, 10, 2, NULL);

@@ -8,6 +8,15 @@
         </span>
         <p class="text-bold m-2 p-2" s>{{ $poll->messagep }}</p>
 
+        <div class="row justify-content-center">
+        @foreach($pollOptions as $pollOption)
+            @if($poll->id == $pollOption->pollid)
+                <div class="col-sm-auto text-center mb-2"><a class="btn btn-sm btn-outline-success"
+                   href= "{{ url('/event/' .$event->id.'/poll/'.$pollOption->pollid)}}">{{ $pollOption->messagepo }} : {{ $pollOption->countvote }}</a></div>
+            @endif
+        @endforeach
+        </div>
+
     </div>
 
 @endforeach

@@ -8,12 +8,11 @@ use App\Models\Event_Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CommentEventController extends Controller
+class PollEventController extends Controller
 {
-    // protected $redirectTo = 'event';
 
 
-    public function index($event_id)
+    public function index($event_id, $poll)
     {
         return view('pages.pollevent', ['event_id' => $event_id]);
     }

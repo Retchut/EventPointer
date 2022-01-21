@@ -22,20 +22,6 @@ class EditUserController extends Controller
     {
         $user = User::find($user_id);
 
-        //$this->authorize('update', $user);
-
-        /*User::where('id', $user_id)->update(
-            [
-                'username' => $request->name,
-                'email' => $request->address,
-                'password' => bcrypt($request->password),
-                'profilepictureurl' => $request->profilePictureUrl,
-                'description' => $request->description,
-            ]
-            );*/
-
-
-
         if ($request->name != null)
             $user->username = $request->name;
 

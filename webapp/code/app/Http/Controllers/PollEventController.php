@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PollEventController extends Controller
 {
-    // protected $redirectTo = 'event';
 
 
     public function index($event_id, $poll)

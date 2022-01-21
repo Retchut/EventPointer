@@ -8,16 +8,20 @@ use App\Models\Event_Role;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 
-class EventHostPolicy
+class EventPolicy
 {
     use HandlesAuthorization;
 
-    public function show(User $user, Event $event)
+    public function show()
     {
-        return true;
+
+        if (Auth::check())
+            return true;
+        else
+            return false;
     }
 
-    
+
     public function create(User $user)
     {
         return Auth::check();
@@ -29,8 +33,11 @@ class EventHostPolicy
         return Auth::check();
     }
 
+    /*
     public function update(User $user, Event $event, Event_Role $event_role)
     {
-        return $user->id == $event_role->userid  and $event_role->eventid == $event->id and $event_role->ishost;
-    }
+        //return $user->id == $event_role->userid  and $event_role->eventid == $event->id and $event_role->ishost;
+
+        return DB::table('event_role')->where('eventid', $event->id)->join('users', 'event_role.userid', '=', 'users.id')->exists();
+    }*/
 }

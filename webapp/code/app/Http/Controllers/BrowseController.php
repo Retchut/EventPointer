@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Event;
+use App\Models\User;
 
 class BrowseController extends Controller
 {
@@ -15,50 +16,54 @@ class BrowseController extends Controller
    *
    * @return View
    */
-  public function show()
+  public function show(Request $request)
   {
-    $events = Event::all();
-    // $this->authorize('show', $events);
-    return view('pages.browse', ['events' => $events]);
-  }
-  
-
-  public function sort($order)
-  {
-    $events = Event::all();
-    $events_sd_asc = array();
-    switch ($order) {
-      case "sdate-asc":
-        $events_sorted = $events->sortBy(['startdate', 'asc']);
-          break;
-      case "sdate-desc":
-          $events_sorted = $events->sortBy(['startdate', 'desc']);
-          break;
-      case "edate-asc":
-          $events_sorted = $events->sortBy(['enddate', 'asc']);
-          break;
-      case "edate-desc":
-          $events_sorted = $events->sortBy(['enddate', 'desc']);
-          break;
-      case "dur-asc":
-          $events_sorted = $events->sortBy(['duration', 'asc']);
-          break;
-      case "dur-desc":
-          $events_sorted = $events->sortBy(['duration', 'desc']);
-          break;
+    
+    //search for query
+    if($request->search_query == "Null"){
+      $event_query=Event::all();
+      $user_query=User::all();
+    }
+    else{
+      $event_query=Event::where('eventname', 'ilike', '%'.$request->search_query.'%');
+      $user_query=User::where('username', 'ilike', '%'.$request->search_query.'%');
     }
 
-    $scheduled = $events->sortBy(['duration', 'desc']);
+    //search for state
+    if(!(is_null($request->event_state) || ($request->event_state == "All"))){
+      $event_query->where('eventstate', $request->event_state);
+    }
+
+    if(!(is_null($request->event_tag) || ($request->event_tag == "All"))){
+      $event_query->where('tagid', $request->event_tag);
+    }
+
+    //fetch data
+    $events = $event_query->get();
+    $users = $user_query->get();
+    
+    //sort
+    switch ($request->sort) {
+      case "sdate-asc":
+        $events = $events->sortBy('startdate');
+          break;
+      case "sdate-desc":
+          $events = $events->sortByDesc('startdate');
+          break;
+      case "edate-asc":
+          $events = $events->sortBy('enddate');
+          break;
+      case "edate-desc":
+          $events = $events->sortByDesc('enddate');
+          break;
+      case "dur-asc":
+          $events = $events->sortBy('duration');
+          break;
+      case "dur-desc":
+          $events = $events->sortByDesc('duration');
+          break;
+    }
     // $this->authorize('show', $events);
-    return view('pages.browse', ['events' => $events_sorted]);
+    return view('pages.browse', ['events' => $events, 'users' => $users]);
   }
-
-  public function search(Request $request)
-  {
-      // $events = Event::where('eventname', $request->parameters)->get();
-      $events = Event::where('eventname', 'like', '%'.$request->parameters.'%')->get();
-      return view('pages.browse', ['events' => $events]);
-  }
-
-  
 }

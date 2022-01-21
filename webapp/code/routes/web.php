@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
- 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,9 +18,7 @@ Route::get('/', 'HomeController@show')->name('home');
 Route::get('about', 'AboutController@show');
 Route::get('faq', 'FAQController@show');
 Route::get('contacts', 'ContactsController@show');
-Route::get('browse', 'BrowseController@show');
-Route::get('browse/{filter}', 'BrowseController@sort');
-Route::post('browse', 'BrowseController@search')->name('browse.search');
+Route::get('browse', 'BrowseController@show')->name('browse.search');
 
 // User Profile
 Route::get('user/{user_id}', 'UserController@show')->name('user.show');
@@ -29,11 +27,11 @@ Route::get('/user/{user_id}/delete', 'UserController@delete')->name('user.delete
 //User Edit
 Route::get('user/{user_id}/edit', 'EditUserController@index')->name('edit.show');
 Route::post('user/{user_id}/edit', 'EditUserController@update')->name('user.update');
-/* Cria-se novo controller para uma nova página para editar, onde se faz depois a edição, e aí sim, chama-se o método edit? */
+
 
 //User Create Event
-Route::get('user/{user_id}/create_event', 'EventController@index')->name('create.show');
-Route::post('user/{user_id}/create_event', 'EventController@create')->name('create');
+Route::get('user/{user_id}/createevent', 'EventController@showCreateForm')->name('create.show');
+Route::post('user/{user_id}/createevent', 'EventController@create')->name('event.create');
 
 // User Invite
 Route::get('user/{user_id}/invite/{invite_id}', 'InviteController@index')->name('create.show');
@@ -46,24 +44,58 @@ Route::get('user/{user_id}/my_events', 'MyEventsController@index');
 Route::get('user/{user_id}/my_participations',/*view my participations controller*/);
 
 // Event
-Route::get('event/{event_id}', 'EventController@show')->name('edit.show');
-Route::delete('event/{event_id}/', 'EventController@delete'); 
+Route::get('event/{event_id}', 'EventController@show')->name('event.show');
+Route::get('event/{event_id}/delete', 'EventController@delete')->name('event.delete');
 
 // Event Edit
 Route::get('event/{event_id}/edit', 'EditEventController@show')->name('edit.show');
-Route::post('event/{event_id}/edit', 'EditEventController@update');
+Route::post('event/{event_id}/edit', 'EditEventController@update')->name('event.update');
+
+// Event Cancel
+Route::get('event/{event_id}/cancel', 'EventController@cancel')->name('event.cancel');
+
+//Join Event
+Route::get('event/{event_id}/join', 'EventController@join')->name('event.join');
+
+// Leave Event
+Route::get('event/{user_id}/leave', 'EventController@leave')->name('event.leave');
+
+//Hosts add participant to event 
+Route::get('event/{event_id}/addparticipants', 'EventController@showAdd')->name('event.showaddparticipants');
+Route::get('event/{event_id}/addparticipant/{user_id}', 'EventController@add')->name('event.addparticipant');
+
+
+//Hosts remove participant from event 
+Route::get('event/{event_id}/removeparticipants', 'EventController@showRemove')->name('event.removeparticipants');
+Route::get('event/{event_id}/removeparticipant/{user_id}', 'EventController@remove')->name('event.remove');
 
 // Report Event
-Route::get('event/{event_id}/report', 'ReportEventController@index')->name('create.show');
-Route::post('event/{event_id}/report', 'ReportEventController@create')->name('create');
+Route::get('event/{event_id}/report', 'ReportEventController@index')->name('event.report');
+Route::get('report/{report_id}/delete', 'ReportEventController@delete')->name('report.delete');
+Route::post('event/{event_id}/report', 'ReportEventController@report')->name('report');
+
+// Announcement Event
+Route::get('event/{event_id}/announcement', 'AnnouncementEventController@index')->name('create.show');
+Route::post('event/{event_id}/announcement', 'AnnouncementEventController@create')->name('create');
+Route::post('event/{event_id}/announcement', 'AnnouncementEventController@announcement')->name('event.announcement');
+
+// Comment Event
+Route::get('event/{event_id}/comment', 'CommentEventController@index')->name('create.show');
+Route::post('event/{event_id}/comment', 'CommentEventController@create')->name('create');
+Route::post('event/{event_id}/comment', 'CommentEventController@comment')->name('event.comment');
+Route::get('event/{event_id}/comment/{comment_id}/edit', 'CommentEventController@edit')->name('comment.edit');
+Route::post('event/{event_id}/comment/{comment_id}/edit', 'CommentEventController@update')->name('comment.update');
+Route::get('event/{event_id}/comment/{comment_id}/delete', 'CommentEventController@delete')->name('comment.delete');
+
+// Poll Event
+Route::get('event/{event_id}/poll', 'PollEventController@index')->name('pollcreate.show');
+Route::post('event/{event_id}/poll', 'PollEventController@create')->name('poll.create');
+Route::post('event/{event_id}/poll', 'PollEventController@poll')->name('event.poll');
 
 // Event Invite
 Route::get('event/{event_id}/invite', 'InvitationController@index')->name('invite.show');
 Route::post('event/{event_id}/invite', 'InvitationController@invite')->name('invite');
 
-// Event Participants
-Route::get('event/{event_id}/participants',/*participants controller*/);
-Route::delete('event/{event_id}/participants/{participant_id}',/*delete participant controller*/);
 
 // Authentication
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
@@ -73,24 +105,3 @@ Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('re
 Route::post('register', 'Auth\RegisterController@register');
 
 
-//API
-Route::get('api/events',/*search events controller*/);
-Route::get('api/users',/*search users controller*/);
-
-//Announcements and Comments
-// TODO
-
-// Admin Profile
-Route::get('admin/{admin_id}', 'AdminController@show');
-
-// Admin Create Report
-Route::get('admin/create_report','AdminReportController@index')->name('create.show');
-Route::post('admin/create_report','AdminReportController@create')->name('create');
-
-// Admin manage user
-Route::get('admin/user/{user_id}/', /* admin used edit page contoller */);
-Route::get('admin/user/{user_id}/delete', 'AdminUserController@remove');
-
-// Admin report
-Route::get('admin/report/{report_id}/',/* see reports controller*/);
-Route::get('admin/report/{report_id}/delete','AdminReportController@remove');

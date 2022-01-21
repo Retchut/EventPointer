@@ -41,6 +41,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'description',
         'profilepictureurl',
         'isadmin',
         'registrationdate'
@@ -56,6 +57,7 @@ class User extends Authenticatable
         'username' => 'string',
         'email' => 'string',
         'password' => 'string',
+        'description' => 'string',
         'profilepictureurl' => 'string',
         'isadmin' => 'boolean'
     ];
@@ -101,10 +103,16 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Event_Role')->where(['host.ishost', '=', 'false'],['$this->id','=','host.userid']);
     }
   
-    public function events($user_id)
+    public function events_as_participant($user_id)
     {
-        $eventroles = Event_Role::all();
-        $events = Event_Role::where('userid', $user_id)->join('eventg', 'event_role.eventid', '=', 'eventg.id')->get();
+        $events = Event_Role::where('ishost',false)->where('userid', $user_id)->join('eventg', 'event_role.eventid', '=', 'eventg.id')->get()->unique();
+        return $events;
+    }
+
+
+    public function events_as_host($user_id)
+    {
+        $events = Event_Role::where('ishost', true)->where('userid', $user_id)->join('eventg', 'event_role.eventid', '=', 'eventg.id')->get()->unique();
         return $events;
     }
 

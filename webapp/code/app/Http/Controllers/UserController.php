@@ -7,52 +7,107 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\User;
+use App\Models\Event;
 use App\Models\Report;
+use App\Models\Invite;
 
 
 
 class UserController extends Controller
 {
-    /**
-     * Shows the user page.
-     *
-     * @param  int  $id
-     * @return View
-     */
-    public function show($user_id)
-    {
-      $user = User::find($user_id);
-      if(is_null($user)){
-        return abort(404);
-      }
-      $events = $user->events($user_id);
-      
-      $reports = Report::all();
-      
-      $user_stats = [
-        'Upvotes' => 0,
-        'Comments' => 0,
-        'Total Events' => count($events),
-        'Member Since' => $user->registrationdate
-      ];
-      return view('pages.user', ['user' => $user, 'events' => $events, 'user_stats' => $user_stats,'reports'=>$reports]);
+  /**
+   * Shows the user page.
+   *
+   * @param  int  $id
+   * @return View
+   */
+  public function show($user_id)
+  {
+    $user = User::find($user_id);
+    if (is_null($user)) {
+      return abort(404);
+    } else if ($user->isadmin && !Auth::user()->isadmin){
+      return abort(403, "Access Denied");
     }
 
-    public function delete($user_id)
-    {
-      $user = User::find($user_id);
+    $invites_data = Invite::all();
+    // $user_invites = Invite::where('receiverid', $user_id) -> get();
+    $invite_events = array();
+    $invite_senders = array();
+    $invite_receivers = array(); //remove later
 
-      $this->authorize('delete', $user);
+    $user_invites = array();
 
-      Auth::logout();
+    foreach($invites_data as $invites_datum){
+      $user_invite = array();
+      $inv_event = Event::find($invites_datum->eventid);
+      $inv_sender = User::find($invites_datum->senderid);
+      $inv_receiver = User::find($invites_datum->receiverid);
+      // array_push($invite_events, $inv_event);
+      // array_push($invite_senders, $inv_sender);
+      // array_push($invite_receivers, $inv_receiver);
 
-      $user->username = 'deleted'.$user->id;
-      $user->email = 'deleted'.$user->id.'@deleted.com';
-      $user->password = bcrypt('deleted');
-
-      $user->save();
-
-      return redirect()->route('home');
+      array_push($user_invite, $inv_event);
+      array_push($user_invite, $inv_sender);
+      array_push($user_invite, $inv_receiver);
+      array_push($user_invites, $user_invite);
     }
+    // dd($user_invites[0][0]->eventname);
+    // dd($user_invites[0][1]->username);
+    // dd($user_invites[0][2]->username);
 
+    $events_as_participant = $user->events_as_participant($user_id);
+    $events_as_host = $user->events_as_host($user_id);
+
+    $reports = Report::all();
+
+    $user_stats = [
+      'Upvotes' => 0,
+      'Comments' => 0,
+      'Participations' => count($events_as_participant),
+      'Events Hosted' => count($events_as_host),
+      'Member Since' => $user->registrationdate
+    ];
+
+    // dd($invite_senders[0]);
+
+    if (Auth::check())
+      return view('pages.user', ['user' => $user, 'user_invites' => $user_invites, 'events_as_host' => $events_as_host,'events_as_participant' => $events_as_participant, 'user_stats' => $user_stats, 'reports' => $reports]);
+    else
+      return redirect("/login");
+  }
+
+  public function delete($user_id)
+  {
+    $user = User::find($user_id);
+
+    //$this->authorize('delete', $user);
+
+    /*
+    Auth::logout();
+
+    $user->username = 'deleted' . $user->id;
+    $user->email = 'deleted' . $user->id . '@deleted.com';
+    $user->password = bcrypt('deleted');
+
+    $user->save();*/
+
+    $user->delete();
+
+    return redirect()->route('home');
+  }
+
+  public static function report_author($report_id)
+  {
+      $report = Report::find($report_id);
+      $user = User::find($report->userid);
+      return $user;
+  }
+
+  public static function report_event($report_id)
+  {
+      $report = Report::find($report_id);
+      $event = Event::find($report->eventid);
+      return $event;
+  }
 }

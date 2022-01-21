@@ -20,6 +20,7 @@ CREATE TABLE users
     username TEXT NOT NULL UNIQUE,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
+    description TEXT DEFAULT NULL,
     profilepictureurl TEXT,
     isadmin BOOLEAN NOT NULL DEFAULT FALSE,
     registrationdate DATE NOT NULL DEFAULT CURRENT_DATE
@@ -43,11 +44,12 @@ CREATE TABLE eventg
     startdate DATE NOT NULL,
     enddate DATE NOT NULL,
     place TEXT NOT NULL,
-    duration FLOAT NOT NULL,
+    duration INTERVAL NOT NULL,
     eventstate eventstate NOT NULL,
     isprivate BOOLEAN NOT NULL DEFAULT FALSE,
-    tagid INTEGER NOT NULL REFERENCES event_tag(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT dates CHECK (startdate < enddate)
+    pictureurl TEXT,
+    tagid INTEGER NOT NULL REFERENCES event_tag(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT dates CHECK (startdate <= enddate)
 );
 
 
@@ -55,19 +57,20 @@ DROP TABLE IF EXISTS event_role CASCADE;
 CREATE TABLE event_role
 (
         id SERIAL PRIMARY KEY,
-        userid INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-        eventid INTEGER NOT NULL REFERENCES eventg(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-        ishost BOOLEAN NOT NULL
+        userid INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        eventid INTEGER NOT NULL REFERENCES eventg(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        ishost BOOLEAN NOT NULL,
+         UNIQUE (userid, eventid, ishost)
 );
 
 DROP TABLE IF EXISTS invite CASCADE;
 CREATE TABLE invite
 (
     id SERIAL PRIMARY KEY,
-    participant INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    host INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    eventid INTEGER NOT NULL REFERENCES eventg(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    CHECK (participant <> host)
+    receiverid INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    senderid INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    eventid INTEGER NOT NULL REFERENCES eventg(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CHECK (receiverid <> senderid)
 );
 
 
@@ -76,8 +79,8 @@ DROP TABLE IF EXISTS ask_access CASCADE;
 CREATE TABLE ask_access
 (
     id SERIAL PRIMARY KEY,
-    participant INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    eventid INTEGER NOT NULL REFERENCES eventg(id) ON DELETE RESTRICT ON UPDATE CASCADE
+    participant INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    eventid INTEGER NOT NULL REFERENCES eventg(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -86,7 +89,7 @@ CREATE TABLE event_announcement
 (
     id SERIAL PRIMARY KEY,
     messagea TEXT NOT NULL,
-    role_id INTEGER NOT NULL REFERENCES event_role (id) ON DELETE RESTRICT ON UPDATE CASCADE
+    role_id INTEGER NOT NULL REFERENCES event_role (id) ON DELETE CASCADE ON UPDATE CASCADE
 
 );
 
@@ -95,7 +98,8 @@ CREATE TABLE event_comment
 (
     id SERIAL PRIMARY KEY,
     messagec TEXT NOT NULL,
-    role_id INTEGER NOT NULL REFERENCES event_role (id) ON DELETE RESTRICT ON UPDATE CASCADE
+    role_id INTEGER NOT NULL REFERENCES event_role (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    photo BYTEA DEFAULT NULL
 );
 
 DROP TABLE IF EXISTS event_poll CASCADE;
@@ -103,7 +107,7 @@ CREATE TABLE event_poll
 (
     id SERIAL PRIMARY KEY,
     messagep TEXT NOT NULL,
-    role_id INTEGER NOT NULL REFERENCES event_role (id) ON DELETE RESTRICT ON UPDATE CASCADE
+    role_id INTEGER NOT NULL REFERENCES event_role (id) ON DELETE CASCADE ON UPDATE CASCADE
 
 );
 
@@ -113,7 +117,7 @@ CREATE TABLE poll_option
 (
     id SERIAL PRIMARY KEY,
     messagepo TEXT NOT NULL,
-    pollId INTEGER NOT NULL REFERENCES event_poll (id) ON DELETE RESTRICT ON UPDATE CASCADE
+    pollId INTEGER NOT NULL REFERENCES event_poll (id) ON DELETE CASCADE ON UPDATE CASCADE
 
 );
 
@@ -123,9 +127,9 @@ CREATE TABLE vote
 (
     id SERIAL PRIMARY KEY,
     votetype BOOLEAN NOT NULL,
-    event_roleid INTEGER NOT NULL REFERENCES event_role(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    commentid INTEGER REFERENCES event_comment (id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    announcementid INTEGER REFERENCES event_announcement (id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    event_roleid INTEGER NOT NULL REFERENCES event_role(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    commentid INTEGER REFERENCES event_comment (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    announcementid INTEGER REFERENCES event_announcement (id) ON DELETE CASCADE ON UPDATE CASCADE,
     CHECK ((announcementid IS NOT NULL AND commentid IS NULL) OR (announcementid IS NULL AND commentid IS NOT NULL))
 );
 
@@ -135,8 +139,19 @@ CREATE TABLE reports
 (
     id SERIAL PRIMARY KEY,
     descriptions TEXT NOT NULL,
-    userid INTEGER NOT NULL REFERENCES users (id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    eventid INTEGER NOT NULL REFERENCES eventg (id) ON DELETE RESTRICT ON UPDATE CASCADE
+    userid INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    eventid INTEGER NOT NULL REFERENCES eventg (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS userNotification CASCADE;
+CREATE TABLE userNotification
+(
+    id SERIAL PRIMARY KEY,
+    userid INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    eventid INTEGER NOT NULL REFERENCES eventg (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    commentid INTEGER REFERENCES event_comment (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    announcementid INTEGER REFERENCES event_announcement (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    inviteid INTEGER REFERENCES invite (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -171,7 +186,7 @@ BEGIN
         );
  END IF;
  IF TG_OP = 'UPDATE' THEN
-         IF (NEW.name <> OLD.name) THEN
+         IF (NEW.eventname <> OLD.eventname) THEN
            NEW.tsvectors = (
              setweight(to_tsvector('english', NEW.eventname), 'A')
            );
@@ -201,8 +216,8 @@ DROP FUNCTION IF EXISTS comment_in_event_poll() CASCADE;
 CREATE FUNCTION comment_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
-           RAISE EXCEPTION 'A users can only comment in an event poll, if he is enrolled in that specific event.';
+        IF NOT EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.id = event_role.eventid ) THEN
+           RAISE EXCEPTION 'A user can only comment in an event poll, if he is enrolled in that specific event.';
         END IF;
         RETURN NEW;
 END
@@ -210,7 +225,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 DROP TRIGGER IF EXISTS comment_in_event_poll ON event_comment CASCADE;
-CREATE TRIGGER delete_comment_in_event_poll
+CREATE TRIGGER comment_in_event_poll
         BEFORE INSERT OR UPDATE ON event_comment
         FOR EACH ROW
         EXECUTE PROCEDURE comment_in_event_poll();
@@ -220,10 +235,12 @@ DROP FUNCTION IF EXISTS delete_comment_in_event_poll() CASCADE;
 CREATE FUNCTION delete_comment_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
-           RAISE EXCEPTION 'A users can only delete a comment in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
+        IF NOT EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON 
+        event_role.userid = users.id WHERE OLD.id = event_role.eventid) THEN
+           RAISE EXCEPTION 'A user can only delete a comment in an event poll, if he is enrolled in that specific event and the 
+           comment belongs to him.';
         END IF;
-        RETURN NEW;
+        RETURN OLD;
 END
 $BODY$
 LANGUAGE plpgsql;
@@ -258,10 +275,10 @@ DROP FUNCTION IF EXISTS delete_vote_in_event_poll() CASCADE;
 CREATE FUNCTION delete_vote_in_event_poll() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
+        IF NOT EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE OLD.id = event_role.eventid) THEN
            RAISE EXCEPTION 'A users can only delete a vote in an event poll, if he is enrolled in that specific event and the comment belongs to him.';
         END IF;
-        RETURN NEW;
+        RETURN OLD;
 END
 $BODY$
 LANGUAGE plpgsql;
@@ -272,7 +289,7 @@ CREATE TRIGGER delete_vote_in_event_poll
         FOR EACH ROW
         EXECUTE PROCEDURE delete_vote_in_event_poll();
 
-
+/*
 DROP FUNCTION IF EXISTS search_event() CASCADE;
 CREATE FUNCTION search_event() RETURNS TRIGGER AS
 $BODY$
@@ -291,7 +308,7 @@ CREATE TRIGGER search_event
         FOR EACH ROW
         EXECUTE PROCEDURE search_event();
 
-
+*/
 DROP FUNCTION IF EXISTS private_event_invite_only() CASCADE;
 CREATE FUNCTION private_event_invite_only() RETURNS TRIGGER AS
 $BODY$
@@ -310,7 +327,7 @@ CREATE TRIGGER private_event_invite_only
         FOR EACH ROW
         EXECUTE PROCEDURE private_event_invite_only();
 
-
+/*
 DROP FUNCTION IF EXISTS event_schedule() CASCADE;
 CREATE FUNCTION event_schedule() RETURNS TRIGGER AS
 $BODY$
@@ -329,13 +346,13 @@ CREATE TRIGGER event_schedule
         FOR EACH ROW
         EXECUTE PROCEDURE event_schedule();
 
-
+*/
 DROP FUNCTION IF EXISTS edit_vote() CASCADE;
 CREATE FUNCTION edit_vote() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.eventg.id = event_role.eventid AND NEW.users.id = event_role.userid) THEN
-           RAISE EXCEPTION ' Only participating userss can edit and vote on their own comments on the discussion of events.';
+        IF NOT EXISTS (SELECT * FROM eventg INNER JOIN event_role ON eventg.id = event_role.eventid INNER JOIN users ON event_role.userid = users.id WHERE NEW.id = event_role.eventid) THEN
+           RAISE EXCEPTION ' Only participating users can edit and vote on their own comments on the discussion of events.';
         END IF;
         RETURN NEW;
 END
@@ -353,10 +370,10 @@ DROP FUNCTION IF EXISTS delete_account() CASCADE;
 CREATE FUNCTION delete_account() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-        IF EXISTS (SELECT * FROM users WHERE NEW.id = users.id ) THEN
-           RAISE EXCEPTION ' Only userss can delete their account.';
+        IF NOT EXISTS (SELECT * FROM users WHERE OLD.id = users.id ) THEN
+           RAISE EXCEPTION ' Only users can delete their account.';
         END IF;
-        RETURN NEW;
+        RETURN OLD;
 END
 $BODY$
 LANGUAGE plpgsql;
@@ -368,23 +385,21 @@ CREATE TRIGGER delete_account
         EXECUTE PROCEDURE delete_account();
 
 
-DROP FUNCTION IF EXISTS delete_account_effects() CASCADE;
-CREATE FUNCTION delete_account_effects() RETURNS TRIGGER AS
-$BODY$
+DROP FUNCTION IF EXISTS calc_duration() CASCADE;
+CREATE FUNCTION calc_duration() RETURNS TRIGGER AS 
+$$
 BEGIN
-        IF EXISTS (SELECT * FROM vote INNER JOIN event_role ON vote.event_roleid = event_role.id INNER JOIN users ON users.id = event_role.userid WHERE NEW.event_roleid = vote.event_roleid AND event_role.userid = users.id) THEN
-           RAISE EXCEPTION 'Only votes from previous users will be deleted.';
-        END IF;
+        NEW.duration = AGE(NEW.enddate+1,NEW.startdate);
         RETURN NEW;
 END
-$BODY$
+$$
 LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS delete_account_effects ON users CASCADE;
-CREATE TRIGGER delete_account_effects
-        AFTER DELETE ON users
+DROP TRIGGER IF EXISTS calc_duration ON eventg CASCADE;
+CREATE TRIGGER calc_duration
+        BEFORE INSERT ON eventg
         FOR EACH ROW
-        EXECUTE PROCEDURE delete_account_effects();
+        EXECUTE PROCEDURE calc_duration();
 
 
 -----------------------------------------
@@ -405,179 +420,295 @@ CREATE TRIGGER delete_account_effects
 -- Population
 -----------------------------------------
 
-insert into users (username, email, password, profilepictureurl,isadmin) values ('admin', 'admin@theone.com', '$2y$10$75Sdlr3i9/18niLK1pMF0.wq5q9W.U/r4VtvWgaQLOSgDECJDwSqG', 'https://tinyurl.com/adminlbaw',true);
-insert into users (username, email, password, profilepictureurl,isadmin) values ('dfrowde1', 'nboulde1@netvibes.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/adminlbaw',true);
-insert into users (username, email, password, profilepictureurl,isadmin) values ('chutson2', 'caddey2@illinois.edu', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/adminlbaw',true);
-insert into users (username, email, password, profilepictureurl,isadmin) values ('bdarlasson3', 'mdawton3@google.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/adminlbaw',true);
-insert into users (username, email, password, profilepictureurl,isadmin) values ('bdawson4', 'bredbourn4@baidu.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/adminlbaw',true);
-insert into users (username, email, password, profilepictureurl) values ('bleitche5', 'hbowler5@mlb.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('lcreaser6', 'kfowells6@usnews.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('mdacres7', 'tmcgown7@miibeian.gov.cn', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('faslott8', 'lgallally8@desdev.cn', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('saery9', 'kgrovier9@printfriendly.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('kdonovina', 'wtavenera@rambler.ru', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('rsimenetb', 'jmarshamb@mashable.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('ssumnallc', 'clomasc@bbb.org', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('eboundeyd', 'kkieltyd@dell.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('rkimburyf', 'abazeleyf@posterous.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('sortigag', 'phachetteg@chicagotribune.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('hbuscombeh', 'kpatriah@answers.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('tbaishi', 'dcammackei@webs.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('rblanshardj', 'iferencj@nytimes.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('lplatfootk', 'idumberellk@mit.edu', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('sceschinil', 'lserchwelll@google.co.jp', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('mmottleym', 'pcasbournem@loc.gov', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('cknyvettn', 'ceveredn@nytimes.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('nsvaninio', 'ssmedleyo@umich.edu', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('ckaganq', 'mandreuttiq@nifty.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('rmanachr', 'bschlagtmansr@cocolog-nifty.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('pmassinghams', 'bcuvleys@miibeian.gov.cn', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('vsheart', 'jgheorghet@bbc.co.uk', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('jpolinu', 'jrollandu@irs.gov', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('sclackersrr', 'ufontenotrr@samsung.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
-insert into users (username, email, password, profilepictureurl) values ('testing', 'testing@testing.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl,isadmin) values ('admin', 'admin@theone.com', '$2y$10$75Sdlr3i9/18niLK1pMF0.wq5q9W.U/r4VtvWgaQLOSgDECJDwSqG', NULL, 'https://tinyurl.com/adminlbaw',true);
+insert into users (username, email, password, description, profilepictureurl,isadmin) values ('dfrowde1', 'nboulde1@netvibes.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/adminlbaw',true);
+insert into users (username, email, password, description, profilepictureurl,isadmin) values ('chutson2', 'caddey2@illinois.edu', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/adminlbaw',true);
+insert into users (username, email, password, description, profilepictureurl,isadmin) values ('bdarlasson3', 'mdawton3@google.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/adminlbaw',true);
+insert into users (username, email, password, description, profilepictureurl,isadmin) values ('bdawson4', 'bredbourn4@baidu.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/adminlbaw',true);
+insert into users (username, email, password, description, profilepictureurl) values ('bleitche5', 'hbowler5@mlb.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('lcreaser6', 'kfowells6@usnews.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('mdacres7', 'tmcgown7@miibeian.gov.cn', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('faslott8', 'lgallally8@desdev.cn', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('saery9', 'kgrovier9@printfriendly.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('kdonovina', 'wtavenera@rambler.ru', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('rsimenetb', 'jmarshamb@mashable.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('ssumnallc', 'clomasc@bbb.org', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('eboundeyd', 'kkieltyd@dell.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('rkimburyf', 'abazeleyf@posterous.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('sortigag', 'phachetteg@chicagotribune.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('hbuscombeh', 'kpatriah@answers.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('tbaishi', 'dcammackei@webs.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('rblanshardj', 'iferencj@nytimes.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('lplatfootk', 'idumberellk@mit.edu', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('sceschinil', 'lserchwelll@google.co.jp', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('mmottleym', 'pcasbournem@loc.gov', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('cknyvettn', 'ceveredn@nytimes.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('nsvaninio', 'ssmedleyo@umich.edu', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('ckaganq', 'mandreuttiq@nifty.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('rmanachr', 'bschlagtmansr@cocolog-nifty.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('pmassinghams', 'bcuvleys@miibeian.gov.cn', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('vsheart', 'jgheorghet@bbc.co.uk', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('jpolinu', 'jrollandu@irs.gov', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('sclackersrr', 'ufontenotrr@samsung.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', NULL, 'https://tinyurl.com/lbawprofilepic');
+insert into users (username, email, password, description, profilepictureurl) values ('testing', 'testing@testing.com', '$2a$06$I1SoT.xFQGG3IpSNrOWUXuTjl6Mb.1J6p4awu8b0YG8to4VL4bZEG', 'This is my about page :)', 'https://tinyurl.com/lbawprofilepic');
 
 
-insert into event_tag (tagname) values ('Mudo');
-insert into event_tag (tagname) values ('Yodoo');
-insert into event_tag (tagname) values ('Dabfeed');
-insert into event_tag (tagname) values ('Babbleopia');
-insert into event_tag (tagname) values ('Voomm');
-insert into event_tag (tagname) values ('Oyope');
-insert into event_tag (tagname) values ('Aibox');
-insert into event_tag (tagname) values ('Mynte');
-insert into event_tag (tagname) values ('Wikido');
-insert into event_tag (tagname) values ('Kazio');
-insert into event_tag (tagname) values ('Fliptune');
-insert into event_tag (tagname) values ('Roomm');
-insert into event_tag (tagname) values ('Dynava');
-insert into event_tag (tagname) values ('Quire');
-insert into event_tag (tagname) values ('Gabtune');
-insert into event_tag (tagname) values ('Browsezoom');
-insert into event_tag (tagname) values ('Kwilith');
-insert into event_tag (tagname) values ('Gigazoom');
-insert into event_tag (tagname) values ('Aivee');
-insert into event_tag (tagname) values ('Edgeclub');
+insert into event_tag (tagname) values('Music');               -- 1       
+insert into event_tag (tagname) values('Sports');              -- 2      
+insert into event_tag (tagname) values('Movies and TV Shows');         -- 3            
+insert into event_tag (tagname) values('Arts and Leisure');    -- 4                 
+insert into event_tag (tagname) values('Programming');         -- 5            
+insert into event_tag (tagname) values('Lifestyle');         -- 6            
+insert into event_tag (tagname) values('Gaming');             -- 7       
+insert into event_tag (tagname) values('Tech');                 -- 8
+insert into event_tag (tagname) values('Streaming');           -- 9          
 
 
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Cuscuta denticulata Engelm. var. denticulata', 'Morbi vel lectus in quam fringilla rhoncus. Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero. Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh. In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.'
-,'2021-05-31', '2021-08-24', 'Changqiao', 89.08, 'Scheduled', 1);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Quercus havardii Rydb. var. tuckeri S.L. Welsh','Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.'
-, '2021-11-14', '2021-12-02', 'Sololá', 168.33, 'Scheduled', 2);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Brosimum Sw.','Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.'
-,'2021-02-18', '2021-10-15', 'Luyang', 75.24, 'Scheduled', 3);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Symphyotrichum pilosum (Willd.) G.L. Nesom', 'Nullam molestie nibh in lectus. Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.'
-,'2020-12-05', '2021-04-25', 'Chemnitz', 130.78, 'Scheduled', 4);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Aphanes arvensis L.','Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros. Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat. In congue. Etiam justo.'
-, '2021-06-26', '2021-08-21', 'Mersa Matruh', 79.0, 'Scheduled', 5);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Cyanea purpurellifolia (Rock) Lammers, Givnish & Systma','Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio. Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue.'
-, '2021-06-15', '2021-07-17', 'Uherce Mineralne', 144.41, 'Scheduled', 6);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Cryptantha kelseyana Greene','Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus. Phasellus in felis. Donec semper sapien a libero. Nam dui. Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius. Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.'
-, '2021-11-16', '2021-12-05', 'Oral', 118.39, 'Scheduled', 7);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Gladiolus ×colvillei Sweet','Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum. Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem. Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit. Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi.'
-,  '2021-01-20', '2021-03-14', 'Jingning Chengguanzhen', 159.48, 'Scheduled', 8);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Arundina Blume','Morbi non quam nec dui luctus rutrum. Nulla tellus. In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus. Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst. Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat. Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.'
-, '2021-10-12', '2021-11-24', 'San Buenaventura', 24.53, 'Scheduled', 9);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Cypripedium kentuckiense C.F. Reed','Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros. Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat. In congue.'
-, '2021-04-20', '2021-12-12', 'Tanjungluar', 132.92, 'Scheduled', 10);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Livistona chinensis (Jacq.) R. Br. ex Mart.','Pellentesque at nulla. Suspendisse potenti.'
-, '2021-09-03', '2021-09-24', 'Lagodekhi', 32.93, 'Scheduled', 11);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Schoenolirion Torr. ex Durand','Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus. Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque.'
-, '2021-02-05', '2021-02-18', 'Masku', 177.85, 'Scheduled', 12);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Trifolium israeliticum Zohary & Katzn.','Ut at dolor quis odio consequat varius. Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.'
-, '2021-07-26', '2021-12-06', 'Yabēlo', 167.64, 'Scheduled', 13);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Trisetum canescens Buckley', 'Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero. Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh. In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet. Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.'
-, '2021-05-19', '2021-06-07', 'Tarczyn', 58.07, 'Scheduled', 14);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Draba borealis DC.','Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus. Phasellus in felis.'
-, '2021-09-17', '2021-09-20', 'Gualeguaychú', 174.62, 'Scheduled', 15);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Sparganium eurycarpum Engelm.','Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus. Phasellus in felis. Donec semper sapien a libero. Nam dui. Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis.'
-, '2020-10-26', '2021-01-27', 'Itagüí', 34.47, 'Scheduled', 16);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Agave xylonacantha Salm-Dyck','Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est. Phasellus sit amet erat. Nulla tempus.'
-, '2021-05-11', '2021-10-30', 'Chengxiang', 146.11, 'Scheduled', 17);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Plagiomnium drummondii (Bruch & Schimp.) T. Kop.', 'Duis at velit eu est congue elementum. In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo. Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis. Sed ante. Vivamus tortor.'
-,'2021-02-28', '2021-09-29', 'Zavitinsk', 82.66, 'Scheduled', 18);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Thelypodium integrifolium (Nutt.) Endl. ex Walp. ssp. complanatum Al-Shehbaz','In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo. Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis. Sed ante. Vivamus tortor. Duis mattis egestas metus. Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.'
-, '2021-04-15', '2021-06-12', 'Batiovo', 91.19, 'Scheduled', 19);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Cotoneaster melanocarpus G. Lodd.','Duis mattis egestas metus. Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros. Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat. In congue. Etiam justo.'
-, '2021-01-08', '2021-10-14', 'Looc', 86.41, 'Scheduled', 20);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Carex fracta Mack.','In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat. Nulla nisl.'
-,  '2021-03-22', '2021-10-02', 'Chak Two Hundred Forty-Nine TDA', 85.98, 'Finished', 4);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Aucuba Thunb.', 'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque. Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus. In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus. Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst. Maecenas ut massa quis augue luctus tincidunt.'
-, '2021-04-25', '2021-08-09', 'Sovetskaya Gavan’', 120.63, 'Finished', 1);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Alternanthera paronychioides A. St.-Hil. var. amazonica Huber','Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus. In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus. Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst. Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem.'
-,'2021-01-21', '2021-01-24', 'Kembangkerang Lauk Timur', 120.17, 'Finished', 2);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Thelopsis melathelia Nyl.', 'Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum.'
-,'2021-01-01', '2021-01-06', 'Sankt Lorenzen im Mürztal', 147.2, 'Finished', 3);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Dubautia ciliolata (DC.) D.D. Keck ssp. glutinosa G.D. Carr', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio. Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim.'
-,'2021-01-24', '2021-02-06', 'Nürnberg', 172.16, 'Canceled', 3);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Calycadenia villosa DC.','Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio. Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim.'
-,  '2021-01-04', '2021-06-07', 'Piedras', 90.02, 'Canceled', 4);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Arthonia pruinosella Nyl.', 'Morbi non lectus.'
-,'2021-08-21', '2021-08-22', 'Cipari', 31.49, 'Canceled', 5);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Masonhalea Karnefelt', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio. Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim.'
-, '2021-01-03', '2021-05-22', 'Krosno Odrzańskie', 110.15, 'Canceled', 6);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Triphora craigheadii Luer', 'Mauris sit amet eros. Suspendisse accumsan tortor quis turpis. Sed ante. Vivamus tortor. Duis mattis egestas metus. Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros. Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat. In congue.'
-, '2021-01-25', '2021-03-20', 'Ampasimanolotra', 128.34, 'Canceled', 7);
-insert into eventg (eventname, event_description, startdate, enddate, place, duration, eventstate, tagid) values ('Synthyris laciniata (A. Gray) Rydb.', 'Mauris sit amet eros. Suspendisse accumsan tortor quis turpis. Sed ante. Vivamus tortor. Duis mattis egestas metus. Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros. Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat. In congue.'
-, '2021-01-01', '2021-04-28', 'Sidi Yahia el Gharb', 103.45, 'Canceled', 8);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Python Workshop', 'In this course, you will learn the fundamentals of the Python programming language, along with programming best practices.'
+,'2022-01-11', '2022-02-24', 'Online - Discord', 'Ongoing', 'https://i2.wp.com/idsc.miami.edu/wp-content/uploads/2020/10/Python-image-with-logo-940x530-1.jpg?resize=940%2C530&ssl=1', 5);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Movie Nights', 'The second edition of movie nights is here. This time we bring the Harry Potter Saga.'
+,'2022-01-01', '2022-02-28', 'Online - Twitch', 'Ongoing', 'https://www.foothillsbaptist.org/wp-content/uploads/2016/01/movie-night-featured.jpg', 3);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('The Cooking Surviving Course','Are you that kind of person who does not know how to fry an egg? Dont worry we have the solution for you. In this course you will be able to learn the basics of cooking, in order to become capable to cook your meals and, whio knows, to impress your friends.'
+, '2022-11-01', '2022-11-04', 'Online - Youtube', 'Scheduled', 'https://postarticles.org/wp-content/uploads/2021/05/cooking-at-home.png', 6);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Web Course for experts','Do you want to improve your web development skills? Enter here for learn the best practices as well as new techniques. Not recommended for people who have no experiece either with HTML, CSS and JavaScript!!'
+, '2022-11-16', '2022-12-16', 'Online - Teams', 'Scheduled', 'https://miro.medium.com/max/3060/1*rGiHBnlqf6-koapA2DzUoA.jpeg',  5);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('CS:GO Tournament','Join your friends, make a team and get the ready for the best tournament.'
+, '2022-07-10', '2022-07-17', 'Online - Steam', 'Scheduled', 'https://midias.jb.com.br/_midias/jpg/2021/03/11/csgo-586394.jpg',  7);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('CS:GO Tournament - Streaming','If you dont want to play, but are a big fan of the game you can enjoy the streaming of the tournament matches.'
+, '2022-07-10', '2022-07-17', 'Online - Twitch', 'Scheduled', 'https://midias.jb.com.br/_midias/jpg/2021/03/11/csgo-586394.jpg', 9);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Comedy Nights - Porto',' Every weekend (Friday and Saturday) 3 comedians are invited to present you their best jokes. Although only 2 of them will be announced, the third one will be a surprise...'
+, '2022-04-20', '2022-09-12', 'Porto - Comedy Bar', 'Scheduled', 'https://m.media-amazon.com/images/G/01/seo/siege-lists/best-comedy-audiobooks-collection-card._CB1579018750_.png', 4);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Movie Nights','After 2 incredible editions, the 3rd one is coming. We can confirm that all the Marvel Cinematic Universe movies are going to be on your screen.'
+, '2022-05-01', '2022-08-31', 'Online - Twitch', 'Scheduled', 'https://www.foothillsbaptist.org/wp-content/uploads/2016/01/movie-night-featured.jpg', 3);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Yoga Workshop','We all have heard about yoga, but few os us have tried it. Enjoy now this unique lifestyle and improve your practices with this tips.'
+, '2022-02-05', '2022-02-25', 'Aveiro', 'Scheduled', 'https://uploads.metropoles.com/wp-content/uploads/2019/01/08165756/WhatsApp-Image-2019-01-08-at-16.51.29.jpeg', 2);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('League of Legends Tournament','Prepare yourself for the best esports experience in this fully organized tournament. We have amazing prizes for the winners and a small gift for all participants.'
+, '2022-07-10', '2022-07-17', 'Online', 'Scheduled', 'https://s2.glbimg.com/y6nngNdKtYKEZx9QiZIa-bW4cq4=/0x0:1200x675/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2019/E/T/z4H0MFRxKrUlZijtEnAQ/20190522035739-1200-675-league-of-legends.jpg', 7);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('QuiZZ Tournament 2022','Test your knowlodge in this online quiz tournament. 3 modes available - individual, pairs, teams (4 elements). The prizes for each category are going to be announced soon. '
+, '2022-11-14', '2022-12-02', 'Online - QuiZZ Official Website', 'Scheduled', 'https://img.freepik.com/fotos-gratis/quiz-ou-palavra-quizz-inscricao-jogo-divertido-com-perguntas_361816-1115.jpg?size=626&ext=jpg', 7);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Gadgets Unboxing and Review','Ever wondered if a online shop is reliable or not? Or being in doubt which product tp buy? Enjoy this sessiond with unboxings and reviews with from different websites and become a pro in online shopping.'
+, '2022-09-1', '2022-10-20', 'Online - Youtube', 'Scheduled', 'http://revistaminha.pt/wp-content/uploads/2018/12/Gadgets.jpg', 8);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Summer Sunset 2.2','During all summer enjoy the best music with us.'
+,'2022-07-01', '2022-08-31', 'Leça da Palmeira', 'Scheduled', 'https://cdn3.dpmag.com/2020/06/challenge-003-summer-sunset.jpg', 1);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('World Cup 2022 Streaming','Streaming of all matches of the 2022 Football World Cup'
+,'2022-11-21', '2022-12-18', 'Online - Cloud Sports', 'Scheduled', 'https://www.marketplace.org/wp-content/uploads/2018/07/GettyImages-453347919.jpg?fit=1800%2C1000', 2);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Movie Nights','The first edition of movie nights is here. To celebrate the 4th of May we prepared  2 months of streaming of your favorite saga. Enjoy us and may the force be with you.'
+,  '2021-05-04', '2021-07-07', 'Online - Twitch', 'Finished','https://www.foothillsbaptist.org/wp-content/uploads/2016/01/movie-night-featured.jpg', 3);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('QuiZZ Tournament 2021','Test your knowlodge in this online quiz tournament. 3 modes available - individual, pairs, teams (4 elements). The prizes for each category are going to be announced soon. '
+, '2021-11-14', '2021-12-02', 'Online - QuiZZ Official Website', 'Finished', 'https://img.freepik.com/fotos-gratis/quiz-ou-palavra-quizz-inscricao-jogo-divertido-com-perguntas_361816-1115.jpg?size=626&ext=jpg', 7);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Summer Sunset 2.1',' During all summer enjoy the best music with us.'
+,'2021-07-01', '2021-08-31', 'Leça da Palmeira', 'Finished', 'https://cdn3.dpmag.com/2020/06/challenge-003-summer-sunset.jpg', 1);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Euro 2020 - (2021 Edition) Streaming','After being postponed we maintain the streaming of all matches of the 2020 European Football Cup'
+,'2021-06-11', '2021-07-11', 'Online - Cloud Sports', 'Finished', 'https://editorial.uefa.com/resources/0258-0e2236eb500b-4dac4439c8b9-1000/2502796.jpg', 2);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Rocket League Lan Party','Meet new people or just bring your friends to an incredible rocket league lan party.'
+,  '2021-03-04', '2021-03-07', 'Porto', 'Canceled', 'https://cdn1.epicgames.com/offer/9773aa1aa54f4f7b80e44bef04986cea/6609d2e1-62d9-4094-9cb7-26d9a7f5ba3f_2560x1440-071db7b0d39d5635f684940c1e3c4ec3', 7);
+insert into eventg (eventname, event_description, startdate, enddate, place, eventstate, pictureurl, tagid) values ('Euro 2020 Streaming','Streaming of all matches of the 2020 European Football Cup'
+,'2020-06-10', '2020-07-10', 'Online - Cloud Sports', 'Canceled', 'https://editorial.uefa.com/resources/0258-0e2236eb500b-4dac4439c8b9-1000/2502796.jpg', 2);
 
 
-insert into event_role (userid, eventid, ishost) values (19, 1, true);
-insert into event_role (userid, eventid, ishost) values (8, 4, false);
-insert into event_role (userid, eventid, ishost) values (24, 17, false);
-insert into event_role (userid, eventid, ishost) values (27, 25, true);
-insert into event_role (userid, eventid, ishost) values (15, 17, false);
-insert into event_role (userid, eventid, ishost) values (30, 10, true);
-insert into event_role (userid, eventid, ishost) values (14, 21, true);
-insert into event_role (userid, eventid, ishost) values (7, 11, true);
-insert into event_role (userid, eventid, ishost) values (25, 29, false);
-insert into event_role (userid, eventid, ishost) values (16, 7, false);
-insert into event_role (userid, eventid, ishost) values (14, 12, true);
-insert into event_role (userid, eventid, ishost) values (27, 23, false);
-insert into event_role (userid, eventid, ishost) values (13, 26, true);
-insert into event_role (userid, eventid, ishost) values (12, 6, true);
-insert into event_role (userid, eventid, ishost) values (15, 12, false);
-insert into event_role (userid, eventid, ishost) values (23, 30, true);
-insert into event_role (userid, eventid, ishost) values (10, 28, false);
-insert into event_role (userid, eventid, ishost) values (14, 14, false);
-insert into event_role (userid, eventid, ishost) values (8, 2, true);
-insert into event_role (userid, eventid, ishost) values (23, 22, true);
-insert into event_role (userid, eventid, ishost) values (14, 1, false);
-insert into event_role (userid, eventid, ishost) values (16, 27, true);
-insert into event_role (userid, eventid, ishost) values (17, 5, true);
-insert into event_role (userid, eventid, ishost) values (28, 27, false);
-insert into event_role (userid, eventid, ishost) values (10, 22, false);
-insert into event_role (userid, eventid, ishost) values (12, 11, false);
+insert into event_role (userid, eventid, ishost) values(6,1,true);      --1
+insert into event_role (userid, eventid, ishost) values (16, 1, false);
+insert into event_role (userid, eventid, ishost) values (26,1, false);
+insert into event_role (userid, eventid, ishost) values (20, 1, false);
+insert into event_role (userid, eventid, ishost) values (15, 1, false);
+insert into event_role (userid, eventid, ishost) values (25, 1, false);
+
+insert into event_role (userid, eventid, ishost) values(21,3,true);     --7
+insert into event_role (userid, eventid, ishost) values (16, 3, false);
+insert into event_role (userid, eventid, ishost) values (26, 3, false);
+insert into event_role (userid, eventid, ishost) values (20, 3, false);
+insert into event_role (userid, eventid, ishost) values (15,3, false);
+insert into event_role (userid, eventid, ishost) values (25, 3, false);
+
+insert into event_role (userid, eventid, ishost) values(18,4,true);    --13
+insert into event_role (userid, eventid, ishost) values (16, 4, false);
+insert into event_role (userid, eventid, ishost) values (26, 4, false);
+insert into event_role (userid, eventid, ishost) values (20, 4, false);
+insert into event_role (userid, eventid, ishost) values (15, 4, false);
+insert into event_role (userid, eventid, ishost) values (25, 4, false);
+
+insert into event_role (userid, eventid, ishost) values(25,7,true);    --19
+insert into event_role (userid, eventid, ishost) values (12, 7, false);
+insert into event_role (userid, eventid, ishost) values (15, 7, false);
+insert into event_role (userid, eventid, ishost) values (22, 7, false);
+insert into event_role (userid, eventid, ishost) values (20, 7, false);
+insert into event_role (userid, eventid, ishost) values (8, 7, false);
+
+insert into event_role (userid, eventid, ishost) values(10,9,true);   --25
+insert into event_role (userid, eventid, ishost) values (9, 9, false);
+insert into event_role (userid, eventid, ishost) values (11, 9, false);
+insert into event_role (userid, eventid, ishost) values (29, 9, false);
+insert into event_role (userid, eventid, ishost) values (20, 9, false);
+insert into event_role (userid, eventid, ishost) values (8, 9, false);
+
+insert into event_role (userid, eventid, ishost) values(9,10,true);   --31
+insert into event_role (userid, eventid, ishost) values (13, 10, false);
+insert into event_role (userid, eventid, ishost) values (11, 10, false);
+insert into event_role (userid, eventid, ishost) values (29, 10, false);
+insert into event_role (userid, eventid, ishost) values (20, 10, false);
+insert into event_role (userid, eventid, ishost) values (8, 10, false);
+
+insert into event_role (userid, eventid, ishost) values(15,19,true);   --37
+insert into event_role (userid, eventid, ishost) values (9, 19, false);
+insert into event_role (userid, eventid, ishost) values (11, 19, false);
+
+
+insert into event_role (userid, eventid, ishost) values(17,12,true);
+insert into event_role (userid, eventid, ishost) values (29, 12, false);
+insert into event_role (userid, eventid, ishost) values (7, 12, false);
+insert into event_role (userid, eventid, ishost) values (11, 12, false);
+insert into event_role (userid, eventid, ishost) values (6, 12, false);
+insert into event_role (userid, eventid, ishost) values (22, 12, false);
+insert into event_role (userid, eventid, ishost) values (27, 12, false);
+
+insert into event_role (userid, eventid, ishost) values(28,16,true);
+insert into event_role (userid, eventid, ishost) values (16, 16, false);
+insert into event_role (userid, eventid, ishost) values (6, 16, false);
+insert into event_role (userid, eventid, ishost) values (11, 16, false);
+insert into event_role (userid, eventid, ishost) values (30, 16, false);
+insert into event_role (userid, eventid, ishost) values (26, 16, false);
+insert into event_role (userid, eventid, ishost) values (27, 16, false);
+insert into event_role (userid, eventid, ishost) values (10, 16, false);
+insert into event_role (userid, eventid, ishost) values(28,11,true);
+insert into event_role (userid, eventid, ishost) values (16, 11, false);
+insert into event_role (userid, eventid, ishost) values (6, 11, false);
+insert into event_role (userid, eventid, ishost) values (11, 11, false);
+insert into event_role (userid, eventid, ishost) values (30, 11, false);
+insert into event_role (userid, eventid, ishost) values (26, 11, false);
+insert into event_role (userid, eventid, ishost) values (27, 11, false);
+insert into event_role (userid, eventid, ishost) values (10, 11, false);
+
+
+
+insert into event_role (userid, eventid, ishost) values(12,13,true);
+insert into event_role (userid, eventid, ishost) values (22, 13, false);
+insert into event_role (userid, eventid, ishost) values (23, 13, false);
+insert into event_role (userid, eventid, ishost) values (6, 13, false);
+insert into event_role (userid, eventid, ishost) values (24, 13, false);
+insert into event_role (userid, eventid, ishost) values (30, 13, false);
+insert into event_role (userid, eventid, ishost) values (9, 13, false);
 insert into event_role (userid, eventid, ishost) values (18, 13, false);
-insert into event_role (userid, eventid, ishost) values (21, 23, true);
-insert into event_role (userid, eventid, ishost) values (23, 9, true);
-insert into event_role (userid, eventid, ishost) values (16, 20, true);
-insert into event_role (userid, eventid, ishost) values (15, 21, false);
-insert into event_role (userid, eventid, ishost) values (28, 21, false);
-insert into event_role (userid, eventid, ishost) values (16, 9, false);
-insert into event_role (userid, eventid, ishost) values (30, 19, true);
-insert into event_role (userid, eventid, ishost) values (26, 24, true);
-insert into event_role (userid, eventid, ishost) values (22, 17, true);
-insert into event_role (userid, eventid, ishost) values (9, 7, true);
-insert into event_role (userid, eventid, ishost) values (21, 15, true);
-insert into event_role (userid, eventid, ishost) values (21, 8, true);
-insert into event_role (userid, eventid, ishost) values (23, 1, false);
-insert into event_role (userid, eventid, ishost) values (16, 16, true);
-insert into event_role (userid, eventid, ishost) values (30, 7, false);
-insert into event_role (userid, eventid, ishost) values (10, 15, false);
-insert into event_role (userid, eventid, ishost) values (25, 14, true);
-insert into event_role (userid, eventid, ishost) values (10, 13, true);
-insert into event_role (userid, eventid, ishost) values (24, 28, true);
-insert into event_role (userid, eventid, ishost) values (28, 3, true);
-insert into event_role (userid, eventid, ishost) values (25, 4, true);
-insert into event_role (userid, eventid, ishost) values (8, 29, true);
+insert into event_role (userid, eventid, ishost) values (26, 13, false);
+insert into event_role (userid, eventid, ishost) values (27, 13, false);
+
+insert into event_role (userid, eventid, ishost) values(12,17,true);
+insert into event_role (userid, eventid, ishost) values (22, 17, false);
+insert into event_role (userid, eventid, ishost) values (23, 17, false);
+insert into event_role (userid, eventid, ishost) values (6, 17, false);
+insert into event_role (userid, eventid, ishost) values (24, 17, false);
+insert into event_role (userid, eventid, ishost) values (30, 17, false);
+insert into event_role (userid, eventid, ishost) values (9, 17, false);
+insert into event_role (userid, eventid, ishost) values (18, 17, false);
+insert into event_role (userid, eventid, ishost) values (26, 17, false);
+insert into event_role (userid, eventid, ishost) values (27, 17, false);
+
+insert into event_role (userid, eventid, ishost) values(22,5,true);
+insert into event_role (userid, eventid, ishost) values(24,5,true);
+insert into event_role (userid, eventid, ishost) values (13, 5, false);
+insert into event_role (userid, eventid, ishost) values (16, 5, false);
+insert into event_role (userid, eventid, ishost) values (29, 5, false);
+insert into event_role (userid, eventid, ishost) values (21, 5, false);
+insert into event_role (userid, eventid, ishost) values (15, 5, false);
+insert into event_role (userid, eventid, ishost) values (12, 5, false);
+insert into event_role (userid, eventid, ishost) values (27, 5, false);
+insert into event_role (userid, eventid, ishost) values (26, 5, false);
+insert into event_role (userid, eventid, ishost) values (23, 5, false);
+insert into event_role (userid, eventid, ishost) values(22,6,true);
+insert into event_role (userid, eventid, ishost) values(24,6,true);
+insert into event_role (userid, eventid, ishost) values (25, 6, false);
+insert into event_role (userid, eventid, ishost) values (11, 6, false);
+insert into event_role (userid, eventid, ishost) values (13, 6, false);
+insert into event_role (userid, eventid, ishost) values (28, 6, false);
+insert into event_role (userid, eventid, ishost) values (21, 6, false);
+insert into event_role (userid, eventid, ishost) values (9, 6, false);
+
+insert into event_role (userid, eventid, ishost) values(13,2,true);
+insert into event_role (userid, eventid, ishost) values (21, 2, false);
+insert into event_role (userid, eventid, ishost) values (27, 2, false);
+insert into event_role (userid, eventid, ishost) values (15, 2, false);
+insert into event_role (userid, eventid, ishost) values (22, 2, false);
+insert into event_role (userid, eventid, ishost) values (9, 2, false);
+insert into event_role (userid, eventid, ishost) values (29, 2, false);
+insert into event_role (userid, eventid, ishost) values(13,8,true);
+insert into event_role (userid, eventid, ishost) values (21, 8, false);
+insert into event_role (userid, eventid, ishost) values (27, 8, false);
+insert into event_role (userid, eventid, ishost) values (15, 8, false);
+insert into event_role (userid, eventid, ishost) values (22, 8, false);
+insert into event_role (userid, eventid, ishost) values (9, 8, false);
+insert into event_role (userid, eventid, ishost) values (29, 8, false);
+insert into event_role (userid, eventid, ishost) values(13,15,true);
+insert into event_role (userid, eventid, ishost) values (21,15, false);
+insert into event_role (userid, eventid, ishost) values (27,15, false);
+insert into event_role (userid, eventid, ishost) values (15,15, false);
+insert into event_role (userid, eventid, ishost) values (22,15, false);
+insert into event_role (userid, eventid, ishost) values (9, 15, false);
+insert into event_role (userid, eventid, ishost) values (29,15, false);
 
 
-insert into invite (participant, host, eventid) values (30, 19, 1);
-insert into invite (participant, host, eventid) values (1, 8, 29);
-insert into invite (participant, host, eventid) values (28, 11, 11);
-insert into invite (participant, host, eventid) values (2, 21, 15);
-insert into invite (participant, host, eventid) values (10, 30, 10);
+insert into event_role (userid, eventid, ishost) values(7,14,true); 
+insert into event_role (userid, eventid, ishost) values(7,18,true); 
+insert into event_role (userid, eventid, ishost) values(7,20,true); 
+insert into event_role (userid, eventid, ishost) values(8,14,true); 
+insert into event_role (userid, eventid, ishost) values(8,18,true); 
+insert into event_role (userid, eventid, ishost) values(8,20,true); 
+insert into event_role(userid,eventid,ishost) values (10,14,false); 
+insert into event_role(userid,eventid,ishost) values (11,14,false); 
+insert into event_role(userid,eventid,ishost) values (12,14,false); 
+insert into event_role(userid,eventid,ishost) values (13,14,false); 
+insert into event_role(userid,eventid,ishost) values (14,14,false); 
+insert into event_role(userid,eventid,ishost) values (15,14,false); 
+insert into event_role(userid,eventid,ishost) values (16,14,false); 
+insert into event_role(userid,eventid,ishost) values (17,14,false); 
+insert into event_role(userid,eventid,ishost) values (18,14,false); 
+insert into event_role(userid,eventid,ishost) values (19,14,false); 
+insert into event_role(userid,eventid,ishost) values (20,14,false); 
+insert into event_role(userid,eventid,ishost) values (23,14,false); 
+insert into event_role(userid,eventid,ishost) values (24,14,false); 
+insert into event_role(userid,eventid,ishost) values (26,14,false); 
+insert into event_role(userid,eventid,ishost) values (28,14,false); 
+insert into event_role(userid,eventid,ishost) values (29,14,false); 
+insert into event_role(userid,eventid,ishost) values (31,14,false); 
+insert into event_role(userid,eventid,ishost) values (10,18,false); 
+insert into event_role(userid,eventid,ishost) values (11,18,false); 
+insert into event_role(userid,eventid,ishost) values (12,18,false); 
+insert into event_role(userid,eventid,ishost) values (13,18,false); 
+insert into event_role(userid,eventid,ishost) values (14,18,false); 
+insert into event_role(userid,eventid,ishost) values (15,18,false); 
+insert into event_role(userid,eventid,ishost) values (16,18,false); 
+insert into event_role(userid,eventid,ishost) values (17,18,false); 
+insert into event_role(userid,eventid,ishost) values (18,18,false); 
+insert into event_role(userid,eventid,ishost) values (19,18,false); 
+insert into event_role(userid,eventid,ishost) values (20,18,false); 
+insert into event_role(userid,eventid,ishost) values (23,18,false); 
+insert into event_role(userid,eventid,ishost) values (24,18,false); 
+insert into event_role(userid,eventid,ishost) values (26,18,false); 
+insert into event_role(userid,eventid,ishost) values (28,18,false); 
+insert into event_role(userid,eventid,ishost) values (29,18,false); 
+insert into event_role(userid,eventid,ishost) values (31,18,false); 
+insert into event_role(userid,eventid,ishost) values (10,20,false); 
+insert into event_role(userid,eventid,ishost) values (11,20,false); 
+insert into event_role(userid,eventid,ishost) values (12,20,false); 
+insert into event_role(userid,eventid,ishost) values (13,20,false); 
+insert into event_role(userid,eventid,ishost) values (14,20,false); 
+insert into event_role(userid,eventid,ishost) values (15,20,false); 
+insert into event_role(userid,eventid,ishost) values (16,20,false); 
+insert into event_role(userid,eventid,ishost) values (17,20,false); 
+insert into event_role(userid,eventid,ishost) values (18,20,false); 
+insert into event_role(userid,eventid,ishost) values (19,20,false); 
+insert into event_role(userid,eventid,ishost) values (20,20,false); 
+insert into event_role(userid,eventid,ishost) values (23,20,false); 
+insert into event_role(userid,eventid,ishost) values (24,20,false); 
+insert into event_role(userid,eventid,ishost) values (26,20,false); 
+insert into event_role(userid,eventid,ishost) values (28,20,false); 
+insert into event_role(userid,eventid,ishost) values (29,20,false); 
+insert into event_role(userid,eventid,ishost) values (31,20,false); 
+
+
+insert into invite (receiverid, senderid, eventid) values (30, 6, 1);
+insert into invite (receiverid, senderid, eventid) values (1, 21, 3);
+insert into invite (receiverid, senderid, eventid) values (28, 25, 7);
+insert into invite (receiverid, senderid, eventid) values (2, 10, 9);
+insert into invite (receiverid, senderid, eventid) values (10, 9, 10);
 
 
 insert into ask_access (participant, eventid) values (25, 12);
@@ -587,79 +718,62 @@ insert into ask_access (participant, eventid) values (19, 8);
 insert into ask_access (participant, eventid) values (27, 9);
 
 
-insert into event_announcement (messagea, role_id) values ('Programmable contextually-based extranet', 1);
-insert into event_announcement (messagea, role_id) values ('Upgradable mobile model', 10);
-insert into event_announcement (messagea, role_id) values ('Operative system-worthy hardware', 12);
-insert into event_announcement (messagea, role_id) values ('Optional bifurcated frame', 6);
-insert into event_announcement (messagea, role_id) values ('Reduced empowering attitude', 10);
-insert into event_announcement (messagea, role_id) values ('Integrated dynamic leverage', 27);
-insert into event_announcement (messagea, role_id) values ('Front-line reciprocal leverage', 19);
-insert into event_announcement (messagea, role_id) values ('Re-contextualized foreground forecast', 1);
-insert into event_announcement (messagea, role_id) values ('Up-sized tertiary interface', 15);
-insert into event_announcement (messagea, role_id) values ('Stand-alone asymmetric firmware', 19);
-insert into event_announcement (messagea, role_id) values ('Profound analyzing project', 30);
-insert into event_announcement (messagea, role_id) values ('Vision-oriented fresh-thinking installation', 14);
-insert into event_announcement (messagea, role_id) values ('Visionary high-level matrices', 16);
-insert into event_announcement (messagea, role_id) values ('Front-line interactive challenge', 21);
-insert into event_announcement (messagea, role_id) values ('Realigned analyzing contingency', 19);
+insert into event_announcement (messagea, role_id) values ('Unfortunately there arent enough participants to continue with the initial plans. So the saddest decision was made and the event is canceled.', 37);
+insert into event_announcement (messagea, role_id) values ('Aware of the latest news, we are forced to call off all streams. As soon as new dates are established, a new event will be created. ', 127);
+insert into event_announcement (messagea, role_id) values ('The Euro 2020 is back, dont miss any match.', 126);
+insert into event_announcement (messagea, role_id) values ('Winners: Individual - sortigag', 47);
+insert into event_announcement (messagea, role_id) values ('Winners: Pairs - bleitche5, sclackersrr', 47);
+insert into event_announcement (messagea, role_id) values ('Winners: Teams - kdonovina, rmanachr, saery9, hbuscombeh', 47);
+insert into event_announcement (messagea, role_id) values ('First announcements Friday: Rui Sinel de Cordes and Rui Cruz', 19);
+insert into event_announcement (messagea, role_id) values ('Saturday: Hugo Sousa and Carlos Vidal', 19);
+insert into event_announcement (messagea, role_id) values ('Due to some external error we have to postpone stream of the first movie. As soon as the problem is fixed we will inform you', 111);
+insert into event_announcement (messagea, role_id) values ('The problem is now fixed. The new date is 2021-05-07', 111);
+insert into event_announcement (messagea, role_id) values ('Prizes: 1st - 500$ voucher; 2nd -  250$; 3rd - 100$', 85);
+insert into event_announcement (messagea, role_id) values ('Note: all prizes previously announced are team prizes and NOT individual prizes.', 85);
+insert into event_announcement (messagea, role_id) values ('The tournament is going to start soon. We will publish the scheduled when all the teams confirm match dates.', 96);
+insert into event_announcement (messagea, role_id) values ('Due to the world pandemic situation all participants need to use a mask during all event. Also you can only enter with a valid EU COVID Digital Certificate (vaccination, testing or recovery).', 74);
 
 
-insert into event_comment (messagec, role_id) values ('Optimized encompassing parallelism', 7);
-insert into event_comment (messagec, role_id) values ('Enterprise-wide methodical frame', 5);
-insert into event_comment (messagec, role_id) values ('Fundamental 6th generation architecture', 8);
-insert into event_comment (messagec, role_id) values ('Multi-channelled needs-based strategy', 2);
-insert into event_comment (messagec, role_id) values ('Phased dynamic superstructure', 27);
-insert into event_comment (messagec, role_id) values ('Fully-configurable 3rd generation solution', 5);
-insert into event_comment (messagec, role_id) values ('Adaptive composite info-mediaries', 25);
-insert into event_comment (messagec, role_id) values ('Decentralized attitude-oriented parallelism', 17);
-insert into event_comment (messagec, role_id) values ('Proactive actuating support', 3);
-insert into event_comment (messagec, role_id) values ('Configurable attitude-oriented process improvement', 10);
-insert into event_comment (messagec, role_id) values ('Versatile composite array', 8);
-insert into event_comment (messagec, role_id) values ('Virtual responsive capability', 13);
-insert into event_comment (messagec, role_id) values ('Networked 6th generation project', 23);
-insert into event_comment (messagec, role_id) values ('Self-enabling fault-tolerant migration', 11);
-insert into event_comment (messagec, role_id) values ('Self-enabling exuding synergy', 25);
 
 
-insert into event_poll (messagep, role_id) values ('Enhanced hybrid workforce', 24);
-insert into event_poll (messagep, role_id) values ('Switchable needs-based superstructure', 30);
-insert into event_poll (messagep, role_id) values ('Re-engineered didactic neural-net', 28);
-insert into event_poll (messagep, role_id) values ('Integrated context-sensitive model', 8);
-insert into event_poll (messagep, role_id) values ('Up-sized scalable policy', 22);
-insert into event_poll (messagep, role_id) values ('Fully-configurable upward-trending capability', 18);
-insert into event_poll (messagep, role_id) values ('Distributed demand-driven project', 29);
-insert into event_poll (messagep, role_id) values ('Digitized stable hardware', 28);
-insert into event_poll (messagep, role_id) values ('Synergistic solution-oriented conglomeration', 25);
-insert into event_poll (messagep, role_id) values ('Stand-alone asymmetric matrix', 3);
-insert into event_poll (messagep, role_id) values ('Digitized bifurcated flexibility', 16);
-insert into event_poll (messagep, role_id) values ('Focused high-level customer loyalty', 19);
-insert into event_poll (messagep, role_id) values ('Team-oriented web-enabled framework', 3);
-insert into event_poll (messagep, role_id) values ('Ameliorated asynchronous task-force', 16);
-insert into event_poll (messagep, role_id) values ('Pre-emptive modular product', 25);
+insert into event_comment (messagec, role_id, photo) values ('Are there any Covid-19 restrictions??', 78, NULL);
+insert into event_comment (messagec, role_id, photo) values ('You have the answer in the announcements.', 79, NULL);
+insert into event_comment (messagec, role_id, photo) values ('How many times each movie is going to be streamed?', 104, NULL);
+insert into event_comment (messagec, role_id, photo) values ('How many times each movie is going to be streamed?', 111, NULL);
+insert into event_comment (messagec, role_id, photo) values ('How many times each movie is going to be streamed?', 120, NULL);
+insert into event_comment (messagec, role_id, photo) values ('Ronaldo > Messi', 151, NULL);
+insert into event_comment (messagec, role_id, photo) values ('Messi > Ronaldo', 152, NULL);
+insert into event_comment (messagec, role_id, photo) values ('Goat Lewangoalski', 153, NULL);
 
 
-insert into poll_option (messagepo, pollId) values ('Optional foreground software', 1);
-insert into poll_option (messagepo, pollId) values ('Inverse cohesive array', 2);
-insert into poll_option (messagepo, pollId) values ('Enhanced mission-critical open system', 3);
-insert into poll_option (messagepo, pollId) values ('Assimilated global success', 4);
-insert into poll_option (messagepo, pollId) values ('Reactive explicit attitude', 5);
-insert into poll_option (messagepo, pollId) values ('Inverse exuding capacity', 6);
-insert into poll_option (messagepo, pollId) values ('Ergonomic multimedia challenge', 7);
-insert into poll_option (messagepo, pollId) values ('Realigned impactful firmware', 8);
-insert into poll_option (messagepo, pollId) values ('Polarised executive open system', 9);
-insert into poll_option (messagepo, pollId) values ('Integrated asynchronous attitude', 10);
-insert into poll_option (messagepo, pollId) values ('Face to face intermediate framework', 11);
-insert into poll_option (messagepo, pollId) values ('Automated national collaboration', 12);
-insert into poll_option (messagepo, pollId) values ('Virtual secondary array', 13);
-insert into poll_option (messagepo, pollId) values ('Polarised directional open system', 14);
-insert into poll_option (messagepo, pollId) values ('Horizontal actuating open system', 15);
+insert into event_poll (messagep, role_id) values ('Should this event be cancelled?', 1);
+insert into event_poll (messagep, role_id) values ('Do you have all the ingredients?', 7);
+insert into event_poll (messagep, role_id) values ('Do you know PHP?', 13);
+insert into event_poll (messagep, role_id) values ('Are you ready to pee your pants from laughing too hard?', 19);
+insert into event_poll (messagep, role_id) values ('Do not forget your yoga pants :)', 25);
+insert into event_poll (messagep, role_id) values ('Who do you thin will win this competition?', 31);
+
+
+
+insert into poll_option (messagepo, pollId) values ('Yes', 1);
+insert into poll_option (messagepo, pollId) values ('No', 1);
+insert into poll_option (messagepo, pollId) values ('Yes', 2);
+insert into poll_option (messagepo, pollId) values ('No', 2);
+insert into poll_option (messagepo, pollId) values ('Yes', 3);
+insert into poll_option (messagepo, pollId) values ('No', 3);
+insert into poll_option (messagepo, pollId) values ('Already brought a diaper', 4);
+insert into poll_option (messagepo, pollId) values ('I am gonna find out', 4);
+insert into poll_option (messagepo, pollId) values ('Going to Decathlon', 5);
+insert into poll_option (messagepo, pollId) values ('Already using them', 5);
+insert into poll_option (messagepo, pollId) values ('BalckKnight365', 6);
+insert into poll_option (messagepo, pollId) values ('Assassin23', 6);
 
 
 insert into vote (votetype, event_roleid, commentid, announcementid) values (true, 10, 2, NULL);
-insert into vote (votetype, event_roleid, commentid, announcementid) values (false, 1, 9, NULL);
-insert into vote (votetype, event_roleid, commentid, announcementid) values (true, 3, 15, NULL);
-insert into vote (votetype, event_roleid, commentid, announcementid) values (false, 5, 3, NULL);
-insert into vote (votetype, event_roleid, commentid, announcementid) values (true, 14, 9, NULL);
+insert into vote (votetype, event_roleid, commentid, announcementid) values (false, 1, 8, NULL);
+insert into vote (votetype, event_roleid, commentid, announcementid) values (true, 3, 8, NULL);
+insert into vote (votetype, event_roleid, commentid, announcementid) values (false, 5, 7, NULL);
+insert into vote (votetype, event_roleid, commentid, announcementid) values (true, 14, 7, NULL);
 insert into vote (votetype, event_roleid, commentid, announcementid) values (false, 5, NULL, 6);
 insert into vote (votetype, event_roleid, commentid, announcementid) values (false, 13, NULL, 10);
 insert into vote (votetype, event_roleid, commentid, announcementid) values (true, 10, NULL, 3);
@@ -668,7 +782,4 @@ insert into vote (votetype, event_roleid, commentid, announcementid) values (fal
 
 
 
-insert into reports (userid, eventid, descriptions) values (6,7,'How does a computer get drunk? A. It takes screenshots');
-insert into reports (userid, eventid, descriptions) values (7,8,'How does a computer get drunk? A. It takes screenshots');
-insert into reports (userid, eventid, descriptions) values (8,9,'How does a computer get drunk? A. It takes screenshots'); 
-insert into reports (userid, eventid, descriptions) values (9,9,'How does a computer get drunk? A. It takes screenshots'); 
+insert into reports (userid, eventid, descriptions) values (6,17,'This event should be cancelled due to the increase of COVID cases.');

@@ -34,8 +34,9 @@ Route::get('user/{user_id}/createevent', 'EventController@showCreateForm')->name
 Route::post('user/{user_id}/createevent', 'EventController@create')->name('event.create');
 
 // User Invite
-Route::get('user/{user_id}/invite/{invite_id}', 'InviteController@index')->name('create.show');
-Route::post('user/{user_id}/invite/{invite_id}', 'InviteController@create')->name('create');
+// Route::get('user/{user_id}/invite/{invite_id}', 'InviteController@index')->name('create.show');
+// Route::post('user/{user_id}/invite/{invite_id}', 'InviteController@create')->name('create');
+Route::get('user/{user_id}/invite/{invite_id}/delete', 'InviteController@delete')->name('invite.delete');
 
 // User Events
 Route::get('user/{user_id}/my_events', 'MyEventsController@index');

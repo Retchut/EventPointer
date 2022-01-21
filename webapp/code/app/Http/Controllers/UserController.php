@@ -32,9 +32,6 @@ class UserController extends Controller
 
     $invites_data = Invite::all();
     // $user_invites = Invite::where('receiverid', $user_id) -> get();
-    $invite_events = array();
-    $invite_senders = array();
-    $invite_receivers = array(); //remove later
 
     $user_invites = array();
 
@@ -42,19 +39,12 @@ class UserController extends Controller
       $user_invite = array();
       $inv_event = Event::find($invites_datum->eventid);
       $inv_sender = User::find($invites_datum->senderid);
-      $inv_receiver = User::find($invites_datum->receiverid);
-      // array_push($invite_events, $inv_event);
-      // array_push($invite_senders, $inv_sender);
-      // array_push($invite_receivers, $inv_receiver);
-
+  
       array_push($user_invite, $inv_event);
       array_push($user_invite, $inv_sender);
-      array_push($user_invite, $inv_receiver);
+      array_push($user_invite, $invites_datum->id);
       array_push($user_invites, $user_invite);
     }
-    // dd($user_invites[0][0]->eventname);
-    // dd($user_invites[0][1]->username);
-    // dd($user_invites[0][2]->username);
 
     $events_as_participant = $user->events_as_participant($user_id);
     $events_as_host = $user->events_as_host($user_id);

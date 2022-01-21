@@ -34,6 +34,7 @@ class EventController extends Controller
     $announcements = $event->announcements($event_id);
     $comments = $event->comments($event_id);
     $polls = $event->polls($event_id);
+    $pollOptions = $event->pollOptions($event_id);
     $participants = $event->participants($event_id);
     $hosts = $event->hosts($event_id);
     $tag = $event->tag($event_id);
@@ -51,7 +52,7 @@ class EventController extends Controller
     */
 
     if (Auth::check())
-      return view('pages.event', ['event' => $event, 'current_role' => $current_role, 'reported' => $request->reported, 'comments' => $comments, 'polls' => $polls, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants, 'tag' => $tag]);
+      return view('pages.event', ['event' => $event, 'current_role' => $current_role, 'reported' => $request->reported, 'comments' => $comments, 'polls' => $polls, 'pollOptions' => $pollOptions, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants, 'tag' => $tag]);
     else
       return redirect("/login");
   }

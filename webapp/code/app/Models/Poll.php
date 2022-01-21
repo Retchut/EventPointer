@@ -20,4 +20,10 @@ class Poll extends Model
     {
         return $this->belongsTo('App\Models\Event_Role', 'idrole');
     }
+
+    public function pollOptions($poll_id)
+    {
+        $pollOptions = PollOption::where('pollId', $poll_id)->join('event_poll', 'pollId', '=', 'event_poll.role_id')->get()->unique();
+        return $pollOptions;
+    }
 }

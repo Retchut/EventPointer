@@ -10,12 +10,25 @@
                 <div id="report_popup" class="popup-container">
                     <div class="popup">
                         <p class="popup-elems">Event reported successfully</p>
-                        <button id="close_popup" type="button" class="popup-elems btn-close"></button>
+                        <button id="close1" type="button" class="popup-elems btn-close"></button>
                     </div>
                 </div>
 
                 <script>
-                    setup_popup_btn();
+                    setup_popup_btn("close1","report_popup");
+                </script>
+            @endif
+
+            @if (!is_null($published) && $published == true)
+                <div id="announcement_popup" class="popup-container">
+                    <div class="popup">
+                        <p class="popup-elems">Announcement published successfully</p>
+                        <button id="close2" type="button" class="popup-elems btn-close"></button>
+                    </div>
+                </div>
+
+                <script>
+                    setup_popup_btn("close2","announcement_popup");
                 </script>
             @endif
 

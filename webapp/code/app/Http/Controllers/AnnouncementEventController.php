@@ -30,7 +30,7 @@ class AnnouncementEventController extends Controller
         $announcement->messagea = $request->announcement_message;
         $announcement->save();
 
-        return redirect()->route('event.show', ['event_id' => $event_id]);
+        return redirect()->route('event.show', ['event_id' => $event_id,'published' => True]);
     }
 
     public function edit($event_id, $announcement_id)

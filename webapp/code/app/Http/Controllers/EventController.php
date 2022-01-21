@@ -52,7 +52,7 @@ class EventController extends Controller
     */
 
     if (Auth::check())
-      return view('pages.event', ['event' => $event, 'current_role' => $current_role, 'reported' => $request->reported, 'comments' => $comments, 'polls' => $polls, 'pollOptions' => $pollOptions, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants, 'tag' => $tag]);
+      return view('pages.event', ['event' => $event, 'current_role' => $current_role, 'published'=>$request->published, 'reported' => $request->reported, 'comments' => $comments, 'polls' => $polls, 'pollOptions' => $pollOptions, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants, 'tag' => $tag]);
     else
       return redirect("/login");
   }

@@ -58,7 +58,7 @@
         </div>
 
         <!-- User control buttons -->
-        @if ((Auth::user()->id == $user->id) || (Auth::user()->isadmin))
+        @if ((Auth::user()->id == $user->id) && !(Auth::user()->isadmin))
         <div class="d-flex justify-content-end">
             <div class="row-sm-1  m-2 p-3">
                 <a class="btn btn-outline-primary" href="{{ url('/user/'.@Auth::user()->id.'/edit') }}">Edit Account</a>

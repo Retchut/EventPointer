@@ -1,7 +1,7 @@
 <div class="row mb-4">
-    <div class="col-sm-5 mx-auto" style="max-width: 200px;">
+    <div class="col-sm-5 mx-auto">
         <img src="{{ $user->profilepictureurl }}"
-            class="user-pic" style="height: 150px; width: 100%; object-fit: cover;" alt="profile_img">
+            class="user-pic" style="width: 150px; height: 150px;  object-fit: cover;" alt="profile_img">
     </div>
     <div class="col-sm-7">
         <h2 class="font-weight-bold">{{ $user->username }}</h2>

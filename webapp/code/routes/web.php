@@ -61,7 +61,7 @@ Route::get('event/{event_id}/join', 'EventController@join')->name('event.join');
 Route::get('event/{user_id}/leave', 'EventController@leave')->name('event.leave');
 
 //Hosts add participant to event 
-Route::get('event/{event_id}/addparticipant', 'EventController@addparticipant')->name('event.addparticipant');
+Route::get('event/{event_id}/addparticipants', 'EventController@showAdd')->name('event.addparticipants');
 
 //Hosts remove participant from event 
 Route::get('event/{event_id}/removeparticipants', 'EventController@showRemove')->name('event.removeparticipants');
@@ -95,24 +95,3 @@ Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('re
 Route::post('register', 'Auth\RegisterController@register');
 
 
-//API
-Route::get('api/events',/*search events controller*/);
-Route::get('api/users',/*search users controller*/);
-
-//Announcements and Comments
-// TODO
-
-// Admin Profile
-Route::get('admin/{admin_id}', 'AdminController@show');
-
-// Admin Create Report
-Route::get('admin/create_report', 'AdminReportController@index')->name('create.show');
-Route::post('admin/create_report', 'AdminReportController@create')->name('create');
-
-// Admin manage user
-Route::get('admin/user/{user_id}/', /* admin used edit page contoller */);
-Route::get('admin/user/{user_id}/delete', 'AdminUserController@remove');
-
-// Admin report
-Route::get('admin/report/{report_id}/',/* see reports controller*/);
-Route::get('admin/report/{report_id}/delete', 'AdminReportController@remove');

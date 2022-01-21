@@ -32,19 +32,18 @@ class UserController extends Controller
 
     $invites_data = Invite::all();
     // $user_invites = Invite::where('receiverid', $user_id) -> get();
-    $invite_events = array();
-    $invite_senders = array();
-    $invite_receivers = array(); //remove later
 
     $user_invites = array();
 
     foreach($invites_data as $invites_datum){
+      $user_invite = array();
       $inv_event = Event::find($invites_datum->eventid);
-      $inv_sender = User::find($invites_datum->userid);
-      $inv_receiver = User::find($invites_datum->receiverid);
-      array_push($invite_events, $inv_event);
-      array_push($invite_senders, $inv_sender);
-      array_push($invite_receivers, $inv_receiver);
+      $inv_sender = User::find($invites_datum->senderid);
+  
+      array_push($user_invite, $inv_event);
+      array_push($user_invite, $inv_sender);
+      array_push($user_invite, $invites_datum->id);
+      array_push($user_invites, $user_invite);
     }
 
     $events_as_participant = $user->events_as_participant($user_id);
@@ -59,8 +58,11 @@ class UserController extends Controller
       'Events Hosted' => count($events_as_host),
       'Member Since' => $user->registrationdate
     ];
+
+    // dd($invite_senders[0]);
+
     if (Auth::check())
-      return view('pages.user', ['user' => $user, 'invite_events' => $invite_events, 'invite_senders' => $invite_senders, 'invite_receivers' => $invite_receivers, 'events_as_host' => $events_as_host,'events_as_participant' => $events_as_participant, 'user_stats' => $user_stats, 'reports' => $reports]);
+      return view('pages.user', ['user' => $user, 'user_invites' => $user_invites, 'events_as_host' => $events_as_host,'events_as_participant' => $events_as_participant, 'user_stats' => $user_stats, 'reports' => $reports]);
     else
       return redirect("/login");
   }

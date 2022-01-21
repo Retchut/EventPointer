@@ -25,9 +25,9 @@
 <div class="border border-primary  bg-light text-dark rounded">
     <!-- TODO: restrict to only the user's invites -->
     @if ((Auth::user()->id == $user->id))
-        @if (count($invite_events) > 0)
-            @foreach (array_combine($invite_senders, $invite_events) as $inv_sender => $inv_event)
-                @include('partials.userinvite')
+        @if (count($user_invites) > 0)
+            @foreach ($user_invites as $user_invite)
+                @include('partials.userinvite', ['user_invite' => $user_invite, 'user_id' => $user->id])
             @endforeach
         @else
             <p class="font-weight-bold pb-2 m-3">You have no pending invites.</p>

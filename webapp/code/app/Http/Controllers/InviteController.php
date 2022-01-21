@@ -8,16 +8,16 @@ use Illuminate\Support\Facades\Auth;
 
 class InviteController extends Controller
 {
-    public function invite(Request $request, $event_id)
+    public function invite(Request $request, $event_id, $user_id)
     {
-        // $comment = new Comment();
+        // $invite = new invite();
         // $role = Event_Role::where('ishost', false)->where('eventid', $event_id)->where('userid', Auth::user()->id)->get()->first();
-        // $comment->role_id = $role->id;
-        // $comment->messagec = $request->comment_message;
+        // $invite->role_id = $role->id;
+        // $invite->messagec = $request->invite_message;
         // if($request->get('file') != null){
-        //     $comment->photo = $request->get('file');
+        //     $invite->photo = $request->get('file');
         // }
-        // $comment->save();
+        // $invite->save();
 
         return redirect()->route('event.show', ['event_id' => $event_id]);
     }

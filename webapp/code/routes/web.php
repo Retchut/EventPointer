@@ -28,14 +28,12 @@ Route::get('/user/{user_id}/delete', 'UserController@delete')->name('user.delete
 Route::get('user/{user_id}/edit', 'EditUserController@index')->name('edit.show');
 Route::post('user/{user_id}/edit', 'EditUserController@update')->name('user.update');
 
-
 //User Create Event
 Route::get('user/{user_id}/createevent', 'EventController@showCreateForm')->name('create.show');
 Route::post('user/{user_id}/createevent', 'EventController@create')->name('event.create');
 
 // User Invite
-// Route::get('user/{user_id}/invite/{invite_id}', 'InviteController@index')->name('create.show');
-// Route::post('user/{user_id}/invite/{invite_id}', 'InviteController@create')->name('create');
+Route::post('user/{event_id}/invite/{user_id}', 'InviteController@invite')->name('event.invite');
 Route::get('user/{user_id}/invite/{invite_id}/delete', 'InviteController@delete')->name('invite.delete');
 
 // User Events

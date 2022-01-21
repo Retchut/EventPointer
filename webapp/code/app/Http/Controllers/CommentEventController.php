@@ -45,7 +45,6 @@ class CommentEventController extends Controller
 
     public function update(Request $request, $event_id, $comment_id)
     {
-
         $comment = Comment::find($request->comment_id);
 
         if ($request->comment_message != null)

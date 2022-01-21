@@ -37,7 +37,13 @@ class EventController extends Controller
     $participants = $event->participants($event_id);
     $hosts = $event->hosts($event_id);
     $tag = $event->tag($event_id);
-    $current_role = Event_Role::where('eventid', $event_id)->where('userid', Auth::user()->id)->get()->first();
+    //TODO: fix non-logged user
+    if(Auth::check()){
+      $current_role = Event_Role::where('eventid', $event_id)->where('userid', Auth::user()->id)->get()->first();
+    }
+    else{
+      $current_role = NULL;
+    }
     /* 403 exception apge*/
     /*
     $this->authorize('show', $event);

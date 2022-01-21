@@ -59,7 +59,8 @@ CREATE TABLE event_role
         id SERIAL PRIMARY KEY,
         userid INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
         eventid INTEGER NOT NULL REFERENCES eventg(id) ON DELETE CASCADE ON UPDATE CASCADE,
-        ishost BOOLEAN NOT NULL
+        ishost BOOLEAN NOT NULL,
+         UNIQUE (userid, eventid, ishost)
 );
 
 DROP TABLE IF EXISTS invite CASCADE;
@@ -587,7 +588,6 @@ insert into event_role (userid, eventid, ishost) values (6, 13, false);
 insert into event_role (userid, eventid, ishost) values (24, 13, false);
 insert into event_role (userid, eventid, ishost) values (30, 13, false);
 insert into event_role (userid, eventid, ishost) values (9, 13, false);
-insert into event_role (userid, eventid, ishost) values (6, 13, false);
 insert into event_role (userid, eventid, ishost) values (18, 13, false);
 insert into event_role (userid, eventid, ishost) values (26, 13, false);
 insert into event_role (userid, eventid, ishost) values (27, 13, false);
@@ -599,7 +599,6 @@ insert into event_role (userid, eventid, ishost) values (6, 17, false);
 insert into event_role (userid, eventid, ishost) values (24, 17, false);
 insert into event_role (userid, eventid, ishost) values (30, 17, false);
 insert into event_role (userid, eventid, ishost) values (9, 17, false);
-insert into event_role (userid, eventid, ishost) values (6, 17, false);
 insert into event_role (userid, eventid, ishost) values (18, 17, false);
 insert into event_role (userid, eventid, ishost) values (26, 17, false);
 insert into event_role (userid, eventid, ishost) values (27, 17, false);

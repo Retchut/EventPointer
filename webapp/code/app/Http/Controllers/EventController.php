@@ -193,9 +193,13 @@ class EventController extends Controller
   {
     $role = new Event_Role;
     $role->userid = $user_id;
-    $role->ishost=false;
+    $role->ishost = false;
     $role->eventid = $event_id;
-    $role->save();
+    try {
+      $role->save();
+    } catch (\Illuminate\Database\QueryException $e) {
+      return abort(403,"Duplicate found");
+    }
     return redirect()->route('event.showaddparticipants', $event_id);
   }
 }

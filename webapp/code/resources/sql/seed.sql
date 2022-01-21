@@ -70,8 +70,8 @@ CREATE TABLE invite
     receiverid INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     senderid INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     eventid INTEGER NOT NULL REFERENCES eventg(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CHECK (receiverid <> senderid)
-);
+    CHECK (receiverid <> senderid),
+    UNIQUE (receiverid,eventid));
 
 
 

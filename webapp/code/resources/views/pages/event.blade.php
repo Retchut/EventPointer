@@ -80,6 +80,11 @@
                                                         class="dropdown-item">Leave Event
                                                     </a></li>
                                                 <li class="dropdown-divider"></li>
+                                                <li><a href="{{ url('/event/' . $event->id) . '/inviteuser' }}"
+                                                        class="dropdown-item">Invite
+                                                        User(s)</a></li>
+                                                <li class="dropdown-divider"></li>
+
                                             @endif
                                         @endforeach
 
@@ -257,7 +262,7 @@
 
                 <div class="tab-pane fade pb-3" id="forum-content" role="tabpanel" aria-labelledby="forum-tab">
                     <h3>Forum</h3>
-                    @if(count($polls) != 0)
+                    @if (count($polls) != 0)
                         @include('partials.poll', [ 'polls' => $polls, 'pollOptions' => $pollOptions])
                     @endif
                     @if (count($comments) != 0)

@@ -74,6 +74,9 @@ Route::post('event/{event_id}/report', 'ReportEventController@report')->name('re
 Route::get('event/{event_id}/announcement', 'AnnouncementEventController@index')->name('createannouncement.show');
 Route::post('event/{event_id}/announcement', 'AnnouncementEventController@create')->name('createannouncement');
 Route::post('event/{event_id}/announcement', 'AnnouncementEventController@announcement')->name('event.announcement');
+Route::get('event/{event_id}/announcement/{announcement_id}/edit', 'AnnouncementEventController@edit')->name('announcement.edit');
+Route::post('event/{event_id}/announcement/{announcement_id}/edit', 'AnnouncementEventController@update')->name('announcement.update');
+Route::get('event/{event_id}/announcement/{announcement_id}/delete', 'AnnouncementEventController@delete')->name('announcement.delete');
 
 // Comment Event
 Route::get('event/{event_id}/comment', 'CommentEventController@index')->name('createcomment.show');
@@ -90,7 +93,7 @@ Route::post('event/{event_id}/poll', 'PollEventController@poll')->name('event.po
 Route::get('event/{event_id}/poll/{pollOption_id}', 'PollOptionController@vote')->name('poll.vote');
 
 // Event Invite
-Route::get('event/{event_id}/inviteuser', 'InviteController@showusers')->name('invite.show');
+Route::get('event/{event_id}/invite', 'InviteController@showusers')->name('invite.show');
 Route::get('event/{event_id}/invite/{user_id}', 'InviteController@invite')->name('event.invite');
 Route::get('user/{user_id}/invite/{invite_id}/delete', 'InviteController@delete')->name('invite.delete');
 

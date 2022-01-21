@@ -6,16 +6,29 @@
 
     <section id="event">
         <div class="container-fluid p-4">
-            @if (!is_null($reported) && $reported == true)
+            @if (!is_null($popup_message))
                 <div id="report_popup" class="popup-container">
                     <div class="popup">
-                        <p class="popup-elems">Event reported successfully</p>
-                        <button id="close_popup" type="button" class="popup-elems btn-close"></button>
+                        <p class="popup-elems">{{$popup_message}}</p>
+                        <button id="close1" type="button" class="popup-elems btn-close"></button>
                     </div>
                 </div>
 
                 <script>
-                    setup_popup_btn();
+                    setup_popup_btn("close1","report_popup");
+                </script>
+            @endif
+
+            @if (!is_null($published) && $published == true)
+                <div id="announcement_popup" class="popup-container">
+                    <div class="popup">
+                        <p class="popup-elems">Announcement published successfully</p>
+                        <button id="close2" type="button" class="popup-elems btn-close"></button>
+                    </div>
+                </div>
+
+                <script>
+                    setup_popup_btn("close2","announcement_popup");
                 </script>
             @endif
 
@@ -49,7 +62,7 @@
                                                         class="dropdown-item">Add
                                                         Announcement</a></li>
                                                 <li class="dropdown-divider"></li>
-                                                <li><a href="{{ url('/event/' . $event->id) . '/inviteuser' }}"
+                                                <li><a href="{{ url('/event/' . $event->id) . '/invite' }}"
                                                         class="dropdown-item">Invite
                                                         User(s)</a></li>
                                                 <li><a href="{{ url('/event/' . $event->id) . '/addparticipants' }}"
@@ -80,7 +93,7 @@
                                                         class="dropdown-item">Leave Event
                                                     </a></li>
                                                 <li class="dropdown-divider"></li>
-                                                <li><a href="{{ url('/event/' . $event->id) . '/inviteuser' }}"
+                                                <li><a href="{{ url('/event/' . $event->id) . '/invite' }}"
                                                         class="dropdown-item">Invite
                                                         User(s)</a></li>
                                                 <li class="dropdown-divider"></li>

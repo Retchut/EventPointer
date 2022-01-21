@@ -30,8 +30,7 @@ class UserController extends Controller
       return abort(403, "Access Denied");
     }
 
-    $invites_data = Invite::all();
-
+    $invites_data = Invite::where('receiverid', $user_id) -> get();
 
     $user_invites = array();
 
@@ -58,7 +57,6 @@ class UserController extends Controller
       'Events Hosted' => count($events_as_host),
       'Member Since' => $user->registrationdate
     ];
-
 
     if (Auth::check())
       return view('pages.user', ['user' => $user, 'user_invites' => $user_invites,'popup_message' => $request->popup_message, 'events_as_host' => $events_as_host,'events_as_participant' => $events_as_participant, 'user_stats' => $user_stats, 'reports' => $reports]);

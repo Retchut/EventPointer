@@ -7,15 +7,15 @@
     <section id="event">
         <div class="container-fluid p-4">
             @if (!is_null($popup_message))
-                <div id="report_popup" class="popup-container">
+                <div id="popup" class="popup-container">
                     <div class="popup">
                         <p class="popup-elems">{{$popup_message}}</p>
-                        <button id="close1" type="button" class="popup-elems btn-close"></button>
+                        <button id="close" type="button" class="popup-elems btn-close"></button>
                     </div>
                 </div>
 
                 <script>
-                    setup_popup_btn("close1","report_popup");
+                    setup_popup_btn("close","popup");
                 </script>
             @endif
 

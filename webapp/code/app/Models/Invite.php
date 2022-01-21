@@ -1,10 +1,9 @@
 <?php
 
 namespace App\Models;
-
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use App\Models\User;
 use App\Models\Event;
@@ -28,7 +27,7 @@ use App\Models\Event;
  * @property string profilePictureUrl
  * @property boolean isAdmin
  */
-class Invite extends Authenticatable
+class Invite extends Model
 {
 
     use Notifiable;

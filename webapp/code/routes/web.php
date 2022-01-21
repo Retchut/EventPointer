@@ -28,15 +28,10 @@ Route::get('/user/{user_id}/delete', 'UserController@delete')->name('user.delete
 Route::get('user/{user_id}/edit', 'EditUserController@index')->name('edit.show');
 Route::post('user/{user_id}/edit', 'EditUserController@update')->name('user.update');
 
-
 //User Create Event
 Route::get('user/{user_id}/createevent', 'EventController@showCreateForm')->name('create.show');
 Route::post('user/{user_id}/createevent', 'EventController@create')->name('event.create');
 
-// User Invite
-// Route::get('user/{user_id}/invite/{invite_id}', 'InviteController@index')->name('create.show');
-// Route::post('user/{user_id}/invite/{invite_id}', 'InviteController@create')->name('create');
-Route::get('user/{user_id}/invite/{invite_id}/delete', 'InviteController@delete')->name('invite.delete');
 
 // User Events
 Route::get('user/{user_id}/my_events', 'MyEventsController@index');
@@ -94,9 +89,14 @@ Route::post('event/{event_id}/poll', 'PollEventController@create')->name('poll.c
 Route::post('event/{event_id}/poll', 'PollEventController@poll')->name('event.poll');
 
 // Event Invite
-Route::get('event/{event_id}/invite', 'InvitationController@index')->name('invite.show');
-Route::post('event/{event_id}/invite', 'InvitationController@invite')->name('invite');
+Route::get('event/{event_id}/inviteuser', 'InviteController@showusers')->name('invite.show');
+// Route::post('event/{event_id}/inviteuser', 'InviteController@invite')->name('invite');
+Route::post('user/{event_id}/invite/{user_id}', 'InviteController@invite')->name('event.invite');
+Route::get('user/{user_id}/invite/{invite_id}/delete', 'InviteController@delete')->name('invite.delete');
 
+// Event Invite
+Route::get('event/{event_id}/inviteuser', 'InviteController@showusers')->name('invite.show');
+Route::post('event/{event_id}/inviteuser', 'InviteController@invite')->name('invite');
 
 // Authentication
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');

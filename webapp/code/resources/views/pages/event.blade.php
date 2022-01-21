@@ -253,6 +253,9 @@
 
                 <div class="tab-pane fade pb-3" id="forum-content" role="tabpanel" aria-labelledby="forum-tab">
                     <h3>Forum</h3>
+                    @if(count($polls) != 0)
+                        @include('partials.poll', $polls)
+                    @endif
                     @if (count($comments) != 0)
                         @include('partials.comments',$comments)
                     @else

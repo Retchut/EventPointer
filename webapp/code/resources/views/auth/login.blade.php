@@ -29,11 +29,7 @@
                         @endif
                     </div>
 
-                    <div class="row">
-                        <label>
-                            <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
-                        </label>
-                    </div>
+                   
                 </div>
                 </div>
             </div>

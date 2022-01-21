@@ -97,7 +97,8 @@ CREATE TABLE event_comment
 (
     id SERIAL PRIMARY KEY,
     messagec TEXT NOT NULL,
-    role_id INTEGER NOT NULL REFERENCES event_role (id) ON DELETE CASCADE ON UPDATE CASCADE
+    role_id INTEGER NOT NULL REFERENCES event_role (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    photo BYTEA DEFAULT NULL
 );
 
 DROP TABLE IF EXISTS event_poll CASCADE;
@@ -504,49 +505,49 @@ insert into eventg (eventname, event_description, startdate, enddate, place, eve
 ,'2020-06-10', '2020-07-10', 'Online - Cloud Sports', 'Canceled', 'https://editorial.uefa.com/resources/0258-0e2236eb500b-4dac4439c8b9-1000/2502796.jpg', 2);
 
 
-insert into event_role (userid, eventid, ishost) values(6,1,true);
+insert into event_role (userid, eventid, ishost) values(6,1,true);      --1
 insert into event_role (userid, eventid, ishost) values (16, 1, false);
 insert into event_role (userid, eventid, ishost) values (26,1, false);
 insert into event_role (userid, eventid, ishost) values (20, 1, false);
 insert into event_role (userid, eventid, ishost) values (15, 1, false);
 insert into event_role (userid, eventid, ishost) values (25, 1, false);
 
-insert into event_role (userid, eventid, ishost) values(21,3,true);
+insert into event_role (userid, eventid, ishost) values(21,3,true);     --7
 insert into event_role (userid, eventid, ishost) values (16, 3, false);
 insert into event_role (userid, eventid, ishost) values (26, 3, false);
 insert into event_role (userid, eventid, ishost) values (20, 3, false);
 insert into event_role (userid, eventid, ishost) values (15,3, false);
 insert into event_role (userid, eventid, ishost) values (25, 3, false);
 
-insert into event_role (userid, eventid, ishost) values(18,4,true);
+insert into event_role (userid, eventid, ishost) values(18,4,true);    --13
 insert into event_role (userid, eventid, ishost) values (16, 4, false);
 insert into event_role (userid, eventid, ishost) values (26, 4, false);
 insert into event_role (userid, eventid, ishost) values (20, 4, false);
 insert into event_role (userid, eventid, ishost) values (15, 4, false);
 insert into event_role (userid, eventid, ishost) values (25, 4, false);
 
-insert into event_role (userid, eventid, ishost) values(25,7,true);
+insert into event_role (userid, eventid, ishost) values(25,7,true);    --19
 insert into event_role (userid, eventid, ishost) values (12, 7, false);
 insert into event_role (userid, eventid, ishost) values (15, 7, false);
 insert into event_role (userid, eventid, ishost) values (22, 7, false);
 insert into event_role (userid, eventid, ishost) values (20, 7, false);
 insert into event_role (userid, eventid, ishost) values (8, 7, false);
 
-insert into event_role (userid, eventid, ishost) values(10,9,true);
+insert into event_role (userid, eventid, ishost) values(10,9,true);   --25
 insert into event_role (userid, eventid, ishost) values (9, 9, false);
 insert into event_role (userid, eventid, ishost) values (11, 9, false);
 insert into event_role (userid, eventid, ishost) values (29, 9, false);
 insert into event_role (userid, eventid, ishost) values (20, 9, false);
 insert into event_role (userid, eventid, ishost) values (8, 9, false);
 
-insert into event_role (userid, eventid, ishost) values(9,10,true);
+insert into event_role (userid, eventid, ishost) values(9,10,true);   --31
 insert into event_role (userid, eventid, ishost) values (13, 10, false);
 insert into event_role (userid, eventid, ishost) values (11, 10, false);
 insert into event_role (userid, eventid, ishost) values (29, 10, false);
 insert into event_role (userid, eventid, ishost) values (20, 10, false);
 insert into event_role (userid, eventid, ishost) values (8, 10, false);
 
-insert into event_role (userid, eventid, ishost) values(15,19,true);
+insert into event_role (userid, eventid, ishost) values(15,19,true);   --37
 insert into event_role (userid, eventid, ishost) values (9, 19, false);
 insert into event_role (userid, eventid, ishost) values (11, 19, false);
 
@@ -645,63 +646,63 @@ insert into event_role (userid, eventid, ishost) values (9, 15, false);
 insert into event_role (userid, eventid, ishost) values (29,15, false);
 
 
-insert into event_role (userid, eventid, ishost) values(7,14,true);
-insert into event_role (userid, eventid, ishost) values(7,18,true);
-insert into event_role (userid, eventid, ishost) values(7,20,true);
-insert into event_role (userid, eventid, ishost) values(8,14,true);
-insert into event_role (userid, eventid, ishost) values(8,18,true);
-insert into event_role (userid, eventid, ishost) values(8,20,true);
-insert into event_role(userid,eventid,ishost) values (10,14,false);
-insert into event_role(userid,eventid,ishost) values (11,14,false);
-insert into event_role(userid,eventid,ishost) values (12,14,false);
-insert into event_role(userid,eventid,ishost) values (13,14,false);
-insert into event_role(userid,eventid,ishost) values (14,14,false);
-insert into event_role(userid,eventid,ishost) values (15,14,false);
-insert into event_role(userid,eventid,ishost) values (16,14,false);
-insert into event_role(userid,eventid,ishost) values (17,14,false);
-insert into event_role(userid,eventid,ishost) values (18,14,false);
-insert into event_role(userid,eventid,ishost) values (19,14,false);
-insert into event_role(userid,eventid,ishost) values (20,14,false);
-insert into event_role(userid,eventid,ishost) values (23,14,false);
-insert into event_role(userid,eventid,ishost) values (24,14,false);
-insert into event_role(userid,eventid,ishost) values (26,14,false);
-insert into event_role(userid,eventid,ishost) values (28,14,false);
-insert into event_role(userid,eventid,ishost) values (29,14,false);
-insert into event_role(userid,eventid,ishost) values (31,14,false);
-insert into event_role(userid,eventid,ishost) values (10,18,false);
-insert into event_role(userid,eventid,ishost) values (11,18,false);
-insert into event_role(userid,eventid,ishost) values (12,18,false);
-insert into event_role(userid,eventid,ishost) values (13,18,false);
-insert into event_role(userid,eventid,ishost) values (14,18,false);
-insert into event_role(userid,eventid,ishost) values (15,18,false);
-insert into event_role(userid,eventid,ishost) values (16,18,false);
-insert into event_role(userid,eventid,ishost) values (17,18,false);
-insert into event_role(userid,eventid,ishost) values (18,18,false);
-insert into event_role(userid,eventid,ishost) values (19,18,false);
-insert into event_role(userid,eventid,ishost) values (20,18,false);
-insert into event_role(userid,eventid,ishost) values (23,18,false);
-insert into event_role(userid,eventid,ishost) values (24,18,false);
-insert into event_role(userid,eventid,ishost) values (26,18,false);
-insert into event_role(userid,eventid,ishost) values (28,18,false);
-insert into event_role(userid,eventid,ishost) values (29,18,false);
-insert into event_role(userid,eventid,ishost) values (31,18,false);
-insert into event_role(userid,eventid,ishost) values (10,20,false);
-insert into event_role(userid,eventid,ishost) values (11,20,false);
-insert into event_role(userid,eventid,ishost) values (12,20,false);
-insert into event_role(userid,eventid,ishost) values (13,20,false);
-insert into event_role(userid,eventid,ishost) values (14,20,false);
-insert into event_role(userid,eventid,ishost) values (15,20,false);
-insert into event_role(userid,eventid,ishost) values (16,20,false);
-insert into event_role(userid,eventid,ishost) values (17,20,false);
-insert into event_role(userid,eventid,ishost) values (18,20,false);
-insert into event_role(userid,eventid,ishost) values (19,20,false);
-insert into event_role(userid,eventid,ishost) values (20,20,false);
-insert into event_role(userid,eventid,ishost) values (23,20,false);
-insert into event_role(userid,eventid,ishost) values (24,20,false);
-insert into event_role(userid,eventid,ishost) values (26,20,false);
-insert into event_role(userid,eventid,ishost) values (28,20,false);
-insert into event_role(userid,eventid,ishost) values (29,20,false);
-insert into event_role(userid,eventid,ishost) values (31,20,false);
+insert into event_role (userid, eventid, ishost) values(7,14,true); 
+insert into event_role (userid, eventid, ishost) values(7,18,true); 
+insert into event_role (userid, eventid, ishost) values(7,20,true); 
+insert into event_role (userid, eventid, ishost) values(8,14,true); 
+insert into event_role (userid, eventid, ishost) values(8,18,true); 
+insert into event_role (userid, eventid, ishost) values(8,20,true); 
+insert into event_role(userid,eventid,ishost) values (10,14,false); 
+insert into event_role(userid,eventid,ishost) values (11,14,false); 
+insert into event_role(userid,eventid,ishost) values (12,14,false); 
+insert into event_role(userid,eventid,ishost) values (13,14,false); 
+insert into event_role(userid,eventid,ishost) values (14,14,false); 
+insert into event_role(userid,eventid,ishost) values (15,14,false); 
+insert into event_role(userid,eventid,ishost) values (16,14,false); 
+insert into event_role(userid,eventid,ishost) values (17,14,false); 
+insert into event_role(userid,eventid,ishost) values (18,14,false); 
+insert into event_role(userid,eventid,ishost) values (19,14,false); 
+insert into event_role(userid,eventid,ishost) values (20,14,false); 
+insert into event_role(userid,eventid,ishost) values (23,14,false); 
+insert into event_role(userid,eventid,ishost) values (24,14,false); 
+insert into event_role(userid,eventid,ishost) values (26,14,false); 
+insert into event_role(userid,eventid,ishost) values (28,14,false); 
+insert into event_role(userid,eventid,ishost) values (29,14,false); 
+insert into event_role(userid,eventid,ishost) values (31,14,false); 
+insert into event_role(userid,eventid,ishost) values (10,18,false); 
+insert into event_role(userid,eventid,ishost) values (11,18,false); 
+insert into event_role(userid,eventid,ishost) values (12,18,false); 
+insert into event_role(userid,eventid,ishost) values (13,18,false); 
+insert into event_role(userid,eventid,ishost) values (14,18,false); 
+insert into event_role(userid,eventid,ishost) values (15,18,false); 
+insert into event_role(userid,eventid,ishost) values (16,18,false); 
+insert into event_role(userid,eventid,ishost) values (17,18,false); 
+insert into event_role(userid,eventid,ishost) values (18,18,false); 
+insert into event_role(userid,eventid,ishost) values (19,18,false); 
+insert into event_role(userid,eventid,ishost) values (20,18,false); 
+insert into event_role(userid,eventid,ishost) values (23,18,false); 
+insert into event_role(userid,eventid,ishost) values (24,18,false); 
+insert into event_role(userid,eventid,ishost) values (26,18,false); 
+insert into event_role(userid,eventid,ishost) values (28,18,false); 
+insert into event_role(userid,eventid,ishost) values (29,18,false); 
+insert into event_role(userid,eventid,ishost) values (31,18,false); 
+insert into event_role(userid,eventid,ishost) values (10,20,false); 
+insert into event_role(userid,eventid,ishost) values (11,20,false); 
+insert into event_role(userid,eventid,ishost) values (12,20,false); 
+insert into event_role(userid,eventid,ishost) values (13,20,false); 
+insert into event_role(userid,eventid,ishost) values (14,20,false); 
+insert into event_role(userid,eventid,ishost) values (15,20,false); 
+insert into event_role(userid,eventid,ishost) values (16,20,false); 
+insert into event_role(userid,eventid,ishost) values (17,20,false); 
+insert into event_role(userid,eventid,ishost) values (18,20,false); 
+insert into event_role(userid,eventid,ishost) values (19,20,false); 
+insert into event_role(userid,eventid,ishost) values (20,20,false); 
+insert into event_role(userid,eventid,ishost) values (23,20,false); 
+insert into event_role(userid,eventid,ishost) values (24,20,false); 
+insert into event_role(userid,eventid,ishost) values (26,20,false); 
+insert into event_role(userid,eventid,ishost) values (28,20,false); 
+insert into event_role(userid,eventid,ishost) values (29,20,false); 
+insert into event_role(userid,eventid,ishost) values (31,20,false); 
 
 
 insert into invite (receiverid, senderid, eventid) values (30, 6, 1);
@@ -736,48 +737,37 @@ insert into event_announcement (messagea, role_id) values ('Due to the world pan
 
 
 
-insert into event_comment (messagec, role_id) values ('Are there any Covid-19 restrictions??', 78);
-insert into event_comment (messagec, role_id) values ('You have the answer in the announcements.', 79);
-insert into event_comment (messagec, role_id) values ('How many times each movie is going to be streamed?', 104);
-insert into event_comment (messagec, role_id) values ('How many times each movie is going to be streamed?', 111);
-insert into event_comment (messagec, role_id) values ('How many times each movie is going to be streamed?', 120);
-insert into event_comment (messagec, role_id) values ('Ronaldo > Messi', 151);
-insert into event_comment (messagec, role_id) values ('Messi > Ronaldo', 152);
-insert into event_comment (messagec, role_id) values ('Goat Lewangoalski', 153);
+insert into event_comment (messagec, role_id, photo) values ('Are there any Covid-19 restrictions??', 78, NULL);
+insert into event_comment (messagec, role_id, photo) values ('You have the answer in the announcements.', 79, NULL);
+insert into event_comment (messagec, role_id, photo) values ('How many times each movie is going to be streamed?', 104, NULL);
+insert into event_comment (messagec, role_id, photo) values ('How many times each movie is going to be streamed?', 111, NULL);
+insert into event_comment (messagec, role_id, photo) values ('How many times each movie is going to be streamed?', 120, NULL);
+insert into event_comment (messagec, role_id, photo) values ('Ronaldo > Messi', 151, NULL);
+insert into event_comment (messagec, role_id, photo) values ('Messi > Ronaldo', 152, NULL);
+insert into event_comment (messagec, role_id, photo) values ('Goat Lewangoalski', 153, NULL);
 
 
-insert into event_poll (messagep, role_id) values ('Enhanced hybrid workforce', 24);
-insert into event_poll (messagep, role_id) values ('Switchable needs-based superstructure', 30);
-insert into event_poll (messagep, role_id) values ('Re-engineered didactic neural-net', 28);
-insert into event_poll (messagep, role_id) values ('Integrated context-sensitive model', 8);
-insert into event_poll (messagep, role_id) values ('Up-sized scalable policy', 22);
-insert into event_poll (messagep, role_id) values ('Fully-configurable upward-trending capability', 18);
-insert into event_poll (messagep, role_id) values ('Distributed demand-driven project', 29);
-insert into event_poll (messagep, role_id) values ('Digitized stable hardware', 21);
-insert into event_poll (messagep, role_id) values ('Synergistic solution-oriented conglomeration', 25);
-insert into event_poll (messagep, role_id) values ('Stand-alone asymmetric matrix', 3);
-insert into event_poll (messagep, role_id) values ('Digitized bifurcated flexibility', 16);
-insert into event_poll (messagep, role_id) values ('Focused high-level customer loyalty', 19);
-insert into event_poll (messagep, role_id) values ('Team-oriented web-enabled framework', 3);
-insert into event_poll (messagep, role_id) values ('Ameliorated asynchronous task-force', 16);
-insert into event_poll (messagep, role_id) values ('Pre-emptive modular product', 25);
+insert into event_poll (messagep, role_id) values ('Should this event be cancelled?', 1);
+insert into event_poll (messagep, role_id) values ('Do you have all the ingredients?', 7);
+insert into event_poll (messagep, role_id) values ('Do you know PHP?', 13);
+insert into event_poll (messagep, role_id) values ('Are you ready to pee your pants from laughing too hard?', 19);
+insert into event_poll (messagep, role_id) values ('Do not forget your yoga pants :)', 25);
+insert into event_poll (messagep, role_id) values ('Who do you thin will win this competition?', 31);
 
 
-insert into poll_option (messagepo, pollId) values ('Optional foreground software', 1);
-insert into poll_option (messagepo, pollId) values ('Inverse cohesive array', 2);
-insert into poll_option (messagepo, pollId) values ('Enhanced mission-critical open system', 3);
-insert into poll_option (messagepo, pollId) values ('Assimilated global success', 4);
-insert into poll_option (messagepo, pollId) values ('Reactive explicit attitude', 5);
-insert into poll_option (messagepo, pollId) values ('Inverse exuding capacity', 6);
-insert into poll_option (messagepo, pollId) values ('Ergonomic multimedia challenge', 7);
-insert into poll_option (messagepo, pollId) values ('Realigned impactful firmware', 8);
-insert into poll_option (messagepo, pollId) values ('Polarised executive open system', 9);
-insert into poll_option (messagepo, pollId) values ('Integrated asynchronous attitude', 10);
-insert into poll_option (messagepo, pollId) values ('Face to face intermediate framework', 11);
-insert into poll_option (messagepo, pollId) values ('Automated national collaboration', 12);
-insert into poll_option (messagepo, pollId) values ('Virtual secondary array', 13);
-insert into poll_option (messagepo, pollId) values ('Polarised directional open system', 14);
-insert into poll_option (messagepo, pollId) values ('Horizontal actuating open system', 15);
+
+insert into poll_option (messagepo, pollId) values ('Yes', 1);
+insert into poll_option (messagepo, pollId) values ('No', 1);
+insert into poll_option (messagepo, pollId) values ('Yes', 2);
+insert into poll_option (messagepo, pollId) values ('No', 2);
+insert into poll_option (messagepo, pollId) values ('Yes', 3);
+insert into poll_option (messagepo, pollId) values ('No', 3);
+insert into poll_option (messagepo, pollId) values ('Already brought a diaper', 4);
+insert into poll_option (messagepo, pollId) values ('I am gonna find out', 4);
+insert into poll_option (messagepo, pollId) values ('Going to Decathlon', 5);
+insert into poll_option (messagepo, pollId) values ('Already using them', 5);
+insert into poll_option (messagepo, pollId) values ('BalckKnight365', 6);
+insert into poll_option (messagepo, pollId) values ('Assassin23', 6);
 
 
 insert into vote (votetype, event_roleid, commentid, announcementid) values (true, 10, 2, NULL);
@@ -793,4 +783,4 @@ insert into vote (votetype, event_roleid, commentid, announcementid) values (fal
 
 
 
-insert into reports (userid, eventid, descriptions) values (6,17,'CANCEL DIS EVENT NOOOOOW. THEY FORCE US TO UZE THAT USELECE MASCK. STOP DSICRMITNATION WITH VAXINES CANCEL CANNCEL');
+insert into reports (userid, eventid, descriptions) values (6,17,'This event should be cancelled due to the increase of COVID cases.');

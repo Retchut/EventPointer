@@ -1,6 +1,6 @@
 <div class="row mb-4">
     <div class="col my-auto" style="max-width: 200px;">
-        <img src="{{ $user->pictureurl }}"
+        <img src="{{ $user->profilepictureurl }}"
             class="img-fluid rounded" style="height: 150px; width: 100%; object-fit: cover;">
     </div>
     <div class="col-10">

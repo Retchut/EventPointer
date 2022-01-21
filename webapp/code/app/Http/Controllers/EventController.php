@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Event;
 use App\Models\Event_Role;
 use App\Models\Comment;
+use App\Models\Poll;
+use App\Models\PollOption;
 use App\Models\Announcement;
 use App\Models\User;
 
@@ -28,6 +30,7 @@ class EventController extends Controller
     $event = Event::find($event_id);
     $announcements = $event->announcements($event_id);
     $comments = $event->comments($event_id);
+    $polls = $event->polls($event_id);
     $participants = $event->participants($event_id);
     $hosts = $event->hosts($event_id);
     $tag = $event->tag($event_id);
@@ -38,7 +41,7 @@ class EventController extends Controller
     */
 
     if (Auth::check())
-      return view('pages.event', ['event' => $event, 'reported' => $request->reported, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants, 'tag' => $tag]);
+      return view('pages.event', ['event' => $event, 'reported' => $request->reported, 'comments' => $comments, 'polls' => $polls, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants, 'tag' => $tag]);
     else
       return redirect("/login");
   }
@@ -63,7 +66,7 @@ class EventController extends Controller
     if ($role != null)
       $role->delete();
 
-    return redirect()->route('home');
+    return redirect()->route('browse.search');
   }
 
   public function join($event_id)
@@ -142,6 +145,14 @@ class EventController extends Controller
     $event_role->save();
 
     return redirect()->route('event.show', $event->id);
+  }
+
+  public static function poll_author($poll_id)
+  {
+    $poll = Poll::find($poll_id);
+    $role = Event_Role::find($poll->role_id);
+    $user = User::find($role->userid);
+    return $user;
   }
 
   public static function comment_author($comment_id)

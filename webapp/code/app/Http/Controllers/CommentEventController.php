@@ -28,6 +28,9 @@ class CommentEventController extends Controller
         $role = Event_Role::where('ishost', false)->where('eventid', $event_id)->where('userid', Auth::user()->id)->get()->first();
         $comment->role_id = $role->id;
         $comment->messagec = $request->comment_message;
+        if($request->get('file') != null){
+            $comment->photo = $request->get('file');
+        }
         $comment->save();
 
         return redirect()->route('event.show', ['event_id' => $event_id]);

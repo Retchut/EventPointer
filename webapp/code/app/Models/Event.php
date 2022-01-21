@@ -36,6 +36,12 @@ class Event extends Model
         return $comments;
     }
 
+    public function polls($event_id)
+    {
+        $polls = Event_Role::where('eventid', $event_id)->join('event_poll', 'event_role.id', '=', 'event_poll.role_id')->get()->unique();
+        return $polls;
+    }
+
 
     public function participants($event_id)
     {

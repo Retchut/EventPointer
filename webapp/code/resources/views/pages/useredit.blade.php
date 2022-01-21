@@ -25,7 +25,7 @@
                         <div class="form-group mb-2">
                             <label for="address">Email</label>
                             <p>
-                                <input type="email" class="form-control" id="address" name="address"
+                                <input type="email" class="form-control" id="email" name="email"
                                     placeholder="{{ $user->email }}">
                         </div>
                         <div class="form-group mb-2">
@@ -52,7 +52,7 @@
                             <label for="profilePictureUrl">Profile Picture (URL)</label>
                             <p>
                                 <input type="profilepictureurl" class="form-control" id="profilepictureurl"
-                                    name="profilePictureUrl" placeholder="Profile Picture URL">
+                                    name="profilepictureurl" placeholder="Profile Picture URL">
                         </div>
 
                     </div>

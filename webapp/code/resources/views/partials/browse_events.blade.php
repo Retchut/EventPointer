@@ -55,6 +55,6 @@
             </div>
         </div>
 
-        <a class="button font-weight-bold pb-2" href="{{ url('/event/' . $event->id) }}">Find out more</a>
+        <a class="button font-weight-bold pb-2" href="{{ url('/event/' . $event->id) }}"><h5>Find out more...</h5></a>
     </div>
 </div>

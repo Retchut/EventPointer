@@ -22,6 +22,11 @@ class CommentEventController extends Controller
         return view('pages.commentevent', ['event_id' => $event_id]);
     }
 
+    public function edit($comment_id)
+    {
+        return view('pages.editcomment'/*, ['event' => $events]*/);
+    }
+
     public function comment(Request $request, $event_id)
     {
         $comment = new Comment;
@@ -35,5 +40,31 @@ class CommentEventController extends Controller
 
         return redirect()->route('event.show', ['event_id' => $event_id]);
     }
+
+    public function update(Request $request, $comment_id)
+    {
+
+        $comment = COmment::find($request->comment_id);
+
+
+        if ($request->comment_message != null)
+            $comment->messagec = $request->comment_message;
+
+        if($request->get('file') != null){
+            $comment->photo = $request->get('file');
+        }
+        $comment->save(); 
+
+        return redirect()-> route('event.show', $event_id);
+    }
+
+    public function delete($comment_id)
+  {
+    $comment = Comment::find($comment_id);
+
+    $comment->delete();
+
+    return redirect()->route('home');
+  }
 
 }

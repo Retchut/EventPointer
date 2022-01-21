@@ -83,6 +83,9 @@ Route::post('event/{event_id}/announcement', 'AnnouncementEventController@announ
 Route::get('event/{event_id}/comment', 'CommentEventController@index')->name('create.show');
 Route::post('event/{event_id}/comment', 'CommentEventController@create')->name('create');
 Route::post('event/{event_id}/comment', 'CommentEventController@comment')->name('event.comment');
+Route::get('event/{event_id}/comment/{comment_id}/edit', 'CommentEventController@edit')->name('comment.edit');
+Route::post('event/{event_id}/comment/{comment_id}/edit', 'CommentEventController@update')->name('comment.update');
+Route::get('event/{event_id}/comment/{comment_id}/delete', 'CommentEventController@delete')->name('comment.delete');
 
 // Poll Event
 Route::get('event/{event_id}/poll', 'PollEventController@index')->name('pollcreate.show');

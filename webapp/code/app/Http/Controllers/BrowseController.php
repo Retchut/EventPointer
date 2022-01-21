@@ -62,12 +62,7 @@ class BrowseController extends Controller
         $events = $events->sortByDesc('duration');
         break;
     }
-<<<<<<< HEAD
 
-    return view('pages.browse', ['events' => $events, 'users' => $users]);
-=======
-    // $this->authorize('show', $events);
     return view('pages.browse', ['events' => $events, 'users' => $users, 'popup_message' => $request->popup_message,]);
->>>>>>> 21f429a46a0d3acc9ee246b5060c41481f805a7c
   }
 }

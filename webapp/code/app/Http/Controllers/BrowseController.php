@@ -17,6 +17,7 @@ class BrowseController extends Controller
    */
   public function show(Request $request)
   {
+    
     //search for query
     if($request->search_query == "Null"){
       $event_query=Event::all();

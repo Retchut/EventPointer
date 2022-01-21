@@ -383,8 +383,6 @@ CREATE TRIGGER delete_account
         EXECUTE PROCEDURE delete_account();
 
 
-
-
 DROP FUNCTION IF EXISTS calc_duration() CASCADE;
 CREATE FUNCTION calc_duration() RETURNS TRIGGER AS 
 $$

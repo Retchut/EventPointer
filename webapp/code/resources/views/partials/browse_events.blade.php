@@ -1,7 +1,7 @@
 <div class="row mb-4">
-    <div class="col my-auto" style="max-width: 200px;">
+    <div class="col my-auto">
         <img src="{{ $event->pictureurl }}"
-            class="img-fluid rounded" style="height: 150px; width: 100%; object-fit: cover;">
+            class="img-fluid rounded" style="width: 100px; height: 100px; object-fit: cover;">
     </div>
     <div class="col-10">
         <h2 class="font-weight-bold">{{ $event->eventname }}</h2>

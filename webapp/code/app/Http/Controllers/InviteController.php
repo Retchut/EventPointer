@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invite;
 use App\Models\User;
 use App\Models\Event;
+use App\Models\Event_Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,7 +29,7 @@ class InviteController extends Controller
 
 
     public function invite($event_id, $user_id)
-    {   
+    {
         $test_invite = Invite::where('receiverid', $user_id)->where('eventid', $event_id)->get();
         // If the user was already invited to this event
         if(count($test_invite) != 0){
@@ -52,6 +53,34 @@ class InviteController extends Controller
         }
         return redirect()->route('event.show', [ 'event_id' =>$event_id,
         'popup_message' => 'User successfully invited.']);
+    }
+
+    public function accept($user_id, $invite_id){
+
+        $invite = Invite::find($invite_id);
+        $user = User::find($invite->senderid);
+        $event = Event::find($invite->eventid);
+
+
+        $test_event_role = Event_Role::where('userid', $user_id)->where('eventid', $invite->eventid)->get();
+        // If the user was already participating in this event
+        if(count($test_event_role) != 0){
+            return redirect()->route('event.show', [ 'event_id' =>$invite->eventid,
+            'popup_message' => 'Error: That user is already participating in this event.']);
+        }
+
+        $event_role = new Event_Role();
+        $event_role->userid = $user_id;
+        $event_role->eventid = $invite->eventid;
+        $event_role->ishost = false;
+        $event_role->save();
+
+        $invite->delete();
+
+        // if()
+
+        return redirect()->route('user.show', [ 'user_id' => $user_id,
+        'popup_message' => 'Invitation to join "'.$event->eventname.'" accepted from '.$user->username.'.']);
     }
 
     public function delete($user_id, $invite_id)

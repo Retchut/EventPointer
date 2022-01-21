@@ -27,7 +27,7 @@ class AnnouncementEventController extends Controller
         $announcement->messagea = $request->announcement_message;
         $announcement->save();
 
-        return redirect()->route('event.show', ['event_id' => $event_id,'published' => True]);
+        return redirect()->route('event.show', ['event_id' => $event_id,'popup_message' => "Announcement added successfully"]);
     }
 
     public function edit($event_id, $announcement_id)
@@ -36,7 +36,7 @@ class AnnouncementEventController extends Controller
         return view('pages.editannouncement', ['event_id' => $event_id, 'announcement' => $announcement, 'announcement_id' => $announcement_id]);
     }
 
-    public function update(Request $request, $event_id, $announcement_id)
+    public function update(Request $request, $event_id)
     {
         $announcement = Announcement::find($request->announcement_id);
 
@@ -46,7 +46,7 @@ class AnnouncementEventController extends Controller
     
         $announcement->save(); 
 
-        return redirect()-> route('event.show', $event_id);
+        return redirect()-> route('event.show', [$event_id,'popup_message' => "Announcement edited successfully"]);
     }
 
     public function delete($event_id, $announcement_id)
@@ -55,6 +55,6 @@ class AnnouncementEventController extends Controller
 
         $announcement->delete();
 
-        return redirect()->route('event.show', $event_id);
+        return redirect()->route('event.show', [$event_id,'popup_message' => "Announcement deleted successfully"]);
     }
 }

@@ -95,9 +95,8 @@ Route::get('event/{event_id}/poll/{pollOption_id}', 'PollOptionController@vote')
 // Event Invite
 Route::get('event/{event_id}/invite', 'InviteController@showusers')->name('invite.show');
 Route::get('event/{event_id}/invite/{user_id}', 'InviteController@invite')->name('event.invite');
+Route::get('user/{user_id}/invite/{invite_id}/accept', 'InviteController@accept')->name('invite.accept');
 Route::get('user/{user_id}/invite/{invite_id}/delete', 'InviteController@delete')->name('invite.delete');
-
-
 
 // Authentication
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');

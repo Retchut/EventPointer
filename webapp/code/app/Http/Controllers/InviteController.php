@@ -23,7 +23,27 @@ class InviteController extends Controller
         $users = $user_query->get();
 
 
-        return view('pages.inviteusers', ['users' => $users, 'event' => $event]);
+        return view('pages.inviteuser', ['users' => $users, 'event' => $event]);
+    }
+
+
+    public function invite($event_id, $user_id)
+    {
+        $invite = new Invite;
+        $invite->receiverid = $user_id;
+        $receiver = User::find($user_id);
+        foreach ($receiver->events_as_participant($user_id) as $event) {
+            if ($event->id == $event_id)
+                abort(403, "User cannot be invited");
+        }
+        $invite->senderid = Auth::user()->id;
+        $invite->eventid = $event_id;
+        try {
+            $invite->save();
+        } catch (\Illuminate\Database\QueryException $e) {
+            return abort(403, "Duplicate found");
+        }
+        return redirect()->route('invite.show', $event_id);
     }
 
     public function delete($user_id, $invite_id)

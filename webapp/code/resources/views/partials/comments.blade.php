@@ -10,10 +10,10 @@
                 </span>
                 <p class="text-bold m-2 p-2" s>{{ $comment->messagec }}</p>
             </div>
-            @if (Auth::user()->isadmin || ($current_role->id == $comment->role_id))
+            @if (Auth::user()->isadmin  ||  ( (!is_null($current_role)) &&($current_role->id == $comment->role_id) ) )
                 <div class="col d-flex justify-content-end">
                     <!-- admin can't edit -->
-                    @if(!Auth::user()->isadmin)
+                    @if(!is_null($current_role))
                     <a class="m-2" href="{{ url('/event/' . $event->id.'/comment/'.$comment->id.'/edit/') }}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                             <path

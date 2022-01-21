@@ -90,8 +90,13 @@ Route::post('event/{event_id}/poll', 'PollEventController@poll')->name('event.po
 
 // Event Invite
 Route::get('event/{event_id}/inviteuser', 'InviteController@showusers')->name('invite.show');
-Route::post('event/{event_id}/inviteuser', 'InviteController@invite')->name('invite');
+// Route::post('event/{event_id}/inviteuser', 'InviteController@invite')->name('invite');
+Route::post('user/{event_id}/invite/{user_id}', 'InviteController@invite')->name('event.invite');
+Route::get('user/{user_id}/invite/{invite_id}/delete', 'InviteController@delete')->name('invite.delete');
 
+// Event Invite
+Route::get('event/{event_id}/inviteuser', 'InviteController@showusers')->name('invite.show');
+Route::post('event/{event_id}/inviteuser', 'InviteController@invite')->name('invite');
 
 // Authentication
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');

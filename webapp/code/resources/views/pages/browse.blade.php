@@ -5,6 +5,18 @@
 @section('content')
 
     <section id="browse">
+        @if (!is_null($popup_message))
+            <div id="popup" class="popup-container">
+                <div class="popup">
+                    <p class="popup-elems">{{ $popup_message }}</p>
+                    <button id="close" type="button" class="popup-elems btn-close"></button>
+                </div>
+            </div>
+
+            <script>
+                setup_popup_btn("close", "popup");
+            </script>
+        @endif
         <h1 class="mb-3">Browse</h1>
         <div class="row gap-5">
             <div class="h-50 col-md-2 ms-3 border border-primary rounded p-3 bg-light text-dark align-center">
@@ -58,15 +70,15 @@
                                     d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 9.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z" />
                                 </svg>
                             </a></div>
-                        <div
-                            class="text-center btn btn-secondary m-2 mt-0 ps-2 pe-2 pt-1 pb-1">
+                        <div class="text-center btn btn-secondary m-2 mt-0 ps-2 pe-2 pt-1 pb-1">
                             <a class="sort-buttons"
                                 href="{{ request()->fullUrlWithQuery(['sort' => 'sdate-desc']) }}"><svg
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                                     class="bi bi-arrow-down-square" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd"
                                         d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z" />
-                                </svg></a></div>
+                                </svg></a>
+                        </div>
                     </div>
                     <div>
                         <h5 class="m-2 mb-1 mx-3">End Date:</h5>

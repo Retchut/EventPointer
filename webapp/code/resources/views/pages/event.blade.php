@@ -49,6 +49,9 @@
                                                         class="dropdown-item">Add
                                                         Announcement</a></li>
                                                 <li class="dropdown-divider"></li>
+                                                <li><a href="{{ url('/event/' . $event->id) . '/inviteuser' }}"
+                                                        class="dropdown-item">Invite
+                                                        User(s)</a></li>
                                                 <li><a href="{{ url('/event/' . $event->id) . '/addparticipants' }}"
                                                         class="dropdown-item">Add
                                                         Participant(s)</a></li>
@@ -68,7 +71,7 @@
                                                 <li class="dropdown-divider"></li>
 
                                             @endif
-                                            @break
+                                        @break
                                         @endforeach
                                         @foreach ($participants as $participant)
                                             @if ($participant->id == Auth::user()->id)
@@ -254,7 +257,7 @@
 
                 <div class="tab-pane fade pb-3" id="forum-content" role="tabpanel" aria-labelledby="forum-tab">
                     <h3>Forum</h3>
-                    @if(count($polls) != 0)
+                    @if (count($polls) != 0)
                         @include('partials.poll', $polls)
                     @endif
                     @if (count($comments) != 0)

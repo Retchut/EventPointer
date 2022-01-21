@@ -43,7 +43,7 @@
                                     @endphp
                                     <ul class="dropdown-menu" aria-labelledby="settings_dropdown">
                                         @foreach ($hosts as $host)
-                                            @if ($host->id == Auth::user()->id)
+                                            @if ($host->id == Auth::user()->id || Auth::user()->isadmin)
                                                 {{ $aux = false }}
                                                 <li><a href="{{ url('/event/' . $event->id) . '/announcement' }}"
                                                         class="dropdown-item">Add

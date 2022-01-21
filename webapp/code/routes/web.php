@@ -61,7 +61,9 @@ Route::get('event/{event_id}/join', 'EventController@join')->name('event.join');
 Route::get('event/{user_id}/leave', 'EventController@leave')->name('event.leave');
 
 //Hosts add participant to event 
-Route::get('event/{event_id}/addparticipants', 'EventController@showAdd')->name('event.addparticipants');
+Route::get('event/{event_id}/addparticipants', 'EventController@showAdd')->name('event.showaddparticipants');
+Route::get('event/{event_id}/addparticipant/{user_id}', 'EventController@add')->name('event.addparticipant');
+
 
 //Hosts remove participant from event 
 Route::get('event/{event_id}/removeparticipants', 'EventController@showRemove')->name('event.removeparticipants');

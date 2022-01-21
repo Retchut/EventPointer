@@ -10,7 +10,7 @@
 
         @foreach($pollOptions as $pollOption)
             @if($poll->id == $pollOption->pollid)
-                <div class="row-sm-auto text-center mb-2 d-flex justify-content-center"><a class="btn btn-sm btn-outline-success"
+                <div class="row-sm-auto text-center mb-2 d-inline-flex justify-content-center"><a class="btn btn-sm btn-outline-success"
                    href= "{{ url('/event/' .$event->id.'/poll/'.$pollOption->pollid)}}">{{ $pollOption->messagepo }} : {{ $pollOption->countvote }}</a></div>
             @endif
         @endforeach

@@ -34,6 +34,7 @@ class EventController extends Controller
     $participants = $event->participants($event_id);
     $hosts = $event->hosts($event_id);
     $tag = $event->tag($event_id);
+    $current_role = Event_Role::where('eventid', $event_id)->where('userid', Auth::user()->id)->get()->first();
     /* 403 exception apge*/
     /*
     $this->authorize('show', $event);
@@ -41,7 +42,7 @@ class EventController extends Controller
     */
 
     if (Auth::check())
-      return view('pages.event', ['event' => $event, 'reported' => $request->reported, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants, 'tag' => $tag]);
+      return view('pages.event', ['event' => $event, 'current_role' => $current_role, 'reported' => $request->reported, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants, 'tag' => $tag]);
     else
       return redirect("/login");
   }
@@ -198,7 +199,7 @@ class EventController extends Controller
     try {
       $role->save();
     } catch (\Illuminate\Database\QueryException $e) {
-      return abort(403,"Duplicate found");
+      return abort(403, "Duplicate found");
     }
     return redirect()->route('event.showaddparticipants', $event_id);
   }

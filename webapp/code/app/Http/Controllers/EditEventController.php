@@ -14,11 +14,11 @@ class EditEventController extends Controller
     // protected $redirectTo = 'event';
 
 
-    public function show($event_id)
+    public function show(Request $request, $event_id)
     {
         $events = Event::find($event_id);
         // $this->authorize('show', $events);
-        return view('pages.editevent', ['event' => $events]);
+        return view('pages.editevent', ['event' => $events, 'popup_message' => $request->popup_message]);
     }
 
     public function index($event_id)
@@ -122,22 +122,23 @@ class EditEventController extends Controller
 
         if ($request->get('isprivate') != null)
             $event->isprivate = $request->get('isprivate');
-        
+
         if ($request->pictureurl != null)
             $event->pictureurl = $request->pictureurl;
-    
+
         $today = today()->format('Y-m-d');
 
         if ($event->startdate < $today)
-            return view('pages.editeventerror', ['event' => $event]);
-
+            return view('pages.editevent', ['event' => $event, 'popup_message' => "Error in dates. Either Start Date entered is earlier than today's date or End Date is earlier than Start
+        Date."]);
         try {
             $event->save();
         } catch (\Illuminate\Database\QueryException $e) {
 
-            return view('pages.editeventerror', ['event' => $event]);
+            return view('pages.editevent', ['event' => $event, 'popup_message' => "Error in dates. Either Start Date entered is earlier than today's date or End Date is earlier than Start
+            Date."]);
         }
-        return redirect()-> route('event.show', $event_id);
+        return redirect()->route('event.show', $event_id);
     }
 }
 

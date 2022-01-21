@@ -119,9 +119,9 @@ class EventController extends Controller
     return view('pages.addparticipants', ['users' => $users, 'event' => $event, 'popup_message' => $request->popup_message]);
   }
 
-  public function showCreateForm()
+  public function showCreateForm(Request $request)
   {
-    return view('pages.createevent');
+    return view('pages.createevent',['popup_message' => $request->popup_message]);
   }
 
   public function create(Request $request)
@@ -142,12 +142,13 @@ class EventController extends Controller
     $today = today()->format('Y-m-d');
 
     if ($event->startdate < $today)
-      return view('pages.createeventerror');
-
+    return view('pages.createevent',['popup_message' => "Error in dates. Either Start Date entered is earlier than today's date or End Date is earlier than Start
+    Date."]);
     try {
       $event->save();
     } catch (\Illuminate\Database\QueryException $e) {
-      return view('pages.createeventerror');
+      return view('pages.createevent',['popup_message' => "Error in dates. Either Start Date entered is earlier than today's date or End Date is earlier than Start
+      Date."]);
     }
 
     //$picture = $request->file('cover');

@@ -1,3 +1,15 @@
+@if (!is_null($popup_message))
+    <div id="popup" class="popup-container">
+        <div class="popup">
+            <p class="popup-elems">{{ $popup_message }}</p>
+            <button id="close" type="button" class="popup-elems btn-close"></button>
+        </div>
+    </div>
+
+    <script>
+        setup_popup_btn("close", "popup");
+    </script>
+@endif
 <h1>Reports</h1>
 <div class="user-events info-div bg-light text-dark rounded">
 

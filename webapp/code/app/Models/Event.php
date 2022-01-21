@@ -44,8 +44,7 @@ class Event extends Model
 
     public function pollOptions($event_id)
     {
-        $pollOptions = Event_Role::where('eventid', $event_id)->join('event_poll', 'event_role.id', '=', 'event_poll.role_id')->join('poll_option', 'event_poll.id', '=', 'poll_option.id')->get()->unique();
-        dd($pollOptions);
+        $pollOptions = PollOption::all();
         return $pollOptions;
     }
 

@@ -8,7 +8,7 @@ use App\Models\Event_Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CommentEventController extends Controller
+class PollEventController extends Controller
 {
     // protected $redirectTo = 'event';
 

@@ -87,6 +87,7 @@ Route::get('event/{event_id}/comment/{comment_id}/delete', 'CommentEventControll
 Route::get('event/{event_id}/poll', 'PollEventController@index')->name('pollcreate.show');
 Route::post('event/{event_id}/poll', 'PollEventController@create')->name('poll.create');
 Route::post('event/{event_id}/poll', 'PollEventController@poll')->name('event.poll');
+Route::get('event/{event_id}/poll/{pollOption_id}', 'PollOptionController@vote')->name('poll.vote');
 
 // Event Invite
 Route::get('event/{event_id}/inviteuser', 'InviteController@showusers')->name('invite.show');

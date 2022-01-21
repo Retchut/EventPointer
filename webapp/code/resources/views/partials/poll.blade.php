@@ -9,9 +9,9 @@
         <p class="text-bold m-2 p-2" s>{{ $poll->messagep }}</p>
 
         @foreach($pollOptions as $pollOption)
-            @if($poll->id == $pollOption->pollId)
-                <div class="row-sm-auto text-center mb-2"><a class="btn btn-sm btn-outline-success"
-                    href="{{ url('/event/' . $event->id) . '/comment' }}">{{ $pollOption->messagepo }} : {{ $pollOption->countvote }}</a></div>
+            @if($poll->id == $pollOption->pollid)
+                <div class="row-sm-auto text-center mb-2 d-flex justify-content-center"><a class="btn btn-sm btn-outline-success"
+                   href= "{{ url('/event/' .$event->id.'/poll/'.$pollOption->pollid)}}">{{ $pollOption->messagepo }} : {{ $pollOption->countvote }}</a></div>
             @endif
         @endforeach
 

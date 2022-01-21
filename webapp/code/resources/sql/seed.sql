@@ -118,7 +118,7 @@ CREATE TABLE poll_option
     id SERIAL PRIMARY KEY,
     messagepo TEXT NOT NULL,
     countvote INTEGER DEFAULT 0,
-    pollId INTEGER NOT NULL REFERENCES event_poll (id) ON DELETE CASCADE ON UPDATE CASCADE
+    pollid INTEGER NOT NULL REFERENCES event_poll (id) ON DELETE CASCADE ON UPDATE CASCADE
 
 );
 
@@ -756,18 +756,18 @@ insert into event_poll (messagep, role_id) values ('Who do you thin will win thi
 
 
 
-insert into poll_option (messagepo, pollId, countvote) values ('Yes', 1, 5);
-insert into poll_option (messagepo, pollId, countvote) values ('No', 1, 7);
-insert into poll_option (messagepo, pollId, countvote) values ('Yes', 2, 8);
-insert into poll_option (messagepo, pollId, countvote) values ('No', 2, 2);
-insert into poll_option (messagepo, pollId, countvote) values ('Yes', 3, 5);
-insert into poll_option (messagepo, pollId, countvote) values ('No', 3, 4);
-insert into poll_option (messagepo, pollId, countvote) values ('Already brought a diaper', 4, 9);
-insert into poll_option (messagepo, pollId, countvote) values ('I am gonna find out', 4, 2);
-insert into poll_option (messagepo, pollId, countvote) values ('Going to Decathlon', 5, 3);
-insert into poll_option (messagepo, pollId, countvote) values ('Already using them', 5, 5);
-insert into poll_option (messagepo, pollId, countvote) values ('BalckKnight365', 6, 12);
-insert into poll_option (messagepo, pollId, countvote) values ('Assassin23', 6, 4);
+insert into poll_option (messagepo, pollid, countvote) values ('Yes', 1, 5);
+insert into poll_option (messagepo, pollid, countvote) values ('No', 1, 7);
+insert into poll_option (messagepo, pollid, countvote) values ('Yes', 2, 8);
+insert into poll_option (messagepo, pollid, countvote) values ('No', 2, 2);
+insert into poll_option (messagepo, pollid, countvote) values ('Yes', 3, 5);
+insert into poll_option (messagepo, pollid, countvote) values ('No', 3, 4);
+insert into poll_option (messagepo, pollid, countvote) values ('Already brought a diaper', 4, 9);
+insert into poll_option (messagepo, pollid, countvote) values ('I am gonna find out', 4, 2);
+insert into poll_option (messagepo, pollid, countvote) values ('Going to Decathlon', 5, 3);
+insert into poll_option (messagepo, pollid, countvote) values ('Already using them', 5, 5);
+insert into poll_option (messagepo, pollid, countvote) values ('BalckKnight365', 6, 12);
+insert into poll_option (messagepo, pollid, countvote) values ('Assassin23', 6, 4);
 
 
 insert into vote (votetype, event_roleid, commentid, announcementid) values (true, 10, 2, NULL);

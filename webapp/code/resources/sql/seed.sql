@@ -108,7 +108,6 @@ CREATE TABLE event_poll
     id SERIAL PRIMARY KEY,
     messagep TEXT NOT NULL,
     role_id INTEGER NOT NULL REFERENCES event_role (id) ON DELETE CASCADE ON UPDATE CASCADE
-
 );
 
 

@@ -49,9 +49,9 @@
                                                         class="dropdown-item">Add
                                                         Announcement</a></li>
                                                 <li class="dropdown-divider"></li>
-                                                <li><a href="{{ url('/event/' . $event->id) . '/addparticipant' }}"
+                                                <li><a href="{{ url('/event/' . $event->id) . '/addparticipants' }}"
                                                         class="dropdown-item">Add
-                                                        Participant</a></li>
+                                                        Participant(s)</a></li>
                                                 <li><a href="{{ url('/event/' . $event->id) . '/removeparticipants' }}"
                                                         class="dropdown-item">Remove
                                                         Participant(s)</a></li>

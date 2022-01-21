@@ -124,7 +124,7 @@ class EditEventController extends Controller
             $event->isprivate = $request->get('isprivate');
         
         if ($request->pictureurl != null)
-            $event->pictureurl = $erques->pictureurl;
+            $event->pictureurl = $request->pictureurl;
     
         $today = today()->format('Y-m-d');
 

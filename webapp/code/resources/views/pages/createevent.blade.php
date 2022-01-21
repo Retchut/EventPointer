@@ -5,9 +5,9 @@
 @section('content')
 
     <section id="createevent">
-        <h1>Create Event</h1>
+        <h1 class="m-4">Create Event</h1>
 
-            <div class="col-md-1 w-75 border rounded py-2 bg-light text-dark align-center border-primary">
+            <div class="col-md-1 w-75 border rounded py-2 bg-light text-dark align-center border-primary m-5">
                 <div class="mb-3 m-2">
                     <h3 class="m-1">Please enter the event details:</h3>
                 </div>

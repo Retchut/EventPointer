@@ -86,12 +86,13 @@ class EventController extends Controller
     $event->save();
 
     return redirect()->route('event.show', $event->id);
-
   }
 
-  public function addparticipant($event_id)
+  public function showAdd(Request $request, $event_id)
   {
-    //TODO
+    $event = Event::find($event_id);
+    $users = User::all();
+    return view('pages.addparticipants', ['users' => $users, 'event' => $event]);
   }
 
   public function showCreateForm()

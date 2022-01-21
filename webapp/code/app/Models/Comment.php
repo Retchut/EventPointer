@@ -13,7 +13,7 @@ class Comment extends Model
 
 
     protected $fillable = [
-        'message'
+        'messagec'
     ];
 
 

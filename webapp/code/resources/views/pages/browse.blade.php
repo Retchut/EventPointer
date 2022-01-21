@@ -74,23 +74,45 @@
                 </div>
             </div>
 
-
-            <div class="col-md-3 w-75 border border-primary rounded p-3 bg-light text-dark align-center">
-                <div class="mb-3">
-                    <h2 class="m-1">Events:</h2>
-                </div>
-                <div class="col" id="browse-event">
-                        @foreach ($events as $event)
-                            @if (Auth::check() && !Auth::user()->isadmin)
-                                @if ($event->isprivate == false)
+            <div class="col-md-3 w-75 text-dark align-center">
+                <div class="row p-3 bg-light border border-primary rounded mb-3">
+                    <div class="mb-3">
+                        <h2 class="m-1">Events:</h2>
+                    </div>
+                    <div class="col" id="browse-event">
+                        @if (count($events) > 0)
+                            @foreach ($events as $event)
+                                @if (Auth::check() && !Auth::user()->isadmin)
+                                    @if ($event->isprivate == false)
+                                        @include('partials.browse_events')
+                                    @endif
+                                @else
                                     @include('partials.browse_events')
                                 @endif
-                            @else
-                                @include('partials.browse_events')
-                            @endif
-                        @endforeach
+                            @endforeach
+                        @else
+                            <h5>No results were found for the specified query and filters.</h5>
+                        @endif
+                    </div>
                 </div>
-            </div>
+
+                <div class="row p-3 bg-light border border-primary rounded mb-3">
+                    <div class="mb-3">
+                        <h2 class="m-1">Users:</h2>
+                    </div>
+                    <div class="col" id="browse-event">
+                        @if (count($users) > 0)
+                            @foreach ($users as $user)
+                                @if (!$user->isadmin)
+                                    @include('partials.browse_users')
+                                @endif
+                            @endforeach
+                        @else
+                            <h5>No results were found for the specified query and filters.</h5>
+                        @endif
+                    </div>
+                </div>
+            <div>
         </div>
     </section>
 

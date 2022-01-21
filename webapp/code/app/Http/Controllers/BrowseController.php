@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Event;
+use App\Models\User;
 
 class BrowseController extends Controller
 {
@@ -20,9 +21,11 @@ class BrowseController extends Controller
     //search for query
     if($request->search_query == "Null"){
       $event_query=Event::all();
+      $user_query=User::all();
     }
     else{
       $event_query=Event::where('eventname', 'ilike', '%'.$request->search_query.'%');
+      $user_query=User::where('username', 'ilike', '%'.$request->search_query.'%');
     }
 
     //search for state
@@ -36,6 +39,7 @@ class BrowseController extends Controller
 
     //fetch data
     $events = $event_query->get();
+    $users = $user_query->get();
     
     //sort
     switch ($request->sort) {
@@ -59,6 +63,6 @@ class BrowseController extends Controller
           break;
     }
     // $this->authorize('show', $events);
-    return view('pages.browse', ['events' => $events]);
+    return view('pages.browse', ['events' => $events, 'users' => $users]);
   }
 }

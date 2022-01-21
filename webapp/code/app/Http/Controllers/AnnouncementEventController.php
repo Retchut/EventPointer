@@ -10,15 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AnnouncementEventController extends Controller
 {
-    // protected $redirectTo = 'event';
+
 
 
     public function index($event_id)
     {
-        //$events = Event::find($event_id);
-        //$user = User::find(Auth::user()->id);
-        //$event_role = User::events_host($user->$id);
-        //if(Auth::check() and this)
+
         return view('pages.announcementevent', ['event_id' => $event_id]);
     }
 
@@ -61,11 +58,3 @@ class AnnouncementEventController extends Controller
         return redirect()->route('event.show', $event_id);
     }
 }
-
-
-
-
-
-
-// reported true
-// botao

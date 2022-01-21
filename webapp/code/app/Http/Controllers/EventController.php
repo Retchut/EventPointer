@@ -45,11 +45,6 @@ class EventController extends Controller
     else{
       $current_role = NULL;
     }
-    /* 403 exception apge*/
-    /*
-    $this->authorize('show', $event);
-    return view('pages.event', ['event' => $event, 'reported' => False, 'comments' => $comments, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants]);
-    */
 
     if (Auth::check())
       return view('pages.event', ['event' => $event, 'current_role' => $current_role, 'published'=>$request->published, 'popup_message' => $request->popup_message, 'comments' => $comments, 'polls' => $polls, 'pollOptions' => $pollOptions, 'announcements' => $announcements, 'hosts' => $hosts, 'participants' => $participants, 'tag' => $tag]);
@@ -62,8 +57,6 @@ class EventController extends Controller
   public function delete($event_id)
   {
     $event = Event::find($event_id);
-
-    //$this->authorize('delete', $event);
 
     $event->delete();
 
@@ -103,7 +96,7 @@ class EventController extends Controller
   }
 
 
-  //TODO
+
   public function showAdd(Request $request, $event_id)
   {
     $event = Event::find($event_id);
@@ -150,16 +143,7 @@ class EventController extends Controller
     } catch (\Illuminate\Database\QueryException $e) {
       return view('pages.createeventerror');
     }
-
-    //$picture = $request->file('cover');
-    //$extension = $picture->getClientOriginalExtension();
-    //$path = $event->id . '.' . $extension;
-    //Storage::disk('public')->put('/event/' . $path,  File::get($picture));
-    //$photo = new Photo();
-    //$photo->name = $path;
-    //$photo->idevent = $event->id;
-    //$photo->save();
-
+    
     $event_role = new Event_Role;
     $event_role->userid = Auth::user()->id;
     $event_role->eventid = $event->id;

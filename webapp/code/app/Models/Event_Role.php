@@ -19,25 +19,10 @@ class Event_Role extends Model
 
     public function user()
     {
-        // return $this->belongsToMany(User::class);
+
         return $this->belongsTo('App\Models\User');
     }
 
-    /*public function comments()
-    {
-        return $this->hasMany('App\Comment');
-    }
-
-    public function announcements()
-    {
-        return $this->hasMany('App\Announcement');
-    }
-
-    public function polls()
-    {
-        return $this->hasMany('App\Poll');
-    }
-*/
 
     public function hosts(){
         return $this->belongsToMany('App\Event_Role', 'event_role');

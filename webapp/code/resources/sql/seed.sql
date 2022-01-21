@@ -401,6 +401,25 @@ CREATE TRIGGER calc_duration
         FOR EACH ROW
         EXECUTE PROCEDURE calc_duration();
 
+/*
+DROP FUNCTION IF EXISTS delete_account_effects() CASCADE;
+CREATE FUNCTION delete_account_effects() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+        DELETE FROM eventg WHERE id IN (SELECT id FROM eventg INNER JOIN event_role eventid ON eventg.id = event_role.eventid 
+        INNER JOIN users id ON users.id = event_role.userid WHERE OLD.id = event_role.eventid);
+
+END
+$BODY$
+LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS delete_account_effects ON users CASCADE;
+CREATE TRIGGER delete_account_effects
+        AFTER DELETE ON users
+        FOR EACH ROW
+        EXECUTE PROCEDURE delete_account_effects();
+*/ 
+
 
 -----------------------------------------
 -- Transactions

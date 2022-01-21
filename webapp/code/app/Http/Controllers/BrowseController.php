@@ -63,7 +63,7 @@ class BrowseController extends Controller
           $events = $events->sortByDesc('duration');
           break;
     }
-    // $this->authorize('show', $events);
+
     return view('pages.browse', ['events' => $events, 'users' => $users]);
   }
 }

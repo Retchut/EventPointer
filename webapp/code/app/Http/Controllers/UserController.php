@@ -31,7 +31,7 @@ class UserController extends Controller
     }
 
     $invites_data = Invite::all();
-    // $user_invites = Invite::where('receiverid', $user_id) -> get();
+
 
     $user_invites = array();
 
@@ -59,7 +59,6 @@ class UserController extends Controller
       'Member Since' => $user->registrationdate
     ];
 
-    // dd($invite_senders[0]);
 
     if (Auth::check())
       return view('pages.user', ['user' => $user, 'user_invites' => $user_invites, 'events_as_host' => $events_as_host,'events_as_participant' => $events_as_participant, 'user_stats' => $user_stats, 'reports' => $reports]);
@@ -70,17 +69,6 @@ class UserController extends Controller
   public function delete($user_id)
   {
     $user = User::find($user_id);
-
-    //$this->authorize('delete', $user);
-
-    /*
-    Auth::logout();
-
-    $user->username = 'deleted' . $user->id;
-    $user->email = 'deleted' . $user->id . '@deleted.com';
-    $user->password = bcrypt('deleted');
-
-    $user->save();*/
 
     $user->delete();
 

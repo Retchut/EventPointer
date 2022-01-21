@@ -10,21 +10,17 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentEventController extends Controller
 {
-    // protected $redirectTo = 'event';
 
 
     public function index($event_id)
     {
-        //$events = Event::find($event_id);
-        //$user = User::find(Auth::user()->id);
-        //$event_role = User::events_host($user->$id);
-        //if(Auth::check() and this)
+
         return view('pages.commentevent', ['event_id' => $event_id]);
     }
 
     public function edit($event_id, $comment_id)
     {
-        // dd($comment);
+
         $comment = Comment::find($comment_id);
         return view('pages.editcomment', ['event_id' => $event_id, 'comment' => $comment, 'comment_id' => $comment_id]);
     }

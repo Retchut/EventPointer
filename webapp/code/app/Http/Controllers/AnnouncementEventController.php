@@ -32,6 +32,34 @@ class AnnouncementEventController extends Controller
 
         return redirect()->route('event.show', ['event_id' => $event_id]);
     }
+
+    public function edit($event_id, $announcement_id)
+    {
+        $announcement = Announcement::find($announcement_id);
+        return view('pages.editannouncement', ['event_id' => $event_id, 'announcement' => $announcement, 'announcement_id' => $announcement_id]);
+    }
+
+    public function update(Request $request, $event_id, $announcement_id)
+    {
+        $announcement = Announcement::find($request->announcement_id);
+
+        if ($request->announcement_message != null)
+            $announcement->messagea = $request->announcement_message;
+
+    
+        $announcement->save(); 
+
+        return redirect()-> route('event.show', $event_id);
+    }
+
+    public function delete($event_id, $announcement_id)
+    {
+        $announcement = Announcement::find($announcement_id);
+
+        $announcement->delete();
+
+        return redirect()->route('event.show', $event_id);
+    }
 }
 
 

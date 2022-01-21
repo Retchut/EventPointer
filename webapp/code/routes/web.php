@@ -74,6 +74,9 @@ Route::post('event/{event_id}/report', 'ReportEventController@report')->name('re
 Route::get('event/{event_id}/announcement', 'AnnouncementEventController@index')->name('createannouncement.show');
 Route::post('event/{event_id}/announcement', 'AnnouncementEventController@create')->name('createannouncement');
 Route::post('event/{event_id}/announcement', 'AnnouncementEventController@announcement')->name('event.announcement');
+Route::get('event/{event_id}/announcement/{announcement_id}/edit', 'AnnouncementEventController@edit')->name('announcement.edit');
+Route::post('event/{event_id}/announcement/{announcement_id}/edit', 'AnnouncementEventController@update')->name('announcement.update');
+Route::get('event/{event_id}/announcement/{announcement_id}/delete', 'AnnouncementEventController@delete')->name('announcement.delete');
 
 // Comment Event
 Route::get('event/{event_id}/comment', 'CommentEventController@index')->name('createcomment.show');

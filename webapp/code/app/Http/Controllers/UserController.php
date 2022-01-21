@@ -21,7 +21,7 @@ class UserController extends Controller
    * @param  int  $id
    * @return View
    */
-  public function show($user_id)
+  public function show($user_id, Request $request)
   {
     $user = User::find($user_id);
     if (is_null($user)) {
@@ -62,7 +62,7 @@ class UserController extends Controller
     // dd($invite_senders[0]);
 
     if (Auth::check())
-      return view('pages.user', ['user' => $user, 'user_invites' => $user_invites, 'events_as_host' => $events_as_host,'events_as_participant' => $events_as_participant, 'user_stats' => $user_stats, 'reports' => $reports]);
+      return view('pages.user', ['user' => $user, 'user_invites' => $user_invites,'popup_message' => $request->popup_message, 'events_as_host' => $events_as_host,'events_as_participant' => $events_as_participant, 'user_stats' => $user_stats, 'reports' => $reports]);
     else
       return redirect("/login");
   }

@@ -19,19 +19,6 @@
                 </script>
             @endif
 
-            @if (!is_null($published) && $published == true)
-                <div id="announcement_popup" class="popup-container">
-                    <div class="popup">
-                        <p class="popup-elems">Announcement published successfully</p>
-                        <button id="close2" type="button" class="popup-elems btn-close"></button>
-                    </div>
-                </div>
-
-                <script>
-                    setup_popup_btn("close2","announcement_popup");
-                </script>
-            @endif
-
             <div class="event-details pb-5">
                 <div class="row">
                     <div class="col-sm-8 event-info">

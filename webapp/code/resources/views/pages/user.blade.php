@@ -25,7 +25,7 @@
                 </div>
                 <div class="row border border-primary rounded mx-1 bg-light text-dark py-2">
                     @if(is_null($user->description))
-                    <p class="m-0">This user hasn't added any description to his profile.</p>
+                    <p class="m-0">This user hasn't yet added a description to his profile.</p>
                     @else
                     <p class="m-0">{{$user->description}}</p>
                     @endif
@@ -55,14 +55,10 @@
                 @endif
             </div>
         </div>
-
-        <!-- TODO: restrict to only the user's invites -->
-        @if ((Auth::user()->id == $user->id))
-        <div class="d-flex justify-content-end">
         </div>
-        @endif
 
-        @if ((Auth::user()->id == $user->id ) && !(Auth::user()->isadmin))
+        <!-- User control buttons -->
+        @if ((Auth::user()->id == $user->id) || (Auth::user()->isadmin))
         <div class="d-flex justify-content-end">
             <div class="row-sm-1  m-2 p-3">
                 <a class="btn btn-outline-primary" href="{{ url('/user/'.@Auth::user()->id.'/edit') }}">Edit Account</a>

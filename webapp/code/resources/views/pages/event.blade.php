@@ -68,6 +68,7 @@
                                                 <li class="dropdown-divider"></li>
 
                                             @endif
+                                            @break
                                         @endforeach
                                         @foreach ($participants as $participant)
                                             @if ($participant->id == Auth::user()->id)

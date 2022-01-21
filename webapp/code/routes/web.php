@@ -47,7 +47,7 @@ Route::get('event/{event_id}', 'EventController@show')->name('event.show');
 Route::get('event/{event_id}/delete', 'EventController@delete')->name('event.delete');
 
 // Event Edit
-Route::get('event/{event_id}/edit', 'EditEventController@show')->name('edit.show');
+Route::get('event/{event_id}/edit', 'EditEventController@show')->name('editevent.show');
 Route::post('event/{event_id}/edit', 'EditEventController@update')->name('event.update');
 
 // Event Cancel
@@ -74,13 +74,13 @@ Route::get('report/{report_id}/delete', 'ReportEventController@delete')->name('r
 Route::post('event/{event_id}/report', 'ReportEventController@report')->name('report');
 
 // Announcement Event
-Route::get('event/{event_id}/announcement', 'AnnouncementEventController@index')->name('create.show');
-Route::post('event/{event_id}/announcement', 'AnnouncementEventController@create')->name('create');
+Route::get('event/{event_id}/announcement', 'AnnouncementEventController@index')->name('createannouncement.show');
+Route::post('event/{event_id}/announcement', 'AnnouncementEventController@create')->name('createannouncement');
 Route::post('event/{event_id}/announcement', 'AnnouncementEventController@announcement')->name('event.announcement');
 
 // Comment Event
-Route::get('event/{event_id}/comment', 'CommentEventController@index')->name('create.show');
-Route::post('event/{event_id}/comment', 'CommentEventController@create')->name('create');
+Route::get('event/{event_id}/comment', 'CommentEventController@index')->name('createcomment.show');
+Route::post('event/{event_id}/comment', 'CommentEventController@create')->name('createcomment');
 Route::post('event/{event_id}/comment', 'CommentEventController@comment')->name('event.comment');
 Route::get('event/{event_id}/comment/{comment_id}/edit', 'CommentEventController@edit')->name('comment.edit');
 Route::post('event/{event_id}/comment/{comment_id}/edit', 'CommentEventController@update')->name('comment.update');

@@ -25,7 +25,10 @@ class EventController extends Controller
    */
   public function show($event_id, Request $request)
   {
+
     $event = Event::find($event_id);
+    if ($event == null)
+      abort(404);
     $announcements = $event->announcements($event_id);
     $comments = $event->comments($event_id);
     $participants = $event->participants($event_id);
@@ -88,10 +91,21 @@ class EventController extends Controller
     return redirect()->route('event.show', $event->id);
   }
 
+
+  //TODO
   public function showAdd(Request $request, $event_id)
   {
     $event = Event::find($event_id);
-    $users = User::all();
+
+
+    if ($request->search_query == "Null") {
+      $user_query = User::all();
+    } else {
+      $user_query = User::where('username', 'ilike', '%' . $request->search_query . '%');
+    }
+    $users = $user_query->get();
+
+
     return view('pages.addparticipants', ['users' => $users, 'event' => $event]);
   }
 
@@ -173,5 +187,15 @@ class EventController extends Controller
     $role = Event_Role::where('ishost', false)->where('eventid', $event_id)->where('userid', $user_id)->get()->first();
     $role->delete();
     return redirect()->route('event.removeparticipants', $event_id);
+  }
+
+  public function add($event_id, $user_id)
+  {
+    $role = new Event_Role;
+    $role->userid = $user_id;
+    $role->ishost=false;
+    $role->eventid = $event_id;
+    $role->save();
+    return redirect()->route('event.showaddparticipants', $event_id);
   }
 }

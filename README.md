@@ -5,6 +5,7 @@
 - Install necessary composer dependencies: `composer install`
 - Run frontend: `php artisan serve`
 - Run backend: `docker-compose up`
+- The application can be accessed by navigating to `localhost:8000` on your browser.
 
 ### Group Members
 - Joel Fernandes - up201904977@edu.fe.up.pt

@@ -1,6 +1,12 @@
 # Lbaw2115 - Event Pointer
 
-### Members
+## Running the project
+- Install necessary npm packages: `npm install`
+- Install necessary composer dependencies: `composer install`
+- Run frontend: `php artisan serve`
+- Run backend: `docker-compose up`
+
+### Group Members
 - Joel Fernandes - up201904977@edu.fe.up.pt
 - Mário Travassos - up201905871@edu.fe.up.pt
 - Carlos Gomes - up201906622@edu.fe.up.pt
